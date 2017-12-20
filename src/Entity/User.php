@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use \Serializable;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -13,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * 
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields="username", message="Username already taken")
  */
 class User implements AdvancedUserInterface, Serializable, EquatableInterface
 {
@@ -26,18 +29,20 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     /**
      * @ORM\Column(type="string", unique=true, length=32)
+     * @Assert\NotBlank()
      */
     protected $username;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    protected $plainPassword;
+    
+    /**
+     * @ORM\Column(type="string", length=256)
      */
     protected $password;
-
-    /**
-     * @ORM\Column(type="string", length=16)
-     */
-    protected $salt;
     
     protected $roles;
 
@@ -80,7 +85,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     public function getSalt()
     {
-        return $this->salt;
+        return null;
     }
 
     public function getRoles()
@@ -90,7 +95,6 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     public function eraseCredentials()
     {
-        ;
     }
 
     public function isEqualTo(UserInterface $user)

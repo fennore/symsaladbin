@@ -27,7 +27,11 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
       ;
       }
      */
-
+    
+    /**
+     * @param string $username Username to look up
+     * @return App\Entity\User
+     */
     public function loadUserByUsername($username)
     {
         $qb = $this
@@ -41,5 +45,39 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
         return $qb->getQuery()->getResult();
     }
+    
+    /**
+     * Writes User Entity to database
+     * @param User $user
+     */
+    public function createUser(UserInterface $user) {
+        $this->persistUser($user);
+    }
 
+    /**
+     * Updates User Entity in database
+     * @param User $user
+     */
+    public function updateUser(UserInterface $user) {
+        $this->persistUser($user);
+    }
+    
+    /**
+     * Removes User Entity from database
+     * @param User $user
+     */
+    public function deleteUser(UserInterface $user) {
+        $this->getEntityManager()
+            ->remove($user);
+    }
+    
+    /**
+     * Creates or updates the User Entity data in the database.
+     * @param User $user
+     */
+    protected function persistUser(UserInterface $user) {
+        $this->getEntityManager()
+            ->persist($user)
+            ->flush();
+    }
 }
