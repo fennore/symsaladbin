@@ -5,6 +5,7 @@ namespace App\Entity;
 use \Serializable;
 use \DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -45,6 +46,10 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
      */
     protected $password;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\JoinTable(name="user_role")
+     */
     protected $roles;
 
     /**
@@ -57,7 +62,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
      */
     protected $created;
 
-    public function __construct(string $username, ?string $password, array $roles = array('ROLE_USER'), int $status = 1)
+    public function __construct(string $username, ?string $password, array $roles = array(), int $status = 1)
     {
         if ('' === $username || null === $username) {
             throw new \InvalidArgumentException('The username cannot be empty.');
@@ -66,23 +71,23 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
         $datetime = new DateTime();
         $this->username = $username;
         $this->password = $password;
-        $this->roles = $roles;
+        $this->roles = new ArrayCollection($roles);
         $this->status = $status;
         $this->created = $datetime->getTimestamp();
     }
     
     public function setUsername($username): void
-        {
+    {
         $this->username = $username;
     }
     
     public function setPassword($password): void
-        {
+    {
         $this->password = $password;
     }
     
     public function setRoles(array $roles): void
-        {
+    {
         $this->roles = $roles;
     }
 
@@ -106,9 +111,12 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
         return null;
     }
 
-    public function getRoles(): array
+    /**
+     * @return ArrayCollection|Role[]
+     */
+    public function getRoles(): ArrayCollection
     {
-        return $this->roles ?? array('ROLE_USER');
+        return $this->roles;
     }
 
     public function eraseCredentials(): void
