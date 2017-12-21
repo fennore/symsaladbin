@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\User;
 
 class UserRepository extends ServiceEntityRepository implements UserLoaderInterface
 {
@@ -48,7 +49,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     
     /**
      * Writes User Entity to database
-     * @param User $user
+     * @param UserInterface $user
      */
     public function createUser(UserInterface $user) {
         $this->persistUser($user);
@@ -56,7 +57,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
     /**
      * Updates User Entity in database
-     * @param User $user
+     * @param UserInterface $user
      */
     public function updateUser(UserInterface $user) {
         $this->persistUser($user);
@@ -64,20 +65,18 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     
     /**
      * Removes User Entity from database
-     * @param User $user
+     * @param UserInterface $user
      */
     public function deleteUser(UserInterface $user) {
-        $this->getEntityManager()
-            ->remove($user);
+        $this->getEntityManager()->remove($user);
     }
     
     /**
      * Creates or updates the User Entity data in the database.
-     * @param User $user
+     * @param UserInterface $user
      */
     protected function persistUser(UserInterface $user) {
-        $this->getEntityManager()
-            ->persist($user)
-            ->flush();
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 }

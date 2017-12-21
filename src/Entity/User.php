@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use \Serializable;
+use \DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use \Serializable;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -56,29 +57,46 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
      */
     protected $created;
 
-    public function __construct($username, $password, $salt, array $roles = array('ROLE_USER'))
+    public function __construct(string $username, ?string $password, array $roles = array('ROLE_USER'), int $status = 1)
     {
         if ('' === $username || null === $username) {
             throw new \InvalidArgumentException('The username cannot be empty.');
         }
 
+        $datetime = new DateTime();
         $this->username = $username;
         $this->password = $password;
-        $this->salt = $salt;
+        $this->roles = $roles;
+        $this->status = $status;
+        $this->created = $datetime->getTimestamp();
+    }
+    
+    public function setUsername($username): void
+        {
+        $this->username = $username;
+    }
+    
+    public function setPassword($password): void
+        {
+        $this->password = $password;
+    }
+    
+    public function setRoles(array $roles): void
+        {
         $this->roles = $roles;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -88,43 +106,43 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
         return null;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
-        return $this->roles;
+        return $this->roles ?? array('ROLE_USER');
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
-    public function isEqualTo(UserInterface $user)
+    public function isEqualTo(UserInterface $user): bool
     {
         return $this->id === $user->getId() && $user instanceof User;
     }
 
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
 
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
 
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->status > 0;
     }
 
-    public function serialize()
+    public function serialize(): string
     {
-        return serialize(array(
+        return \serialize(array(
             $this->id,
             $this->username,
             $this->password,
@@ -143,7 +161,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
             $this->status
             // see section on salt below
             // $this->salt
-        ) = unserialize($serialized);
+        ) = \unserialize($serialized);
     }
 
 }
