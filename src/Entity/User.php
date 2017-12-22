@@ -88,10 +88,10 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
     
     public function setRoles(array $roles): void
     {
-        $this->roles = $roles;
+        $this->roles = new ArrayCollection($roles);
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
