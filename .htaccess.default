@@ -17,10 +17,10 @@ Options -Indexes
 Options +FollowSymLinks
 
 # Handle any 404 errors through index.
-ErrorDocument 404 /public/index.php
+ErrorDocument 404 public/index.php
 
 # Set the default handler.
-DirectoryIndex /public/index.php
+DirectoryIndex public/index.php
 
 # Override PHP settings that cannot be changed at runtime.
 
