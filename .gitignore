@@ -12,3 +12,4 @@
 !.htaccess.default
 .todo
 /db-sqlite/
+.phpintel
