@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
+ * Role Entity for database
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  * @ORM\Table(name="role")
  */
@@ -24,7 +25,7 @@ class Role extends BaseRole
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank()
      */
-    protected $role;
+    protected $name;
     
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="roles")
@@ -34,23 +35,41 @@ class Role extends BaseRole
     /**
      * @param string $role Unique name for the role
      */
-    public function __construct(string $role)
+    public function __construct(string $name)
     {
         $this->users = new ArrayCollection();
-        $this->role = $role;
-        parent::__construct($role);
+        $this->name = $name;
+        parent::__construct($name);
     }
-    
+
+    /**
+     * Get the name for the role
+     * @return string
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Overrides the parent getRole
+     * @return string
+     */
+    public function getRole(): ?string
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-    
-    /**
-     * @return ArrayCollection|User[]
-     */
-    public function getUsers(): ArrayCollection
-    {
-        return $this->users;
     }
 }

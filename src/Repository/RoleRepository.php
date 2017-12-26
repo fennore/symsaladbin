@@ -27,6 +27,15 @@ class RoleRepository extends ServiceEntityRepository
     }
     */
     /**
+     *
+     * @param string $name Name for the role to search for. Each role has a unique name.
+     * @return Role
+     */
+    public function loadRoleByName(string $name): Role
+    {
+        return $this->findOneBy(array('role' => $name));
+    }
+    /**
      * Writes a new Role Entity to database
      * @param Role $role
      */

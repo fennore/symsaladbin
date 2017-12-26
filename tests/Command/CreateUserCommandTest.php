@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use App\Command\CreateUserCommand;
 use App\Repository\UserRepository;
+use App\Repository\RoleRepository;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class CreateUserCommandTest extends KernelTestCase
@@ -17,8 +18,9 @@ class CreateUserCommandTest extends KernelTestCase
         $application = new Application($kernel);
         // Create mocks
         $userRepository = $this->createMock(UserRepository::class);
+        $roleRepository = $this->createMock(RoleRepository::class);
         $userPasswordEncoder = $this->createMock(UserPasswordEncoder::class);
-        $application->add(new CreateUserCommand($userRepository, $userPasswordEncoder));
+        $application->add(new CreateUserCommand($userRepository, $roleRepository, $userPasswordEncoder));
 
         $command = $application->find('app:user:create');
         $commandTester = new CommandTester($command);

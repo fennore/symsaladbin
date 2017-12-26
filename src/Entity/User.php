@@ -5,6 +5,7 @@ namespace App\Entity;
 use \Serializable;
 use \DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -49,6 +50,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinTable(name="user_role")
+     * @var Collection
      */
     protected $roles;
 
@@ -114,9 +116,9 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
     /**
      * @return ArrayCollection|Role[]
      */
-    public function getRoles(): ArrayCollection
+    public function getRoles(): array
     {
-        return $this->roles;
+        return $this->roles->toArray();
     }
 
     public function eraseCredentials(): void

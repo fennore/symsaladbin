@@ -35,7 +35,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
      */
     public function loadUserByUsername($username)
     {
-        $qb = $this
+        /*$qb = $this
             ->createQueryBuilder('u');
         $expr = $qb
             ->expr()
@@ -44,7 +44,8 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->where($expr)
             ->setParameter(':username', $username);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult();*/
+        return $this->findOneBy(array('username' => $username));
     }
     
     /**
