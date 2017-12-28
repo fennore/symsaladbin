@@ -8,19 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version20171226153147 extends AbstractMigration
+class Version20171228113812 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
-        $this->addSql('CREATE TEMPORARY TABLE __temp__role AS SELECT id, role FROM role');
-        $this->addSql('DROP TABLE role');
-        $this->addSql('CREATE TABLE role (id INTEGER NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('INSERT INTO role (id, name) SELECT id, role FROM __temp__role');
-        $this->addSql('DROP TABLE __temp__role');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_57698A6A5E237E06 ON role (name)');
+        $this->addSql('CREATE TABLE log (id INTEGER NOT NULL, message CLOB NOT NULL, context CLOB NOT NULL --(DC2Type:array)
+        , channel VARCHAR(255) NOT NULL, level SMALLINT UNSIGNED NOT NULL, extra CLOB NOT NULL --(DC2Type:array)
+        , created INTEGER UNSIGNED NOT NULL, PRIMARY KEY(id))');
         $this->addSql('DROP INDEX IDX_2DE8C6A3D60322AC');
         $this->addSql('DROP INDEX IDX_2DE8C6A3A76ED395');
         $this->addSql('CREATE TEMPORARY TABLE __temp__user_role AS SELECT user_id, role_id FROM user_role');
@@ -37,12 +34,7 @@ class Version20171226153147 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
 
-        $this->addSql('DROP INDEX UNIQ_57698A6A5E237E06');
-        $this->addSql('CREATE TEMPORARY TABLE __temp__role AS SELECT id, name FROM role');
-        $this->addSql('DROP TABLE role');
-        $this->addSql('CREATE TABLE role (id INTEGER NOT NULL, role VARCHAR(255) NOT NULL COLLATE BINARY, PRIMARY KEY(id))');
-        $this->addSql('INSERT INTO role (id, role) SELECT id, name FROM __temp__role');
-        $this->addSql('DROP TABLE __temp__role');
+        $this->addSql('DROP TABLE log');
         $this->addSql('DROP INDEX IDX_2DE8C6A3A76ED395');
         $this->addSql('DROP INDEX IDX_2DE8C6A3D60322AC');
         $this->addSql('CREATE TEMPORARY TABLE __temp__user_role AS SELECT user_id, role_id FROM user_role');
