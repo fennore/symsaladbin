@@ -3,7 +3,7 @@
 /public/bundles/
 /var/
 /vendor/
-/config/routes/dev/annotations.yaml
+/config/routes/dev
 ###< symfony/framework-bundle ###
 ###> phpunit/phpunit ###
 /phpunit.xml
