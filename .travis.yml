@@ -25,7 +25,7 @@ matrix:
 
 # Define an environment variable
 env:
-  - SYMFONY_VERSION="4.0.*" DB=sqlite
+  - SYMFONY_VERSION="4.0.*"
 
 before_install:
   # Manually compile the libsodium library
