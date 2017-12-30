@@ -27,13 +27,19 @@ matrix:
 env:
   - SYMFONY_VERSION="4.0.*" DB=sqlite
 
-# Update composer
-before-install:
+before_install:
+  # Manually compile the libsodium library
+  - git clone -b stable https://github.com/jedisct1/libsodium.git
+  - cd libsodium && sudo ./configure && sudo make check && sudo make install && cd ..
+  # Update composer
   - composer self-update
 
-# Install composer dependencies,
-# Create database, schema and fixtures
 install:
+  # Manually install libsodium, because the TravicCi image doesn't provide PHP7.2 with libsodium
+  - pecl install libsodium
+  - echo "extension=sodium.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  # Install composer dependencies,
+  # Create database, schema and fixtures
   - composer install
   - cp .env.dist .env
   - php bin/console doctrine:database:create --env=test
