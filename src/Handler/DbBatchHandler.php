@@ -6,15 +6,16 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * 
+ * Handles database transaction execution in batches
  */
 class DbBatchHandler
 {
+
     /**
      * @var array of ObjectManager 
      */
     private $managers;
-    
+
     /**
      * Array linking ObjectManager name with object class name
      * @var type 
@@ -39,14 +40,19 @@ class DbBatchHandler
         $this->batchCount = array_fill_keys(array_keys($this->managers), 0);
     }
 
+    /**
+     * Batch counter for given ObjectManager.
+     * Automatically flushes the ObjectManager when enough operations are queued for transaction.
+     * @param ObjectManager $manager
+     * @param string $objectClassName ObjectManager related object
+     */
     public function addToBatch(ObjectManager $manager, string $objectClassName)
     {
         // Get the ObjectManager name
-        if(!isset($this->objectManagerMatch[$objectClassName])) {
+        if (!isset($this->objectManagerMatch[$objectClassName])) {
             $managerName = array_search($manager, $this->managers);
             $this->objectManagerMatch[$objectClassName] = $managerName;
-        }
-        else {
+        } else {
             $managerName = $this->objectManagerMatch[$objectClassName];
         }
         // Batch size check
@@ -76,12 +82,13 @@ class DbBatchHandler
     {
         $this->batchProcessSize = $size;
     }
-    
+
     /**
      * @param string $objectClassName Fully qualified classname for the managed object
      * @return int
      */
-    public function getBatchCount(string $objectClassName) {
+    public function getBatchCount(string $objectClassName)
+    {
         $managerName = $this->objectManagerMatch[$objectClassName];
         return $this->batchCount[$managerName];
     }

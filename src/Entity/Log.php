@@ -12,46 +12,50 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Log
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      */
-    protected $message;
+    private $message;
 
     /**
      * @ORM\Column(type="array")
      */
-    protected $context;
+    private $context;
 
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
-    protected $channel;
+    private $channel;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned":true})
      * @Assert\NotBlank()
      */
-    protected $level;
+    private $level;
 
     /**
      * @ORM\Column(type="array")
      */
-    protected $extra;
+    private $extra;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $created;
+    private $created;
 
+    /**
+     * @param array $record Monolog logging record
+     */
     public function __construct($record)
     {
         $datetime = new DateTime();
@@ -63,7 +67,9 @@ class Log
         $this->created = $datetime->getTimestamp();
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
+
 }

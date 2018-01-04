@@ -28,41 +28,41 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", unique=true, length=32)
      * @Assert\NotBlank()
      */
-    protected $username;
+    private $username;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
      */
-    protected $plainPassword;
+    private $plainPassword;
     
     /**
      * @ORM\Column(type="string", length=256)
      */
-    protected $password;
+    private $password;
     
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinTable(name="user_role")
      * @var Collection
      */
-    protected $roles;
+    private $roles;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned":true})
      */
-    protected $status;
+    private $status;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $created;
+    private $created;
 
     public function __construct(string $username, ?string $password, array $roles = array(), int $status = 1)
     {

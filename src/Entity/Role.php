@@ -14,24 +14,25 @@ use Symfony\Component\Security\Core\Role\Role as BaseRole;
  */
 class Role extends BaseRole
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank()
      */
-    protected $name;
-    
+    private $name;
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="roles")
      */
-    protected $users;
-    
+    private $users;
+
     /**
      * @param string $role Unique name for the role
      */
@@ -43,10 +44,18 @@ class Role extends BaseRole
     }
 
     /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
      * Get the name for the role
      * @return string
      */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -55,21 +64,14 @@ class Role extends BaseRole
      * Overrides the parent getRole
      * @return string
      */
-    public function getRole(): ?string
+    public function getRole(): string
     {
         return $this->getName();
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
     }
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
 }

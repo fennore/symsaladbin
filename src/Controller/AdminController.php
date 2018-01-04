@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminController extends AbstractController
 {
+
     /**
      * @Route("/admin", name="admin")
      */
@@ -15,4 +16,5 @@ class AdminController extends AbstractController
         // replace this line with your own code!
         return $this->render("default/admin/overview.html.twig");
     }
+
 }
