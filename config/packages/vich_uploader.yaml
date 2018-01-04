@@ -1,7 +1,8 @@
 vich_uploader:
     db_driver: orm
 
-    #mappings:
-    #    products:
-    #        uri_prefix: /images/products
-    #        upload_destination: '%kernel.project_dir%/public/images/products'
+    mappings:
+        files:
+            upload_destination: '%kernel.project_dir%/files/'
+            namer: vich_uploader.namer_origname
+            directory_namer: App\Naming\FileSubdirectoryNamer
