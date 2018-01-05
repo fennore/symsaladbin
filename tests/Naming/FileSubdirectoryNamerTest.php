@@ -5,8 +5,7 @@ namespace App\Tests\Naming;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use App\Naming\FileSubdirectoryNamer;
 use Vich\UploaderBundle\Mapping\PropertyMapping;
-use App\Tests\TestFile;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Tests\DummyFile;
 
 class FileSubdirectoryNamerTest extends KernelTestCase
 {
@@ -36,7 +35,7 @@ class FileSubdirectoryNamerTest extends KernelTestCase
     {
         self::bootKernel();
         
-        $entity = new TestFile();
+        $entity = new DummyFile();
         $entity->setMimeType($mimeType);
         $mapping = $this->createMock(PropertyMapping::class);
         $namer = new FileSubdirectoryNamer(static::$kernel->getContainer());

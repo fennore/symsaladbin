@@ -7,7 +7,7 @@ use App\Entity\File;
 /**
  * Test file entity for testing functionality without requirement of existing files.
  */
-class TestFile extends File
+class DummyFile extends File
 {
     
     private $mimeType;
