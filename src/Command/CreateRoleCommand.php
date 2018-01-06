@@ -13,9 +13,9 @@ use App\Repository\RoleRepository;
 class CreateRoleCommand extends Command
 {
     protected static $defaultName = 'app:role:create';
-    
+
     protected $roleRepository;
-    
+
     public function __construct(RoleRepository $roleRepository)
     {
         $this->roleRepository = $roleRepository;
@@ -33,7 +33,7 @@ class CreateRoleCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        
+
         $roleName = $input->getArgument('name');
         $role = new Role($roleName);
         $this->roleRepository->createRole($role);

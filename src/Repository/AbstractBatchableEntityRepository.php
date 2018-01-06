@@ -6,14 +6,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Handler\DbBatchHandler;
 
-/**
- * 
- */
 abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
 {
-
     /**
-     * @var DbBatchHandler 
+     * @var DbBatchHandler
      */
     protected $batchHandler;
 
@@ -33,5 +29,4 @@ abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
             $em->flush();
         }
     }
-
 }

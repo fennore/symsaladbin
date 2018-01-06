@@ -6,30 +6,32 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Handles database transaction execution in batches
+ * Handles database transaction execution in batches.
  */
 class DbBatchHandler
 {
-
     /**
-     * @var array of ObjectManager 
+     * @var array of ObjectManager
      */
     private $managers;
 
     /**
-     * Array linking ObjectManager name with object class name
-     * @var type 
+     * Array linking ObjectManager name with object class name.
+     *
+     * @var type
      */
     private $objectManagerMatch = array();
 
     /**
-     * Size of each batch to process
-     * @var int 
+     * Size of each batch to process.
+     *
+     * @var int
      */
     private $batchProcessSize = 50;
 
     /**
-     * Current count of batch items
+     * Current count of batch items.
+     *
      * @var array of integers
      */
     private $batchCount = array();
@@ -43,8 +45,9 @@ class DbBatchHandler
     /**
      * Batch counter for given ObjectManager.
      * Automatically flushes the ObjectManager when enough operations are queued for transaction.
+     *
      * @param ObjectManager $manager
-     * @param string $objectClassName ObjectManager related object
+     * @param string        $objectClassName ObjectManager related object
      */
     public function addToBatch(ObjectManager $manager, string $objectClassName)
     {
@@ -63,11 +66,11 @@ class DbBatchHandler
     }
 
     /**
-     * Process all batch leftovers
+     * Process all batch leftovers.
      */
     public function cleanUpBatch()
     {
-        array_walk($this->batchCount, function($count, $managerName) {
+        array_walk($this->batchCount, function ($count, $managerName) {
             if ($count > 0) {
                 $this->processBatch($managerName);
             }
@@ -75,7 +78,8 @@ class DbBatchHandler
     }
 
     /**
-     * Set the size of a batch
+     * Set the size of a batch.
+     *
      * @param int $size
      */
     public function setBatchProcessSize(int $size)
@@ -85,16 +89,19 @@ class DbBatchHandler
 
     /**
      * @param string $objectClassName Fully qualified classname for the managed object
+     *
      * @return int
      */
     public function getBatchCount(string $objectClassName)
     {
         $managerName = $this->objectManagerMatch[$objectClassName];
+
         return $this->batchCount[$managerName];
     }
 
     /**
-     * Performs transaction on the object manager
+     * Performs transaction on the object manager.
+     *
      * @param string $managerName Name of the object manager
      */
     private function processBatch(string $managerName)
@@ -103,5 +110,4 @@ class DbBatchHandler
         $this->managers[$managerName]->clear(); // Detaches all objects from the manager.
         $this->batchCount[$managerName] = 0; // Set batch count back to 0
     }
-
 }

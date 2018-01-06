@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Coordinate;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
@@ -11,7 +10,6 @@ use App\Entity\Coordinate;
  */
 class Location
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -46,10 +44,10 @@ class Location
 
     /**
      * @param Coordinate $coordinate
-     * @param string $name
-     * @param int $stage
-     * @param int $weight
-     * @param int $status
+     * @param string     $name
+     * @param int        $stage
+     * @param int        $weight
+     * @param int        $status
      */
     public function __construct(Coordinate $coordinate, string $name, int $stage, int $weight = 0, int $status = 1)
     {
@@ -89,10 +87,9 @@ class Location
     {
         return (string) $this->coordinate;
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;
     }
-
 }

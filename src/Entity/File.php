@@ -7,7 +7,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File as BaseFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile; // Uploaded file will be of this type instead
 
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
  * @ORM\Table(name="file", indexes={@ORM\Index(name="file_select", columns={"mime_type", "path"})})
@@ -16,16 +15,15 @@ use Symfony\Component\HttpFoundation\File\UploadedFile; // Uploaded file will be
  */
 class File
 {
-
     /**
      * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     * 
+     *
      * @Vich\UploadableField(mapping="files", fileNameProperty="fileName", mimeType="mimeType")
-     * 
+     *
      * @var File
      */
     private $file;
-    
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -42,10 +40,11 @@ class File
      * @ORM\Column(type="string")
      */
     private $path;
-    
+
     /**
-     * Holds the source of the file
-     * @var string 
+     * Holds the source of the file.
+     *
+     * @var string
      */
     private $source;
 
@@ -61,7 +60,9 @@ class File
 
     /**
      * In some cases we want item info with the file.
+     *
      * @todo check if we should use unilateral Doctrine for this instead.
+     *
      * @var Item
      */
     private $item;
@@ -82,12 +83,13 @@ class File
         $this->setFile($file);
         //$this->data = $fileInfo->getContents();
     }
-    
+
     /** @ORM\PostLoad */
-    public function doPostLoad() {
+    public function doPostLoad()
+    {
         $this->source = $this->path.'/'.$this->fileName;
     }
-    
+
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the  update. If this
@@ -103,9 +105,9 @@ class File
         $this->path = str_replace('\\', '/', $file->getPath()); // Always use / for directory separator
         $this->lastModified = $file->getMTime();
     }
-       
+
     /**
-     * Function to fix legacy paths saved in database
+     * Function to fix legacy paths saved in database.
      */
     public function cleanPaths(): void
     {
@@ -116,7 +118,7 @@ class File
     {
         return $this->fileName;
     }
-    
+
     public function getFile(): BaseFile
     {
         return $this->file;
@@ -126,7 +128,7 @@ class File
     {
         return $this->path;
     }
-    
+
     public function getSource(): string
     {
         return $this->source;

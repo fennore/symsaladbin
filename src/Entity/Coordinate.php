@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Coordinate
 {
-
     /**
      * @ORM\Column(type="float")
      */
@@ -32,21 +31,25 @@ class Coordinate
 
     /**
      * @param float $lat Latitude
+     *
      * @return $this
      */
     public function setLat(float $lat): self
     {
         $this->lat = $lat;
+
         return $this;
     }
 
     /**
      * @param float $lng Longitude
+     *
      * @return $this
      */
     public function setLng(float $lng): self
     {
         $this->lng = $lng;
+
         return $this;
     }
 
@@ -64,5 +67,4 @@ class Coordinate
     {
         return $this->getLat().','.$this->getLng();
     }
-
 }

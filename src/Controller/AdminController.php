@@ -11,7 +11,6 @@ use App\Handler\DbBatchHandler;
 
 class AdminController extends AbstractController
 {
-
     /**
      * @Route("/admin", name="admin_overview", schemes="https")
      */
@@ -20,7 +19,7 @@ class AdminController extends AbstractController
         // replace this line with your own code!
         return $this->render('default/admin/overview.html.twig');
     }
-    
+
     /**
      * @Route("/admin/route/{stage}", name="admin_route", requirements={"stage"="\d+"})
      */
@@ -31,7 +30,7 @@ class AdminController extends AbstractController
             'stagelist' => $locationRepository->getStageList(),
         ]);
     }
-    
+
     /**
      * @Route("/admin/route/sync", name="admin_route_sync")
      */
@@ -43,7 +42,7 @@ class AdminController extends AbstractController
         $batchHandler->cleanUpBatch();
         // Save gpx data as locations
         $locationImporter->syncWithGpx();
+
         return $this->json(['status' => 'ok']);
     }
-
 }

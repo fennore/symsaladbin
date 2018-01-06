@@ -8,13 +8,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
- * Role Entity for database
+ * Role Entity for database.
+ *
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  * @ORM\Table(name="role")
  */
 class Role extends BaseRole
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -52,7 +52,8 @@ class Role extends BaseRole
     }
 
     /**
-     * Get the name for the role
+     * Get the name for the role.
+     *
      * @return string
      */
     public function getName(): string
@@ -61,7 +62,8 @@ class Role extends BaseRole
     }
 
     /**
-     * Overrides the parent getRole
+     * Overrides the parent getRole.
+     *
      * @return string
      */
     public function getRole(): string
@@ -73,5 +75,4 @@ class Role extends BaseRole
     {
         return $this->id;
     }
-
 }

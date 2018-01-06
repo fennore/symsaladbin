@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +15,6 @@ use App\Entity\User;
 
 class CreateUserCommand extends Command
 {
-
     protected static $defaultName = 'app:user:create';
     protected $userRepository;
     protected $roleRepository;
@@ -55,8 +55,8 @@ class CreateUserCommand extends Command
         $user->setPassword($password);
 
         $output->writeln(array(
-            'Username: ' . $user->getUsername(),
-            'Encoded password: ' . $user->getPassword()
+            'Username: '.$user->getUsername(),
+            'Encoded password: '.$user->getPassword(),
         ));
 
         if ($input->getOption('is-admin')) {

@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * File directory namer for Vich Uploader bundle.
+ *
  * @see https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/directory_namer/howto/create_a_custom_directory_namer.md
  */
 class FileSubdirectoryNamer implements DirectoryNamerInterface
@@ -16,14 +17,14 @@ class FileSubdirectoryNamer implements DirectoryNamerInterface
     private $subDirImages;
     private $subDirGpx;
     private $subDirStories;
-    
+
     public function __construct(ContainerInterface $container)
     {
         $this->subDirImages = $container->getParameter('app.files.subdir.images');
         $this->subDirGpx = $container->getParameter('app.files.subdir.gpx');
         $this->subDirStories = $container->getParameter('app.files.subdir.stories');
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -31,9 +32,10 @@ class FileSubdirectoryNamer implements DirectoryNamerInterface
     {
         return $this->determineSubDirectoryForMimeType($object->getMimeType()).'/';
     }
-    
-    private function determineSubDirectoryForMimeType(string $mimeType) {
-        switch($mimeType) {
+
+    private function determineSubDirectoryForMimeType(string $mimeType)
+    {
+        switch ($mimeType) {
             case 'image/jpeg':
             case 'image/png':
                 return $this->subDirImages;

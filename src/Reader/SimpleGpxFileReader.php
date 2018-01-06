@@ -9,17 +9,16 @@ use App\Entity\Location;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Simple Reader of Gpx files
- * 
+ * Simple Reader of Gpx files.
+ *
  * GPX Schema Documentation: http://www.topografix.com/gpx/1/1/
- * 
+ *
  * Note: if ever there would be the need for more complex gpx file processing,
  * there exists https://github.com/Sibyx/phpGPX
  * Like... support for tracks and routes instead of only waypoints?
  */
 class SimpleGpxFileReader
 {
-
     private $filesDirectory;
 
     /**
@@ -33,29 +32,29 @@ class SimpleGpxFileReader
     /**
      * Generator method.
      * Yields new Location entities.
-     * @param File $file The GPX file to read from.
-     * @param int $stage Which stage GPX locations belong to.
+     *
+     * @param File $file  the GPX file to read from
+     * @param int  $stage which stage GPX locations belong to
      */
     public function saveGpxAsLocations(File $file, int $stage)
     {
         $gpx = new SimpleXMLIterator($file->getSource(), LIBXML_NOCDATA, true);
         // Validate gpx file
         $gpx->rewind();
-        
+
         if (!$gpx->valid() || !$gpx->hasChildren()) {
             return;
         }
         $i = 0;
-        
+
         // Add all GPX data as Location
         foreach ($gpx->children() as $coordinate) {
-            if($coordinate->getName() !== 'wpt') {
+            if ('wpt' !== $coordinate->getName()) {
                 return;
             }
             yield new Location(
-                new Coordinate((float) $coordinate->attributes()->lat, (float) $coordinate->attributes()->lon), $coordinate->name ?? "noname", $stage, $i++
+                new Coordinate((float) $coordinate->attributes()->lat, (float) $coordinate->attributes()->lon), $coordinate->name ?? 'noname', $stage, $i++
             );
         }
     }
-
 }

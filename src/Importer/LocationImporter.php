@@ -7,29 +7,28 @@ use App\Repository\LocationRepository;
 use App\Reader\SimpleGpxFileReader;
 
 /**
- * Importing Locations into the database
+ * Importing Locations into the database.
  */
 class LocationImporter
 {
-
     /**
-     * @var FileRepository 
+     * @var FileRepository
      */
     private $fileRepository;
 
     /**
-     * @var LocationRepository 
+     * @var LocationRepository
      */
     private $locationRepository;
 
     /**
-     * @var SimpleGpxFileReader 
+     * @var SimpleGpxFileReader
      */
     private $gpxReader;
 
     /**
-     * @param FileRepository $fileRepository
-     * @param LocationRepository $locationRepository
+     * @param FileRepository      $fileRepository
+     * @param LocationRepository  $locationRepository
      * @param SimpleGpxFileReader $gpxReader
      */
     public function __construct(FileRepository $fileRepository, LocationRepository $locationRepository, SimpleGpxFileReader $gpxReader)
@@ -48,7 +47,6 @@ class LocationImporter
      */
     public function syncWithGpx()
     {
-
         // 1. Get highest existing stage number.
         // Take this straight from db since stages can be added manually.
         $lastStage = $this->locationRepository->getLastStage();
@@ -60,7 +58,7 @@ class LocationImporter
         // 3. Add any locations from new files to subsequent stages.
         // - path is expected to be subpath of files directory
         //   anything else can be considered invalid anyway
-        $files = $this->fileRepository->getFiles(['application/xml','text/xml']);
+        $files = $this->fileRepository->getFiles(['application/xml', 'text/xml']);
         foreach ($files as $row) {
             $file = $row[0];
             /*             * $duplicateCheck = in_array($file->getId(), $savedState->get('readFiles') ?? array());
@@ -73,5 +71,4 @@ class LocationImporter
 //          $savedState->add('readFiles', $file->id);
         }
     }
-
 }

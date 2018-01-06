@@ -10,7 +10,6 @@ use App\Entity\User;
 
 class UserRepository extends ServiceEntityRepository implements UserLoaderInterface
 {
-
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, User::class);
@@ -31,6 +30,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
     /**
      * @param string $username Username to look up
+     *
      * @return App\Entity\User
      */
     public function loadUserByUsername($username)
@@ -49,7 +49,8 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     }
 
     /**
-     * Writes User Entity to database
+     * Writes User Entity to database.
+     *
      * @param UserInterface $user
      */
     public function createUser(UserInterface $user)
@@ -58,7 +59,8 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     }
 
     /**
-     * Updates User Entity in database
+     * Updates User Entity in database.
+     *
      * @param UserInterface $user
      */
     public function updateUser(UserInterface $user)
@@ -67,7 +69,8 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     }
 
     /**
-     * Removes User Entity from database
+     * Removes User Entity from database.
+     *
      * @param UserInterface $user
      */
     public function deleteUser(UserInterface $user)
@@ -77,6 +80,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
     /**
      * Creates or updates the User Entity data in the database.
+     *
      * @param UserInterface $user
      */
     protected function persistUser(UserInterface $user)
@@ -84,5 +88,4 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
-
 }

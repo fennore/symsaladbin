@@ -9,7 +9,6 @@ use Doctrine\ORM\ORMInvalidArgumentException;
 
 class LogRepository extends AbstractBatchableEntityRepository
 {
-
     public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, Log::class);
@@ -29,7 +28,8 @@ class LogRepository extends AbstractBatchableEntityRepository
      */
 
     /**
-     * Writes a new Log Entity to database
+     * Writes a new Log Entity to database.
+     *
      * @param Log $log
      */
     public function createLog(Log $log, $useBatch = true)
@@ -41,7 +41,8 @@ class LogRepository extends AbstractBatchableEntityRepository
     }
 
     /**
-     * Updates Log Entity in database
+     * Updates Log Entity in database.
+     *
      * @param Log $log
      */
     public function updateLog(Log $log, $useBatch = true)
@@ -53,7 +54,8 @@ class LogRepository extends AbstractBatchableEntityRepository
     }
 
     /**
-     * Removes Log Entity from database
+     * Removes Log Entity from database.
+     *
      * @param Log $log
      */
     public function deleteLog(Log $log, $useBatch = true)
@@ -65,6 +67,7 @@ class LogRepository extends AbstractBatchableEntityRepository
 
     /**
      * Creates or updates the Log Entity data in the database.
+     *
      * @param Log $log
      */
     protected function persistLog(Log $log, $useBatch)
@@ -73,5 +76,4 @@ class LogRepository extends AbstractBatchableEntityRepository
         $em->persist($log);
         $this->startTransaction($useBatch);
     }
-
 }

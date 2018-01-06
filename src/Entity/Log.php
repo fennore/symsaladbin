@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use \DateTime;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Log
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -27,7 +26,8 @@ class Log
     private $message;
 
     /**
-     * Json is safer because of no serialisation, and cleaner
+     * Json is safer because of no serialisation, and cleaner.
+     *
      * @ORM\Column(type="json")
      */
     private $context;
@@ -45,7 +45,8 @@ class Log
     private $level;
 
     /**
-     * Json is safer because of no serialisation, and cleaner
+     * Json is safer because of no serialisation, and cleaner.
+     *
      * @ORM\Column(type="json")
      */
     private $extra;
@@ -73,5 +74,4 @@ class Log
     {
         return $this->id;
     }
-
 }

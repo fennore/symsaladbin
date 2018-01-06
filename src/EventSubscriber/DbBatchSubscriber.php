@@ -9,12 +9,12 @@ use App\Handler\DbBatchHandler;
 class DbBatchSubscriber implements EventSubscriberInterface
 {
     private $batchHandler;
-    
+
     public function __construct(DbBatchHandler $batchHandler)
     {
         $this->batchHandler = $batchHandler;
     }
-    
+
     public function onKernelTerminate(PostResponseEvent $event)
     {
         $this->batchHandler->cleanUpBatch();

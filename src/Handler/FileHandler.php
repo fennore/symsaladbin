@@ -5,17 +5,15 @@ namespace App\Handler;
 use App\Repository\FileRepository;
 use App\Entity\File;
 use Symfony\Component\HttpFoundation\File\File as BaseFile;
-use Symfony\Component\Finder\SplFileInfo;
 use App\Reader\DirectoryReader;
 
 /**
- * Handles files in the files directory
+ * Handles files in the files directory.
  */
 class FileHandler
 {
-
     /**
-     * @var DirectoryReader 
+     * @var DirectoryReader
      */
     private $directoryReader;
 
@@ -26,7 +24,7 @@ class FileHandler
 
     /**
      * @param DirectoryReader $directoryReader
-     * @param FileRepository $fileRepository
+     * @param FileRepository  $fileRepository
      */
     public function __construct(DirectoryReader $directoryReader, FileRepository $fileRepository)
     {
@@ -42,12 +40,12 @@ class FileHandler
         // $dbFiles = $this->fileRepository->getFiles()
         // Fetch all files from files directory
         $dirFiles = $this->directoryReader->getAllFiles();
-  
+
         // Write new files to database
-        foreach($dirFiles as $splFileInfo) {
+        foreach ($dirFiles as $splFileInfo) {
             $id = $dbFileSources[str_replace('\\', '/', $splFileInfo->getRelativePathname())] ?? false;
 
-            if ($id !== false) {
+            if (false !== $id) {
                 // Skip already recorded files
                 unset($dbFileSources[$id]);
                 continue;
@@ -60,8 +58,7 @@ class FileHandler
             $file = $this->fileRepository->find($id);
             $this->fileRepository->deleteFile($file);
         }
-        //
+
         return array_values($dbFileSources);
     }
-
 }

@@ -13,3 +13,4 @@
 .todo
 /db-sqlite/
 .phpintel
+.php_cs.cache

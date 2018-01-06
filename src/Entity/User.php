@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use \Serializable;
-use \DateTime;
+use Serializable;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,15 +14,14 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * User Entity
- * 
+ * User Entity.
+ *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields="username", message="Username already taken")
  */
 class User implements AdvancedUserInterface, Serializable, EquatableInterface
 {
-
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -41,15 +40,16 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
      * @Assert\Length(max=4096)
      */
     private $plainPassword;
-    
+
     /**
      * @ORM\Column(type="string", length=256)
      */
     private $password;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinTable(name="user_role")
+     *
      * @var Collection
      */
     private $roles;
@@ -77,17 +77,17 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
         $this->status = $status;
         $this->created = $datetime->getTimestamp();
     }
-    
+
     public function setUsername($username): void
     {
         $this->username = $username;
     }
-    
+
     public function setPassword($password): void
     {
         $this->password = $password;
     }
-    
+
     public function setRoles(array $roles): void
     {
         $this->roles = new ArrayCollection($roles);
@@ -127,7 +127,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     public function isEqualTo(UserInterface $user): bool
     {
-        return $this->id === $user->getId() && $user instanceof User;
+        return $this->id === $user->getId() && $user instanceof self;
     }
 
     public function isAccountNonExpired(): bool
@@ -156,7 +156,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
             $this->id,
             $this->username,
             $this->password,
-            $this->status
+            $this->status,
             // see section on salt below
             // $this->salt,
         ));
@@ -173,5 +173,4 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
             // $this->salt
         ) = \unserialize($serialized);
     }
-
 }
