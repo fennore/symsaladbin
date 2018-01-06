@@ -27,11 +27,20 @@ class DbLogHandler extends AbstractProcessingHandler {
     protected $logRepository;
     protected $container;
 
+    /**
+     * @param ContainerInterface $container
+     * @param type $level
+     * @param type $bubble
+     */
     public function __construct(ContainerInterface $container, $level = Logger::DEBUG, $bubble = true) {
         $this->container = $container;
         parent::__construct($level, $bubble);
     }
 
+    /**
+     * Writes the given Monolog record to database
+     * @param array $record Monolog record
+     */
     public function write(array $record) {
         $log = new Log($record);
         $this->container

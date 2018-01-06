@@ -27,7 +27,8 @@ class Log
     private $message;
 
     /**
-     * @ORM\Column(type="array")
+     * Json is safer because of no serialisation, and cleaner
+     * @ORM\Column(type="json")
      */
     private $context;
 
@@ -44,7 +45,8 @@ class Log
     private $level;
 
     /**
-     * @ORM\Column(type="array")
+     * Json is safer because of no serialisation, and cleaner
+     * @ORM\Column(type="json")
      */
     private $extra;
 
