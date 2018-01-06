@@ -48,7 +48,7 @@ class FileHandler
             if (false !== $id) {
                 // Skip already recorded files
                 unset($dbFileSources[$id]);
-                
+
                 continue;
             }
             $file = new File(new BaseFile($splFileInfo->getPathname()));

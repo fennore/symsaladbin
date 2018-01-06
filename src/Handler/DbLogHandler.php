@@ -26,14 +26,16 @@ use App\Entity\Log;
 class DbLogHandler extends AbstractProcessingHandler
 {
     /**
-     * Note: is not used but should be used instead
-     * @var LogRepository 
+     * Note: is not used but should be used instead.
+     *
+     * @var LogRepository
      */
     protected $logRepository;
-    
+
     /**
-     * Note: is used but should not be used instead
-     * @var ContainerInterface 
+     * Note: is used but should not be used instead.
+     *
+     * @var ContainerInterface
      */
     protected $container;
 

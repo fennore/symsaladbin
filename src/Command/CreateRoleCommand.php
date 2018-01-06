@@ -13,12 +13,12 @@ use App\Repository\RoleRepository;
 class CreateRoleCommand extends Command
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected static $defaultName = 'app:role:create';
 
     /**
-     * @var RoleRepository 
+     * @var RoleRepository
      */
     protected $roleRepository;
 
@@ -32,7 +32,7 @@ class CreateRoleCommand extends Command
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -43,9 +43,9 @@ class CreateRoleCommand extends Command
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @param InputInterface $input
+     * {@inheritdoc}
+     *
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)

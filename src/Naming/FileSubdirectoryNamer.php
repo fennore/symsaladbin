@@ -8,13 +8,13 @@ use App\Reader\DirectoryReader;
 
 /**
  * File directory namer for Vich Uploader bundle.
- * 
+ *
  * @see https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/directory_namer/howto/create_a_custom_directory_namer.md
  */
 class FileSubdirectoryNamer implements DirectoryNamerInterface
 {
     /**
-     * @var DirectoryReader 
+     * @var DirectoryReader
      */
     private $directoryReader;
 
@@ -37,13 +37,15 @@ class FileSubdirectoryNamer implements DirectoryNamerInterface
     /**
      * Determines the file subdirectory for a file to save to,
      * according to its MIME type.
+     *
      * @param string $mimeType Given MIME type
+     *
      * @return string
      */
     private function determineSubDirectoryForMimeType(string $mimeType): string
     {
         $getRelative = true;
-        
+
         switch ($mimeType) {
             case 'image/jpeg':
             case 'image/png':

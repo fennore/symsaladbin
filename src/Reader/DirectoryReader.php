@@ -11,27 +11,27 @@ use Symfony\Component\Finder\Finder;
 class DirectoryReader
 {
     /**
-     * Files directory parameter name
+     * Files directory parameter name.
      */
     const DIRECTORYNAME_FILES = 'app.files.directory';
 
     /**
-     * Gpx files subdirectory parameter name
+     * Gpx files subdirectory parameter name.
      */
     const SUBDIRECTORYNAME_GPX = 'app.files.subdir.gpx';
 
     /**
-     * Story files subdirectory parameter name
+     * Story files subdirectory parameter name.
      */
     const SUBDIRECTORYNAME_STORIES = 'app.files.subdir.stories';
 
     /**
-     * Image files subdirectory parameter name
+     * Image files subdirectory parameter name.
      */
     const SUBDIRECTORYNAME_IMAGES = 'app.files.subdir.images';
 
     /**
-     * @var ContainerInterface 
+     * @var ContainerInterface
      */
     private $container;
 
@@ -57,37 +57,41 @@ class DirectoryReader
 
     /**
      * @param bool $getRelative Set to true if you want the path relative to the project root
+     *
      * @return string
      */
     public function getFilesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative?'':$this->container->getParameter('kernel.project_dir').'/').($this->container->getParameter(self::DIRECTORYNAME_FILES) ?? 'var/files');
+        return ($getRelative ? '' : $this->container->getParameter('kernel.project_dir').'/').($this->container->getParameter(self::DIRECTORYNAME_FILES) ?? 'var/files');
     }
-    
+
     /**
      * @param bool $getRelative Set to true if you want to get the path relative to the files directory
+     *
      * @return string
      */
     public function getGpxDirectory(bool $getRelative = false): string
     {
-        return ($getRelative?'':$this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_GPX) ?? 'gpx');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_GPX) ?? 'gpx');
     }
-    
+
     /**
      * @param bool $getRelative Set to true if you want to get the path relative to the files directory
+     *
      * @return string
      */
     public function getStoriesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative?'':$this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_STORIES) ?? 'stories');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_STORIES) ?? 'stories');
     }
-    
+
     /**
      * @param bool $getRelative Set to true if you want to get the path relative to the files directory
+     *
      * @return string
      */
     public function getImagesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative?'':$this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_IMAGES) ?? 'images');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_IMAGES) ?? 'images');
     }
 }
