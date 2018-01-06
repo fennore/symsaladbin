@@ -10,8 +10,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile; // Uploaded file will be
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
- * @ORM\Table(name="file", indexes={@Index(name="file_select", columns={"mime_type", "path"})})
+ * @ORM\Table(name="file", indexes={@ORM\Index(name="file_select", columns={"mime_type", "path"})})
  * @Vich\Uploadable
+ * @ORM\HasLifecycleCallbacks
  */
 class File
 {
@@ -41,6 +42,12 @@ class File
      * @ORM\Column(type="string")
      */
     private $path;
+    
+    /**
+     * Holds the source of the file
+     * @var string 
+     */
+    private $source;
 
     /**
      * @ORM\Column(name="mime_type",type="string")
@@ -76,6 +83,11 @@ class File
         //$this->data = $fileInfo->getContents();
     }
     
+    /** @ORM\PostLoad */
+    public function doPostLoad() {
+        $this->source = $this->path.'/'.$this->fileName;
+    }
+    
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the  update. If this
@@ -104,6 +116,11 @@ class File
     {
         return $this->fileName;
     }
+    
+    public function getFile(): BaseFile
+    {
+        return $this->file;
+    }
 
     public function getPath(): string
     {
@@ -112,7 +129,7 @@ class File
     
     public function getSource(): string
     {
-        return $this->path.'/'.$this->fileName;
+        return $this->source;
     }
 
     public function getMimeType(): string

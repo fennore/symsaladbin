@@ -60,16 +60,16 @@ class LocationImporter
         // 3. Add any locations from new files to subsequent stages.
         // - path is expected to be subpath of files directory
         //   anything else can be considered invalid anyway
-        $files = $this->fileRepository->getFiles('application/xml');
-        foreach ($files as $file) {
+        $files = $this->fileRepository->getFiles(['application/xml','text/xml']);
+        foreach ($files as $row) {
+            $file = $row[0];
             /*             * $duplicateCheck = in_array($file->getId(), $savedState->get('readFiles') ?? array());
               if ($duplicateCheck) {
               continue;
               } */
-            foreach ($this->gpxReader->saveGpxAsLocations($file, $lastStage) as $location) {
+            foreach ($this->gpxReader->saveGpxAsLocations($file, ++$lastStage) as $location) {
                 $this->locationRepository->createLocation($location);
             }
-            ++$lastStage;
 //          $savedState->add('readFiles', $file->id);
         }
     }

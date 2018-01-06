@@ -15,7 +15,7 @@ class SecurityController extends AbstractController
 
     /**
      * Matches /login on GET, HEAD
-     * @Route("/login", name="login-page", methods={"GET","HEAD"}, schemes="https")
+     * @Route("/login", name="login_page", methods={"GET","HEAD"}, schemes="https")
      */
     public function login(AuthenticationUtils $authUtils)
     {
@@ -33,11 +33,20 @@ class SecurityController extends AbstractController
 
     /**
      * Matches /login on POST
-     * @Route("/login", name="login-action", methods="POST", schemes="https")
+     * @Route("/login", name="login_action", methods="POST", schemes="https")
      */
     public function doLogin(Request $request)
     {
         
+    }
+    
+    /**
+     * Matches /logout
+     * @Route("/logout", name="logout", schemes="https")
+     */
+    public function doLogout(Request $request)
+    {
+        return $this->redirectToRoute('intro');
     }
 
 }

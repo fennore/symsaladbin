@@ -1,5 +1,10 @@
 {% extends 'default/base.html.twig' %}
 
 {% block body %}
-Logged in seeing this page!
+  <p>
+    Logged in seeing this page!
+  </p>
+  <ul>
+    <li><a href="{{path('admin_route')}}">Manage your route</a></li>
+  </ul>
 {% endblock %}

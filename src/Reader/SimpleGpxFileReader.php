@@ -6,7 +6,7 @@ use SimpleXMLIterator;
 use App\Entity\File;
 use App\Entity\Coordinate;
 use App\Entity\Location;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple Reader of Gpx files
@@ -22,7 +22,10 @@ class SimpleGpxFileReader
 
     private $filesDirectory;
 
-    public function __construct(Container $container)
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
     {
         $this->filesDirectory = $container->getParameter('app.files.directory');
     }
@@ -35,15 +38,20 @@ class SimpleGpxFileReader
      */
     public function saveGpxAsLocations(File $file, int $stage)
     {
-        $gpx = new SimpleXMLIterator($this->filesDirectory.'/'.$file->getSource(), LIBXML_NOCDATA, true, 'http://www.topografix.com/GPX/1/1');
+        $gpx = new SimpleXMLIterator($file->getSource(), LIBXML_NOCDATA, true);
         // Validate gpx file
+        $gpx->rewind();
+        
         if (!$gpx->valid() || !$gpx->hasChildren()) {
             return;
         }
         $i = 0;
-
+        
         // Add all GPX data as Location
         foreach ($gpx->children() as $coordinate) {
+            if($coordinate->getName() !== 'wpt') {
+                return;
+            }
             yield new Location(
                 new Coordinate((float) $coordinate->attributes()->lat, (float) $coordinate->attributes()->lon), $coordinate->name ?? "noname", $stage, $i++
             );

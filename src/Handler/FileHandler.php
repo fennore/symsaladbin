@@ -5,8 +5,8 @@ namespace App\Handler;
 use App\Repository\FileRepository;
 use App\Entity\File;
 use Symfony\Component\HttpFoundation\File\File as BaseFile;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use App\Reader\DirectoryReader;
 
 /**
  * Handles files in the files directory
@@ -15,31 +15,23 @@ class FileHandler
 {
 
     /**
-     * @var FileRepository 
+     * @var DirectoryReader 
+     */
+    private $directoryReader;
+
+    /**
+     * @var FileRepository
      */
     private $fileRepository;
 
     /**
-     * @var Finder 
-     */
-    private $fileFinder;
-
-    /**
-     * @var string Files directory
-     */
-    private $filesDirectory;
-
-    /**
-     * 
-     * @param \App\Handler\Container $container
+     * @param DirectoryReader $directoryReader
      * @param FileRepository $fileRepository
-     * @param Finder $fileFinder
      */
-    public function __construct(Container $container, FileRepository $fileRepository, Finder $fileFinder)
+    public function __construct(DirectoryReader $directoryReader, FileRepository $fileRepository)
     {
-        $this->filesDirectory = $container->getParameter('app.files.directory') ?? '';
+        $this->directoryReader = $directoryReader;
         $this->fileRepository = $fileRepository;
-        $this->fileFinder = $fileFinder;
     }
 
     public function syncSourceWithFileEntity()
@@ -49,21 +41,20 @@ class FileHandler
         // Or use iterator
         // $dbFiles = $this->fileRepository->getFiles()
         // Fetch all files from files directory
-        $dirFiles = $this->fileFinder->files()
-            ->followLinks() // Follow symbolic links!
-            ->in($this->filesDirectory);
+        $dirFiles = $this->directoryReader->getAllFiles();
+  
         // Write new files to database
-        array_walk($dirFiles, function(SplFileInfo $splFileInfo) use ($dbFileSources) {
-            $relativeSource = $splFileInfo->getRelativePathname();
-            $id = $dbFileSources[str_replace('\\', '/', $relativeSource)] ?? false;
+        foreach($dirFiles as $splFileInfo) {
+            $id = $dbFileSources[str_replace('\\', '/', $splFileInfo->getRelativePathname())] ?? false;
+
             if ($id !== false) {
                 // Skip already recorded files
                 unset($dbFileSources[$id]);
-                return;
+                continue;
             }
-            $file = new File(new BaseFile($relativeSource));
+            $file = new File(new BaseFile($splFileInfo->getPathname()));
             $this->fileRepository->createFile($file);
-        });
+        }
         // Remove orphan records
         foreach ($dbFileSources as $source => $id) {
             $file = $this->fileRepository->find($id);
@@ -71,11 +62,6 @@ class FileHandler
         }
         //
         return array_values($dbFileSources);
-    }
-
-    public function getFilesDirectory(): string
-    {
-        return $this->filesDirectory;
     }
 
 }
