@@ -12,16 +12,28 @@ use App\Repository\RoleRepository;
 
 class CreateRoleCommand extends Command
 {
+    /**
+     * {@inheritDoc}
+     */
     protected static $defaultName = 'app:role:create';
 
+    /**
+     * @var RoleRepository 
+     */
     protected $roleRepository;
 
+    /**
+     * @param RoleRepository $roleRepository
+     */
     public function __construct(RoleRepository $roleRepository)
     {
         $this->roleRepository = $roleRepository;
         parent::__construct();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function configure()
     {
         $this
@@ -30,6 +42,12 @@ class CreateRoleCommand extends Command
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);

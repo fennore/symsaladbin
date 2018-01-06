@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Entity\Log;
 
 /**
- * Handler for monolog as service.
+ * Handler for Monolog as service.
  * This handler writes logs using a doctrine repository.
  * Note: this should not log any generic doctrine logs that log writing to database,
  *       as this would result in an infinite cycle;
@@ -25,7 +25,16 @@ use App\Entity\Log;
  */
 class DbLogHandler extends AbstractProcessingHandler
 {
+    /**
+     * Note: is not used but should be used instead
+     * @var LogRepository 
+     */
     protected $logRepository;
+    
+    /**
+     * Note: is used but should not be used instead
+     * @var ContainerInterface 
+     */
     protected $container;
 
     /**

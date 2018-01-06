@@ -2,7 +2,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    app.files.directory: '%kernel.project_dir%/var/files'
+    app.files.directory: 'var/files'
     app.files.subdir.images: 'images'
     app.files.subdir.gpx: 'gpx'
     app.files.subdir.stories: 'stories'

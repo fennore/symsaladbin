@@ -14,7 +14,7 @@ class CreateUserCommandTest extends KernelTestCase
 {
     public function testExecute()
     {
-        $kernel = self::bootKernel(); 
+        $kernel = self::bootKernel();
         $application = new Application($kernel);
         // Create mocks
         $userRepository = $this->createMock(UserRepository::class);
@@ -24,20 +24,18 @@ class CreateUserCommandTest extends KernelTestCase
 
         $command = $application->find('app:user:create');
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
-            'command'  => $command->getName(),
-
+        $commandTester->execute([
+            'command' => $command->getName(),
             // pass arguments to the helper
             'username' => 'testadmin',
             'password' => 'mytravel',
             // prefix the key with two dashes when passing options,
             // e.g: '--some-option' => 'option_value',
-            '--is-admin' => true
-        ));
+            '--is-admin' => true,
+        ]);
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();
         $this->assertContains('Username: testadmin', $output);
-
     }
 }

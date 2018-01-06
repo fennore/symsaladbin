@@ -15,11 +15,31 @@ use App\Entity\User;
 
 class CreateUserCommand extends Command
 {
+    /**
+     * {@inheritDoc}
+     */
     protected static $defaultName = 'app:user:create';
+
+    /**
+     * @var UserRepository 
+     */
     protected $userRepository;
+
+    /**
+     * @var RoleRepository 
+     */
     protected $roleRepository;
+
+    /**
+     * @var UserPasswordEncoderInterface 
+     */
     protected $userPasswordEncoder;
 
+    /**
+     * @param UserRepository $userRepository
+     * @param RoleRepository $roleRepository
+     * @param UserPasswordEncoderInterface $userPasswordEncoder
+     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->userRepository = $userRepository;

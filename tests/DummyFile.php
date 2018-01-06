@@ -9,36 +9,35 @@ use App\Entity\File;
  */
 class DummyFile extends File
 {
-    
     private $mimeType;
-    
+
     /**
      * Overwrite constructor,
      * so we can use non existing files as data for testing.
      */
     public function __construct()
     {
-        
     }
-    
+
     /**
      * Set the Mime Type.
      * We don't want this possibility for the real file entity.
+     * 
      * @param string $mimeType
      */
     public function setMimeType(string $mimeType)
     {
         $this->mimeType = $mimeType;
     }
-    
+
     /**
      * Need to overwrite getMimeType
      * because we are dealing with a private property.
+     * 
      * @return string
      */
     public function getMimeType(): string
     {
         return $this->mimeType;
     }
-
 }

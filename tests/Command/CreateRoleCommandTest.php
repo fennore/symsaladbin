@@ -12,7 +12,7 @@ class CreateRoleCommandTest extends KernelTestCase
 {
     public function testExecute()
     {
-        $kernel = self::bootKernel(); 
+        $kernel = self::bootKernel();
         $application = new Application($kernel);
         // Create mocks
         $roleRepository = $this->createMock(RoleRepository::class);
@@ -20,14 +20,13 @@ class CreateRoleCommandTest extends KernelTestCase
 
         $command = $application->find('app:role:create');
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
-            'command'  => $command->getName(),
-
+        $commandTester->execute([
+            'command' => $command->getName(),
             // pass arguments to the helper
             'name' => 'ROLE_ADMIN',
             // prefix the key with two dashes when passing options,
             // e.g: '--some-option' => 'option_value',
-        ));
+        ]);
 
         // the output of the command in the console
         $output = $commandTester->getDisplay();

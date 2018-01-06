@@ -9,14 +9,13 @@ use App\Tests\DummyFile;
 
 class FileSubdirectoryNamerTest extends KernelTestCase
 {
-    
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        
+
         self::bootKernel();
     }
-    
+
     public function fileDataProvider()
     {
         yield ['0123456789.jpg', 'image/jpeg', static::$kernel->getContainer()->getParameter('app.files.subdir.images').'/'];
@@ -34,12 +33,11 @@ class FileSubdirectoryNamerTest extends KernelTestCase
     public function testDirectoryName(string $fileName, string $mimeType, string $expectedDirectory): void
     {
         self::bootKernel();
-        
+
         $entity = new DummyFile();
         $entity->setMimeType($mimeType);
         $mapping = $this->createMock(PropertyMapping::class);
         $namer = new FileSubdirectoryNamer(static::$kernel->getContainer());
         $this->assertSame($expectedDirectory, $namer->directoryName($entity, $mapping));
     }
-
 }
