@@ -28,31 +28,32 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
       ;
       }
      */
-    
+
     /**
      * @param string $username Username to look up
      * @return App\Entity\User
      */
     public function loadUserByUsername($username)
     {
-        /*$qb = $this
-            ->createQueryBuilder('u');
-        $expr = $qb
-            ->expr()
-            ->eq('u.username', ':username');
-        $qb
-            ->where($expr)
-            ->setParameter(':username', $username);
+        /* $qb = $this
+          ->createQueryBuilder('u');
+          $expr = $qb
+          ->expr()
+          ->eq('u.username', ':username');
+          $qb
+          ->where($expr)
+          ->setParameter(':username', $username);
 
-        return $qb->getQuery()->getResult();*/
+          return $qb->getQuery()->getResult(); */
         return $this->findOneBy(array('username' => $username));
     }
-    
+
     /**
      * Writes User Entity to database
      * @param UserInterface $user
      */
-    public function createUser(UserInterface $user) {
+    public function createUser(UserInterface $user)
+    {
         $this->persistUser($user);
     }
 
@@ -60,24 +61,28 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
      * Updates User Entity in database
      * @param UserInterface $user
      */
-    public function updateUser(UserInterface $user) {
+    public function updateUser(UserInterface $user)
+    {
         $this->persistUser($user);
     }
-    
+
     /**
      * Removes User Entity from database
      * @param UserInterface $user
      */
-    public function deleteUser(UserInterface $user) {
+    public function deleteUser(UserInterface $user)
+    {
         $this->getEntityManager()->remove($user);
     }
-    
+
     /**
      * Creates or updates the User Entity data in the database.
      * @param UserInterface $user
      */
-    protected function persistUser(UserInterface $user) {
+    protected function persistUser(UserInterface $user)
+    {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+
 }

@@ -4,13 +4,13 @@ namespace App\Repository;
 
 use App\Entity\File;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Handler\DbBatchHandler;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Symfony\Component\DependencyInjection\Container;
 
 class FileRepository extends AbstractBatchableEntityRepository
 {
 
-    public function __construct(RegistryInterface $registry, \App\Handler\DbBatchHandler $batchHandler)
+    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, File::class);
     }
@@ -31,17 +31,18 @@ class FileRepository extends AbstractBatchableEntityRepository
     /**
      * Get all Files from database,
      * optionally filtered by parameter.
+     * About IterableResult annoyance @see https://github.com/doctrine/doctrine2/issues/5287.
      * @param string|array $mimeMatch
      * @return IterableResult
      */
     public function getFiles($mimeMatch = null, $pathMatch = ''): IterableResult
     {
-        $qb = $this->createQueryBuilder();
+        $qb = $this->createQueryBuilder('f');
         // Build Expr
         if (is_string($mimeMatch)) {
-            $expr = $qb->expr()->like('f.type', ':type');
+            $expr = $qb->expr()->like('f.mimeType', ':type');
         } else if (is_array($mimeMatch)) {
-            $expr = $qb->expr()->in('f.type', ':type');
+            $expr = $qb->expr()->in('f.mimeType', ':type');
         }
         if (!empty($expr)) {
             $qb->setParameter(':type', $mimeMatch);
