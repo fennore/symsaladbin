@@ -64,7 +64,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
      */
     private $created;
 
-    public function __construct(string $username, ?string $password, array $roles = array(), int $status = 1)
+    public function __construct(string $username, ?string $password, array $roles = [], int $status = 1)
     {
         if ('' === $username || null === $username) {
             throw new \InvalidArgumentException('The username cannot be empty.');
@@ -152,14 +152,14 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     public function serialize(): string
     {
-        return \serialize(array(
+        return \serialize([
             $this->id,
             $this->username,
             $this->password,
             $this->status,
             // see section on salt below
             // $this->salt,
-        ));
+        ]);
     }
 
     public function unserialize($serialized)

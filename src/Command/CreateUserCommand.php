@@ -74,14 +74,14 @@ class CreateUserCommand extends Command
         $password = $this->userPasswordEncoder->encodePassword($user, $input->getArgument('password'));
         $user->setPassword($password);
 
-        $output->writeln(array(
+        $output->writeln([
             'Username: '.$user->getUsername(),
             'Encoded password: '.$user->getPassword(),
-        ));
+        ]);
 
         if ($input->getOption('is-admin')) {
             $role = $this->roleRepository->loadRoleByName('ROLE_ADMIN');
-            $user->setRoles(array($role));
+            $user->setRoles([$role]);
         }
 
         $this->userRepository->createUser($user);

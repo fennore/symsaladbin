@@ -20,7 +20,7 @@ class DbBatchHandler
      *
      * @var type
      */
-    private $objectManagerMatch = array();
+    private $objectManagerMatch = [];
 
     /**
      * Size of each batch to process.
@@ -34,7 +34,7 @@ class DbBatchHandler
      *
      * @var array of integers
      */
-    private $batchCount = array();
+    private $batchCount = [];
 
     public function __construct(RegistryInterface $registry)
     {

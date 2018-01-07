@@ -45,7 +45,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
           ->setParameter(':username', $username);
 
           return $qb->getQuery()->getResult(); */
-        return $this->findOneBy(array('username' => $username));
+        return $this->findOneBy(['username' => $username]);
     }
 
     /**
