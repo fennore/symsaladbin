@@ -15,12 +15,14 @@ security:
         main:
             anonymous: ~
             form_login:
-                login_path: login-page
-                check_path: login-action
+                login_path: login_page
+                check_path: login_action
+                default_target_path: admin_overview
+                always_use_default_target_path: true
             provider: db_provider
-    access_control:
-        - { path: /admin, roles: ROLE_ADMIN }
-        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN }
+            logout:
+                path: /logout
+                target: /
             # activate different ways to authenticate
 
             # http_basic: ~
@@ -28,3 +30,7 @@ security:
 
             # form_login: ~
             # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
+    access_control:
+        - { path: /admin, roles: ROLE_ADMIN }
+        - { methods: [POST], path: /login, roles: ~ }
+        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN }

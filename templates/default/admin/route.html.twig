@@ -1,0 +1,28 @@
+{% extends "default/base.html.twig" %}
+
+{% block title %}Route{% endblock %}
+
+{% block body %}
+  <main id="content">
+    <p>
+      Build a route using waypoints.<br>
+      A route can contain multiple stages.<br>
+      If you provided gpx waypoints in files under var/files/gpx these will be used as initial route points.
+    </p>
+    <p>
+      <a href="{{path('admin_route_sync')}}">Synchronize</a>
+    </p>
+    <dl>
+      {% for row in locationlist %}
+        {% set location = row[0] %}
+        <dt>{{location.name}}</dt>
+        <dd>{{location}}</dd>
+      {% endfor %}
+    </dl>
+  </main>
+  <nav>
+    {% for stage in stagelist %}
+      <a href="{{path('admin_route', {stage:stage})}}">stage {{stage}}</a> 
+    {% endfor %}
+  </nav>
+{% endblock %}

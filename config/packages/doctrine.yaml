@@ -14,7 +14,7 @@ doctrine:
 
         # With Symfony 3.3, remove the `resolve:` prefix
         # url: '%env(resolve:DATABASE_URL)%'
-        path: '%kernel.project_dir%/db-sqlite/mytravel.sqlite'
+        path: '%kernel.project_dir%/var/db/mytravel.sqlite'
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore

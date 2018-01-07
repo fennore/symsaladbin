@@ -3,6 +3,7 @@
 /public/bundles/
 /var/
 /vendor/
+/config/routes/dev
 ###< symfony/framework-bundle ###
 ###> phpunit/phpunit ###
 /phpunit.xml
@@ -11,3 +12,5 @@
 !.htaccess.default
 .todo
 /db-sqlite/
+.phpintel
+.php_cs.cache

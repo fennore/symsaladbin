@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
-use \Serializable;
-use \DateTime;
+use Serializable;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -12,52 +14,57 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * User Entity
- * 
+ * User Entity.
+ *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields="username", message="Username already taken")
  */
 class User implements AdvancedUserInterface, Serializable, EquatableInterface
 {
-
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", unique=true, length=32)
      * @Assert\NotBlank()
      */
-    protected $username;
+    private $username;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=4096)
      */
-    protected $plainPassword;
-    
+    private $plainPassword;
+
     /**
      * @ORM\Column(type="string", length=256)
      */
-    protected $password;
-    
-    protected $roles;
+    private $password;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\JoinTable(name="user_role")
+     *
+     * @var Collection
+     */
+    private $roles;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned":true})
      */
-    protected $status;
+    private $status;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      */
-    protected $created;
+    private $created;
 
-    public function __construct(string $username, ?string $password, array $roles = array('ROLE_USER'), int $status = 1)
+    public function __construct(string $username, ?string $password, array $roles = [], int $status = 1)
     {
         if ('' === $username || null === $username) {
             throw new \InvalidArgumentException('The username cannot be empty.');
@@ -66,27 +73,27 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
         $datetime = new DateTime();
         $this->username = $username;
         $this->password = $password;
-        $this->roles = $roles;
+        $this->roles = new ArrayCollection($roles);
         $this->status = $status;
         $this->created = $datetime->getTimestamp();
     }
-    
+
     public function setUsername($username): void
-        {
+    {
         $this->username = $username;
     }
-    
+
     public function setPassword($password): void
-        {
+    {
         $this->password = $password;
     }
-    
+
     public function setRoles(array $roles): void
-        {
-        $this->roles = $roles;
+    {
+        $this->roles = new ArrayCollection($roles);
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -106,9 +113,12 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
         return null;
     }
 
+    /**
+     * @return ArrayCollection|Role[]
+     */
     public function getRoles(): array
     {
-        return $this->roles ?? array('ROLE_USER');
+        return $this->roles->toArray();
     }
 
     public function eraseCredentials(): void
@@ -117,7 +127,7 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     public function isEqualTo(UserInterface $user): bool
     {
-        return $this->id === $user->getId() && $user instanceof User;
+        return $this->id === $user->getId() && $user instanceof self;
     }
 
     public function isAccountNonExpired(): bool
@@ -142,14 +152,14 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
 
     public function serialize(): string
     {
-        return \serialize(array(
+        return \serialize([
             $this->id,
             $this->username,
             $this->password,
-            $this->status
+            $this->status,
             // see section on salt below
             // $this->salt,
-        ));
+        ]);
     }
 
     public function unserialize($serialized)
@@ -163,5 +173,4 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
             // $this->salt
         ) = \unserialize($serialized);
     }
-
 }

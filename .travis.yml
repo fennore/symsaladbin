@@ -1,0 +1,60 @@
+# Project language
+language: php
+
+# Allows use container-based infrastructure
+sudo: false
+
+# Start mysql service
+services:
+#  - mysql
+
+# Cache composer packages so "composer install" is faster
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+# Matrix to test in every php version
+matrix:
+  # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
+  fast_finish: true
+  include:
+    - php: 7.2
+    - php: hhvm
+  allow_failures:
+    - php: hhvm
+
+# Define an environment variable
+env:
+  - SYMFONY_VERSION="4.0.*"
+
+before_install:
+  # Manually compile the libsodium library
+  - git clone -b stable https://github.com/jedisct1/libsodium.git
+  - cd libsodium && sudo ./configure && sudo make check && sudo make install && cd ..
+  # Update composer
+  - composer self-update
+
+install:
+  # Manually install libsodium, because the TravicCi image doesn't provide PHP7.2 with libsodium
+  - pecl install libsodium
+  - echo "extension=sodium.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  # Install composer dependencies,
+  # Create database, schema and fixtures
+  - composer install
+  - cp .env.dist .env
+  # Create directories
+  - mkdir -p var/db/ var/files/gpx/ var/files/stories/ var/files/images/
+  # Create empty db file
+  - touch var/db/mytravel.sqlite
+  - touch var/db/mytravel.test.sqlite
+  - php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:create --env=test
+#  - php bin/console doctrine:fixtures:load -n --env=test
+
+# Run script
+script:
+  - phpunit
+
+# After a build, send email notification with the build results
+# notifications:
+#  email: your_email

@@ -6,7 +6,7 @@
     <p>{{ error.messageKey|trans(error.messageData, 'security') }}</p>
   {% endif %}
 
-  <form action="{{ path('login-page') }}" method="post">
+  <form action="{{ path('login_page') }}" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="_username" value="{{ last_username }}" />
 

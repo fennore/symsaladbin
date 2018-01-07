@@ -10,17 +10,40 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Repository\UserRepository;
+use App\Repository\RoleRepository;
 use App\Entity\User;
 
 class CreateUserCommand extends Command
 {
+    /**
+     * {@inheritdoc}
+     */
     protected static $defaultName = 'app:user:create';
+
+    /**
+     * @var UserRepository
+     */
     protected $userRepository;
+
+    /**
+     * @var RoleRepository
+     */
+    protected $roleRepository;
+
+    /**
+     * @var UserPasswordEncoderInterface
+     */
     protected $userPasswordEncoder;
-    
-    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $userPasswordEncoder)
+
+    /**
+     * @param UserRepository               $userRepository
+     * @param RoleRepository               $roleRepository
+     * @param UserPasswordEncoderInterface $userPasswordEncoder
+     */
+    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->userRepository = $userRepository;
+        $this->roleRepository = $roleRepository;
         $this->userPasswordEncoder = $userPasswordEncoder;
         parent::__construct();
     }
@@ -38,29 +61,31 @@ class CreateUserCommand extends Command
             ->addOption('is-admin', null, InputOption::VALUE_NONE, 'Is admin user', null)
         ;
     }
+
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        
+
         $username = $input->getArgument('username');
         $user = new User($username, null);
         $password = $this->userPasswordEncoder->encodePassword($user, $input->getArgument('password'));
         $user->setPassword($password);
-        
-        $output->writeln(array(
+
+        $output->writeln([
             'Username: '.$user->getUsername(),
-            'Encoded password: '.$user->getPassword()
-        ));
-        
-        if($input->getOption('is-admin')) {
-            $user->setRoles(array('ROLE_ADMIN'));
+            'Encoded password: '.$user->getPassword(),
+        ]);
+
+        if ($input->getOption('is-admin')) {
+            $role = $this->roleRepository->loadRoleByName('ROLE_ADMIN');
+            $user->setRoles([$role]);
         }
-        
+
         $this->userRepository->createUser($user);
- 
+
         $io->success('New user created.');
     }
 }
