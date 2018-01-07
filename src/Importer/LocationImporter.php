@@ -4,13 +4,20 @@ namespace App\Importer;
 
 use App\Repository\FileRepository;
 use App\Repository\LocationRepository;
+use App\Repository\SavedStateRepository;
 use App\Reader\SimpleGpxFileReader;
+use App\States\ImportLocationState;
 
 /**
  * Importing Locations into the database.
  */
 class LocationImporter
 {
+    /**
+     * @var SavedStateRepository
+     */
+    private $savedStateRepository;
+
     /**
      * @var FileRepository
      */
@@ -31,10 +38,11 @@ class LocationImporter
      * @param LocationRepository  $locationRepository
      * @param SimpleGpxFileReader $gpxReader
      */
-    public function __construct(FileRepository $fileRepository, LocationRepository $locationRepository, SimpleGpxFileReader $gpxReader)
+    public function __construct(SavedStateRepository $savedStateRepo, FileRepository $fileRepo, LocationRepository $locationRepo, SimpleGpxFileReader $gpxReader)
     {
-        $this->fileRepository = $fileRepository;
-        $this->locationRepository = $locationRepository;
+        $this->savedStateRepository = $savedStateRepo;
+        $this->fileRepository = $fileRepo;
+        $this->locationRepository = $locationRepo;
         $this->gpxReader = $gpxReader;
     }
 
@@ -50,25 +58,24 @@ class LocationImporter
         // 1. Get highest existing stage number.
         // Take this straight from db since stages can be added manually.
         $lastStage = $this->locationRepository->getLastStage();
-        // 2. Get savedState
-//        $ctrlState = SavedStateController::create();
-//        $savedState = $ctrlState->get(self::STATESYNC);
+        // 2. Use State to keep track and avoid doubles
+        $state = new ImportLocationState();
+        $savedState = $this->savedStateRepository->checkState($state);
         // Detach savedState skipping flushes
-//        ->detach($savedState);
+        // $this->savedStateRepository->
         // 3. Add any locations from new files to subsequent stages.
-        // - path is expected to be subpath of files directory
-        //   anything else can be considered invalid anyway
         $files = $this->fileRepository->getFiles(['application/xml', 'text/xml']);
         foreach ($files as $row) {
             $file = $row[0];
-            /*             * $duplicateCheck = in_array($file->getId(), $savedState->get('readFiles') ?? array());
-              if ($duplicateCheck) {
-              continue;
-              } */
+            if (in_array($file->getId(), $state->getReadFiles())) {
+                continue; // Skip
+            }
             foreach ($this->gpxReader->saveGpxAsLocations($file, ++$lastStage) as $location) {
                 $this->locationRepository->createLocation($location);
             }
-//          $savedState->add('readFiles', $file->id);
+            $state->addReadFile($file->getId());
         }
+        // 4. Make sure that savedState is merged or batching might result in state loss
+        $this->savedStateRepository->mergeSavedState($savedState);
     }
 }
