@@ -42,8 +42,9 @@ install:
   # Create database, schema and fixtures
   - composer install
   - cp .env.dist .env
+  # Create directories
+  - mkdir -p var/db/ var/files/gpx/ var/files/stories/ var/files/images/
   # Create empty db file
-  - mkdir -p var/db/ 
   - touch var/db/mytravel.sqlite
   - php bin/console doctrine:database:create --env=test
   - php bin/console doctrine:schema:create --env=test
