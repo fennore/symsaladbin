@@ -32,12 +32,16 @@ class File
     private $id;
 
     /**
-     * @ORM\Column(name="filename", type="string", unique=true)
+     * @ORM\Column(name="filename", type="string")
+     *
+     * @var string
      */
     private $fileName;
 
     /**
      * @ORM\Column(type="string")
+     *
+     * @var string
      */
     private $path;
 
@@ -78,8 +82,6 @@ class File
 
     public function __construct(BaseFile $file)
     {
-        $this->fileName = $file->getFilename();
-        $this->mimeType = $file->getMimeType();
         $this->setFile($file);
         //$this->data = $fileInfo->getContents();
     }
@@ -101,8 +103,11 @@ class File
      */
     public function setFile(BaseFile $file): void
     {
+        $this->fileName = $file->getFilename();
+        $this->mimeType = $file->getMimeType();
         $this->file = $file;
         $this->path = str_replace('\\', '/', $file->getPath()); // Always use / for directory separator
+        $this->source = $this->path.'/'.$this->fileName;
         $this->lastModified = $file->getMTime();
     }
 
@@ -147,5 +152,27 @@ class File
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * Note: should not be used but required for Vich Uploader.
+     * Use setFile instead.
+     *
+     * @todo keep an eye on Vich updates because this should not be happening.
+     */
+    public function setFileName(?string $fileName): void
+    {
+        $this->fileName = $fileName;
+    }
+
+    /**
+     * Note: should not be used but required for Vich Uploader.
+     * Use setFile instead.
+     *
+     * @todo keep an eye on Vich updates because this should not be happening.
+     */
+    public function setMimeType(?string $mimeType): void
+    {
+        $this->mimeType = $mimeType;
     }
 }

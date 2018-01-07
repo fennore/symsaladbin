@@ -14,19 +14,6 @@ class FileRepository extends AbstractBatchableEntityRepository
         parent::__construct($registry, $batchHandler, File::class);
     }
 
-    /*
-      public function findBySomething($value)
-      {
-      return $this->createQueryBuilder('f')
-      ->where('f.something = :value')->setParameter('value', $value)
-      ->orderBy('f.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
-
     /**
      * Get all Files from database,
      * optionally filtered by parameter.

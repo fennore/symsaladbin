@@ -25,7 +25,7 @@ class DummyFile extends File
      *
      * @param string $mimeType
      */
-    public function setMimeType(string $mimeType)
+    public function setMimeType(?string $mimeType): void
     {
         $this->mimeType = $mimeType;
     }

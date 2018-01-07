@@ -4,6 +4,7 @@ namespace App\Tests\Naming;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use App\Naming\FileSubdirectoryNamer;
+use App\Reader\DirectoryReader;
 use Vich\UploaderBundle\Mapping\PropertyMapping;
 use App\Tests\DummyFile;
 
@@ -37,7 +38,8 @@ class FileSubdirectoryNamerTest extends KernelTestCase
         $entity = new DummyFile();
         $entity->setMimeType($mimeType);
         $mapping = $this->createMock(PropertyMapping::class);
-        $namer = new FileSubdirectoryNamer(static::$kernel->getContainer());
+        $reader = new DirectoryReader(static::$kernel->getContainer());
+        $namer = new FileSubdirectoryNamer($reader);
         $this->assertSame($expectedDirectory, $namer->directoryName($entity, $mapping));
     }
 }
