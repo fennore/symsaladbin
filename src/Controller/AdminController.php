@@ -5,9 +5,8 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\LocationRepository;
-use App\Handler\FileHandler;
 use App\Importer\LocationImporter;
-use App\Handler\DbBatchHandler;
+use App\Handler\{DbBatchHandler, FileHandler};
 
 class AdminController extends AbstractController
 {

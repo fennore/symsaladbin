@@ -6,5 +6,5 @@ namespace App\States;
 
 interface StateInterface
 {
-    public function getKey();
+    public function getKey(): int;
 }

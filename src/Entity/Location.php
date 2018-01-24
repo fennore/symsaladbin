@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
@@ -46,8 +47,8 @@ class Location
      * @param Coordinate $coordinate
      * @param string     $name
      * @param int        $stage
-     * @param int        $weight
-     * @param int        $status
+     * @param int        $weight Defaults to 0.
+     * @param int        $status Defaults to 1.
      */
     public function __construct(Coordinate $coordinate, string $name, int $stage, int $weight = 0, int $status = 1)
     {

@@ -31,6 +31,6 @@ security:
             # form_login: ~
             # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
     access_control:
-        - { path: /admin, roles: ROLE_ADMIN }
-        - { methods: [POST], path: /login, roles: ~ }
-        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN }
+        - { path: /admin, roles: ROLE_ADMIN, requires_channel: https }
+        - { methods: [POST], path: /login, roles: ~, requires_channel: https }
+        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN, requires_channel: https }

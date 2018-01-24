@@ -2,11 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Location;
+use Doctrine\ORM\{Query, Internal\Hydration\IterableResult};
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Handler\DbBatchHandler;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
+use App\Entity\Location;
 
 class LocationRepository extends AbstractBatchableEntityRepository
 {
@@ -43,6 +42,8 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Get the list of all stages.
+     *
+     * @return array
      */
     public function getStageList(): array
     {

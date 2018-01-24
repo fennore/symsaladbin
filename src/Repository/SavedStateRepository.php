@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\SavedState;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\States\StateInterface;
+use App\Entity\SavedState;
 
 class SavedStateRepository extends ServiceEntityRepository
 {
