@@ -3,17 +3,16 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class DefaultController extends AbstractController
+class DefaultController extends AbstractSmartController
 {
     /**
      * Matches /.
      *
-     * @Route("/", name="intro", schemes="https")
+     * @Route("/", name="intro", schemes="https", defaults={"_format": "html"})
      */
     public function intro()
     {
-        return $this->render('default/intro.html.twig');
+        return $this->smartRender('default/intro.html.twig');
     }
 }
