@@ -2,16 +2,17 @@
 
 namespace App\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Handler\DbBatchHandler;
 use App\States\StateInterface;
 use App\Entity\SavedState;
 
-class SavedStateRepository extends ServiceEntityRepository
+class SavedStateRepository extends AbstractBatchableEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+
+    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
-        parent::__construct($registry, SavedState::class);
+        parent::__construct($registry, $batchHandler, Location::class);
     }
 
     /**
@@ -55,9 +56,6 @@ class SavedStateRepository extends ServiceEntityRepository
      */
     public function createSavedState(SavedState $savedState, $useBatch = true)
     {
-        if (!is_null($savedState->getId())) {
-            throw ORMInvalidArgumentException::scheduleInsertForManagedEntity($savedState);
-        }
         $this->persistSavedState($savedState, $useBatch);
     }
 
@@ -68,9 +66,6 @@ class SavedStateRepository extends ServiceEntityRepository
      */
     public function updateSavedState(SavedState $savedState, $useBatch = true)
     {
-        if (is_null($savedState->getId())) {
-            throw ORMInvalidArgumentException::entityHasNoIdentity($savedState, 'update');
-        }
         $this->persistSavedState($savedState, $useBatch);
     }
 

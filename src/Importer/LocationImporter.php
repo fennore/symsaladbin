@@ -61,8 +61,6 @@ class LocationImporter
         // 2. Use State to keep track and avoid doubles
         $state = new ImportLocationState();
         $savedState = $this->savedStateRepository->checkState($state);
-        // Detach savedState skipping flushes
-        // $this->savedStateRepository->
         // 3. Add any locations from new files to subsequent stages.
         $files = $this->fileRepository->getFiles(['application/xml', 'text/xml']);
         foreach ($files as $row) {
@@ -75,7 +73,8 @@ class LocationImporter
             }
             $state->addReadFile($file->getId());
         }
-        // 4. Make sure that savedState is merged or batching might result in state loss
-        $this->savedStateRepository->mergeSavedState($savedState);
+        // 4. Make sure to merge before updating saved state
+        $mergedSavedState = $this->savedStateRepository->mergeSavedState($savedState);
+        $this->savedStateRepository->updateSavedState($mergedSavedState);
     }
 }

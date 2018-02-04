@@ -2,30 +2,18 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\{Query, Internal\Hydration\IterableResult};
+use Doctrine\ORM\{Query,Internal\Hydration\IterableResult};
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Handler\DbBatchHandler;
 use App\Entity\Location;
 
 class LocationRepository extends AbstractBatchableEntityRepository
 {
+
     public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, Location::class);
     }
-
-    /*
-      public function findBySomething($value)
-      {
-      return $this->createQueryBuilder('l')
-      ->where('l.something = :value')->setParameter('value', $value)
-      ->orderBy('l.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
 
     /**
      * Get the last recorded stage.

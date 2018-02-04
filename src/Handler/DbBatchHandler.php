@@ -106,7 +106,7 @@ class DbBatchHandler
      */
     private function processBatch(string $managerName)
     {
-        $this->managers[$managerName]->flush(); // Executes all deletions.
+        $this->managers[$managerName]->flush(); // Executes all queued transactions.
         $this->managers[$managerName]->clear(); // Detaches all objects from the manager.
         $this->batchCount[$managerName] = 0; // Set batch count back to 0
     }

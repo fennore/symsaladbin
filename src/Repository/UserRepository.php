@@ -3,8 +3,7 @@
 namespace App\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Bridge\Doctrine\{RegistryInterface, Security\User\UserLoaderInterface};
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\User;
 
@@ -14,19 +13,6 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     {
         parent::__construct($registry, User::class);
     }
-
-    /*
-      public function findBySomething($value)
-      {
-      return $this->createQueryBuilder('u')
-      ->where('u.something = :value')->setParameter('value', $value)
-      ->orderBy('u.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
 
     /**
      * @param string $username Username to look up
