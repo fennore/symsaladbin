@@ -4,67 +4,62 @@ namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use App\Utils\ContentSecurityPolicy;
 
 /**
  */
 class GlobalHeaderSubscriber implements EventSubscriberInterface
 {
+    private $csp;
+
+    public function __construct(ContentSecurityPolicy $csp)
+    {
+        $this->csp = $csp;
+    }
 
     public static function getSubscribedEvents()
     {
         return [
-            'kernel.response' => 'onKernelResponse'
+            'kernel.response' => 'addCSPHeaderToResponse' // XSS protection
         ];
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function addCSPHeaderToResponse(FilterResponseEvent $event)
     {
         // Do not allow the App to be displayed in an iframe
         $event
             ->getResponse()
             ->headers
-            ->set('X-Frame-Options', 'SAMEORIGIN');
-        // for HTML responses
-        $fullPolicy = '';
-        // Set origin policy
-        $allowedContentOrigins = array(
-            'default-src' => array(
-                "'self'"
-            )
-        );
+            ->set('X-Frame-Options', 'DENY');
+        // For HTML responses, set origin policy
         if ($event->getResponse()->headers->contains('content-type', 'text/html')) {
-            $allowedContentOrigins += array(
-                'script-src' => array(
+            // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
+            $this->csp
+                ->set('default-src', array("'self'"))
+                ->set('script-src', array(
                     "'self'",
-                    "'unsafe-inline'",
-                    "'unsafe-eval'",
+//                    "'unsafe-inline'",
+//                    "'unsafe-eval'",
+//                    'strict-dynamic', => requires nonce to work
                     'https://*.googleapis.com',
                     'https://*.gstatic.com',
-                //'https://cdn.tinymce.com',
-                ),
-                'img-src' => array(
+                    //'https://cdn.tinymce.com',
+                ))
+                ->set('img-src', array("'self'", 'https://*.gstatic.com', 'https://*.googleapis.com'))
+                ->set('style-src', array(
                     "'self'",
-                    'https://*.gstatic.com',
-                    'https://*.googleapis.com'
-                ),
-                'style-src' => array(
-                    "'self'",
-                    "'unsafe-inline'",
+//                    "'unsafe-inline'",
                     'https://*.googleapis.com',
-                ),
-                'font-src' => array(
+                ))
+                ->set('font-src', array(
                     "'self'",
                     'https://*.gstatic.com',
-                )
-                //
-            );
+            ));
         }
-        foreach ($allowedContentOrigins as $srcType => $policy) {
-            $fullPolicy .= $srcType.' '.implode(' ', $policy).'; ';
-        }
+
         $event
             ->getResponse()
             ->headers
-            ->set('Content-Security-Policy', $fullPolicy);
+            ->set('Content-Security-Policy', $this->csp->getPolicy());
     }
 }
