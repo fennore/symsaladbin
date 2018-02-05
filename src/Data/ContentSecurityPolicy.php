@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Utils;
+namespace App\Data;
+
+use App\Utils\Generator;
 
 /**
  * @see https://www.w3.org/TR/CSP3/
@@ -22,9 +24,9 @@ class ContentSecurityPolicy
      */
     private $useNonce = false;
     
-    public function __construct()
+    public function __construct(Generator $generator)
     {
-        $this->createNonce();
+        $this->nonce = $generator->createNonce();
     }
     
     /**
@@ -73,10 +75,5 @@ class ContentSecurityPolicy
         return array_reduce(array_keys($this->csp), function($policy, $directive) use ($csp) {
             return $policy.$directive.' '.implode(' ', $csp[$directive]).'; ';
         });
-    }
-    
-    private function createNonce()
-    {
-        $this->nonce = base64_encode(random_bytes(20));
     }
 }

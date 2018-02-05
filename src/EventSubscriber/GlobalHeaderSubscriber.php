@@ -4,7 +4,7 @@ namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use App\Utils\ContentSecurityPolicy;
+use App\Data\ContentSecurityPolicy;
 
 /**
  */
@@ -36,25 +36,26 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
             // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
             $this->csp
                 ->set('default-src', array("'self'"))
-                ->set('script-src', array(
-                    "'self'",
-//                    "'unsafe-inline'",
-//                    "'unsafe-eval'",
-//                    'strict-dynamic', => requires nonce to work
-                    'https://*.googleapis.com',
-                    'https://*.gstatic.com',
-                    //'https://cdn.tinymce.com',
-                ))
-                ->set('img-src', array("'self'", 'https://*.gstatic.com', 'https://*.googleapis.com'))
-                ->set('style-src', array(
-                    "'self'",
-//                    "'unsafe-inline'",
-                    'https://*.googleapis.com',
-                ))
-                ->set('font-src', array(
-                    "'self'",
-                    'https://*.gstatic.com',
-            ));
+//                ->set('script-src', array(
+//                    "'self'",
+////                    "'unsafe-inline'",
+////                    "'unsafe-eval'",
+////                    'strict-dynamic', => requires nonce to work
+//                    'https://*.googleapis.com',
+//                    'https://*.gstatic.com',
+//                    //'https://cdn.tinymce.com',
+//                ))
+//                ->set('img-src', array("'self'", 'https://*.gstatic.com', 'https://*.googleapis.com'))
+//                ->set('style-src', array(
+//                    "'self'",
+////                    "'unsafe-inline'",
+//                    'https://*.googleapis.com',
+//                ))
+//                ->set('font-src', array(
+//                    "'self'",
+//                    'https://*.gstatic.com',
+//                ))
+            ;
         }
 
         $event
