@@ -2,10 +2,8 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    app.files.directory: 'var/files'
-    app.files.subdir.images: 'images'
-    app.files.subdir.gpx: 'gpx'
-    app.files.subdir.stories: 'stories'
+imports:
+    - { resource: 'parameters.yaml', ignore_errors: true }
 
 services:
     # default configuration for services in *this* file
@@ -20,7 +18,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{Entity,Lists,Migrations,Tests}'
+        exclude: '../src/{Entity,States,Lists,Migrations,Tests,Driver/Gapi}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class

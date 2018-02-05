@@ -6,7 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\LocationRepository;
 use App\Importer\LocationImporter;
-use App\Handler\{DbBatchHandler, FileHandler};
+use App\Handler\{DbBatchHandler,FileHandler,DirectionsHandler};
 
 class AdminController extends AbstractController
 {
@@ -33,7 +33,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/route/sync", name="admin_route_sync")
      */
-    public function syncRoute(DbBatchHandler $batchHandler, FileHandler $fileHandler, LocationImporter $locationImporter)
+    public function syncRoute(DbBatchHandler $batchHandler, FileHandler $fileHandler, LocationImporter $locationImporter, DirectionsHandler $directionsHandler)
     {
         // Sync files in db
         $fileHandler->syncSourceWithFileEntity();
@@ -41,7 +41,9 @@ class AdminController extends AbstractController
         $batchHandler->cleanUpBatch();
         // Save gpx data as locations
         $locationImporter->syncWithGpx();
+        // Build encoded route
+        $state = $directionsHandler->buildEncodedRoute();
 
-        return $this->json(['status' => 'ok']);
+        return $this->json(['status' => 'ok', 'state' => ['stage' => $state->getStage(), 'weight' => $state->getWeight()]]);
     }
 }

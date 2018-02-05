@@ -12,7 +12,7 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
 
     public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
-        parent::__construct($registry, $batchHandler, Location::class);
+        parent::__construct($registry, $batchHandler, SavedState::class);
     }
 
     /**

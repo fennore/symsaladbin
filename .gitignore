@@ -4,6 +4,7 @@
 /var/
 /vendor/
 /config/routes/dev
+/config/parameters.yaml
 ###< symfony/framework-bundle ###
 ###> phpunit/phpunit ###
 /phpunit.xml
