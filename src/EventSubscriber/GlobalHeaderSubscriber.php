@@ -57,10 +57,12 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
 //                ))
             ;
         }
-
-        $event
-            ->getResponse()
-            ->headers
-            ->set('Content-Security-Policy', $this->csp->getPolicy());
+        $policy = $this->csp->getPolicy();
+        if(!empty($policy)) {
+            $event
+                ->getResponse()
+                ->headers
+                ->set('Content-Security-Policy', $policy);
+        }
     }
 }

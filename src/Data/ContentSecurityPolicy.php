@@ -67,9 +67,9 @@ class ContentSecurityPolicy
     
     /**
      * Get the string formatted policy for in the header
-     * @return string
+     * @return string|null
      */
-    public function getPolicy(): string
+    public function getPolicy(): ?string
     {
         $csp = $this->csp;
         return array_reduce(array_keys($this->csp), function($policy, $directive) use ($csp) {
