@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Driver;
+namespace App\Driver\Gapi;
 
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use App\Driver\DirectionsDriverInterface;
 use App\Entity\{Directions,Location};
-use App\Driver\Gapi\{GapiHelper,GapiDirectionsRequest};
 
 /**
  * Directions Driver using Google API

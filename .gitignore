@@ -12,6 +12,5 @@
 .htaccess
 !.htaccess.default
 .todo
-/db-sqlite/
 .phpintel
 .php_cs.cache
