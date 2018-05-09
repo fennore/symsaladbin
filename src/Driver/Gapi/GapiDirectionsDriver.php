@@ -29,6 +29,13 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
      */
     private $lastLocation;
 
+    /**
+     * Array of leftover locations when directions calculation hit request limit.
+     *
+     * @var array[Location]
+     */
+    private $leftovers;
+
     public function __construct(ContainerInterface $container)
     {
         $this->apiKey = $container->getParameter('app.googledirections.apikey');
@@ -82,7 +89,17 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
             $setBack = 1;
         }
 
+        $this->leftovers = !empty($list) || $locationList->valid();
+
         return $directionsList;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasUncalculatedDirectionsLeft(): bool
+    {
+        return $this->leftovers;
     }
 
     /**

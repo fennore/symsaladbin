@@ -146,7 +146,7 @@ class DirectionsHandler
 
         $lastDirection = array_pop($directionsList);
         // Old check : match last location with last direction location + count check $locationCheck = $lastDirectionLocation == $lastLocation && $countCheck;
-        if (!$locationList->valid()) {
+        if (!$this->driver->hasUncalculatedDirectionsLeft()) {
             $directionsState
                 ->setWeight(0)
                 ->setStage(++$stage);

@@ -2,7 +2,8 @@
 
 namespace App\Driver;
 
-use App\Entity\{Directions,Location};
+use App\Entity\Directions;
+use App\Entity\Location;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 
 /**
@@ -10,7 +11,6 @@ use Doctrine\ORM\Internal\Hydration\IterableResult;
  */
 interface DirectionsDriverInterface
 {
-
     /**
      * Get the amount of locations that will be used in 1 Direction request.
      */
@@ -18,14 +18,24 @@ interface DirectionsDriverInterface
 
     /**
      * Get Route Directions.
-     * @param IterableResult $locationList List of Location Entities.
-     * @param int $maxRequests Maximum Direction requests to send
+     *
+     * @param IterableResult $locationList list of Location Entities
+     * @param int            $maxRequests  Maximum Direction requests to send
+     *
      * @return array
      */
     public function getDirections(IterableResult $locationList, $maxRequests = 0): array;
-    
+
     /**
-     * Get the last Location used for Direction requests
+     * If the directions calculation hit the request limit there will be locations left to calculate directions for.
+     *
+     * @return bool
+     */
+    public function hasUncalculatedDirectionsLeft(): bool;
+
+    /**
+     * Get the last Location used for Direction requests.
+     *
      * @return Location|null
      */
     public function getLastLocation(): ?Location;
