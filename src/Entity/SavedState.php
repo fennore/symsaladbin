@@ -29,7 +29,7 @@ class SavedState
     /**
      * Note: never gets called by Doctrine ORM.
      *
-     * @param int $key
+     * @param StateInterface $state
      */
     public function __construct(StateInterface $state)
     {
@@ -51,7 +51,7 @@ class SavedState
      * Overwrite the full state object
      * Warning!: do not use numeric values for state names!
      *
-     * @param stdClass StateInterface
+     * @param StateInterface $state
      */
     public function setState(StateInterface $state)
     {

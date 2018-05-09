@@ -2,9 +2,12 @@
 
 namespace App\Handler;
 
-use App\Repository\{LocationRepository,DirectionsRepository,SavedStateRepository};
+use App\Repository\LocationRepository;
+use App\Repository\DirectionsRepository;
+use App\Repository\SavedStateRepository;
 use App\Driver\DirectionsDriverInterface;
-use App\States\{EncodedRoute,DirectionsState};
+use App\States\EncodedRoute;
+use App\States\DirectionsState;
 
 /**
  * Use a DirectionsDriver to calculate a route from Location entities.
@@ -17,30 +20,29 @@ class DirectionsHandler
     const MAXREQUESTS = 13;
 
     /**
-     *
      * @var DirectionsDriverInterface
      */
     private $driver;
 
     /**
-     * @var LocationRepository 
+     * @var LocationRepository
      */
     private $locationRepository;
 
     /**
-     * @var DirectionsRepository 
+     * @var DirectionsRepository
      */
     private $directionsRepository;
 
     /**
-     * @var SavedStateRepository 
+     * @var SavedStateRepository
      */
     private $savedStateRepository;
 
     /**
-     * @param DirectionsDriverInterface $driver Available Directions Driver
-     * @param DirectionsRepository $directionsRepo
-     * @param SavedStateRepository $savedStateRepo
+     * @param DirectionsDriverInterface $driver         Available Directions Driver
+     * @param DirectionsRepository      $directionsRepo
+     * @param SavedStateRepository      $savedStateRepo
      */
     public function __construct(DirectionsDriverInterface $driver, LocationRepository $locationRepository, DirectionsRepository $directionsRepository, SavedStateRepository $savedStateRepository)
     {
@@ -52,6 +54,7 @@ class DirectionsHandler
 
     /**
      * The maximum amount of Location entities that will be used for direction requests.
+     *
      * @return int
      */
     private function getLocationLimit()
@@ -60,20 +63,24 @@ class DirectionsHandler
     }
 
     /**
-     * Get the encoded route
+     * Get the encoded route.
+     *
      * @return array
      */
     public function getEncodedRoute(): array
     {
         $state = new EncodedRoute();
         $this->savedStateRepository->checkState($state);
+
         return $state->getRoute();
     }
 
     /**
      * Resets encoded route to certain point,
      * so that it can be rebuild in chunks.
+     *
      * @todo See if we can use some direction/location diff to perform a more accurate reset.
+     *
      * @param int $stage
      */
     public function resetEncodedRoute(int $stage)
@@ -97,11 +104,13 @@ class DirectionsHandler
         }
         $state->setStage($stage, $encodedRoute);
         $this->savedStateRepository->updateSavedState($savedState);
+
         return $this;
     }
 
     /**
      * Build an encoded route in chunks from all Location entities.
+     *
      * @return DirectionsState
      */
     public function buildEncodedRoute()
@@ -120,10 +129,11 @@ class DirectionsHandler
             return;
         }
         // - Stop processing when weight is 0 but there are already encoded route parts
-        if ($weight === 0 && !empty($route->getStage($stage))) {
+        if (0 === $weight && !empty($route->getStage($stage))) {
             // Also set Direction SavedState to next stage
             $directionsState->setStage(++$stage);
             $this->savedStateRepository->updateSavedState($savedDirectionsState);
+
             return;
         }
         // 3. Directions
@@ -131,7 +141,7 @@ class DirectionsHandler
         // 4. Encoded route
         $encodedRoute = array_map(array($this->driver, 'getPolyline'), $directionsList);
         // 5. Set data for Db and Flush it
-        array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
+        //array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
         $route->setStage($stage, $encodedRoute);
 
         $lastDirection = array_pop($directionsList);
@@ -139,17 +149,17 @@ class DirectionsHandler
         if (!$locationList->valid()) {
             $directionsState
                 ->setWeight(0)
-                ->setStage( ++$stage);
+                ->setStage(++$stage);
         } else {
             $directionsState
                 ->setWeight($lastDirection->getDestination()->getWeight())
                 ->setStage($stage);
         }
-        $mergedSavedDirectionsState = $this->savedStateRepository->mergeSavedState($savedDirectionsState);
-        $this->savedStateRepository->updateSavedState($mergedSavedDirectionsState);
-        $mergedSavedRoute = $this->savedStateRepository->mergeSavedState($savedRoute);
-        $this->savedStateRepository->updateSavedState($mergedSavedRoute);
-        
+
+        // Note: merges are required because the objects might have been detached during writing the directions to database
+        $this->savedStateRepository->updateSavedState($this->savedStateRepository->mergeSavedState($savedDirectionsState));
+        $this->savedStateRepository->updateSavedState($this->savedStateRepository->mergeSavedState($savedRoute));
+
         return $directionsState;
     }
 }

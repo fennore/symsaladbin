@@ -9,7 +9,6 @@ use App\Entity\SavedState;
 
 class SavedStateRepository extends AbstractBatchableEntityRepository
 {
-
     public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, SavedState::class);
@@ -26,10 +25,10 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
      */
     public function checkState(StateInterface &$state)
     {
-        $savedState = $this->find($state->getKey()) ?? new SavedState($state);
+        $savedState = $this->mergeSavedState($this->find($state->getKey()) ?? new SavedState($state));
         $state = $savedState->getState();
 
-        return $this->mergeSavedState($savedState);
+        return $savedState;
     }
 
     public function detachSavedState(SavedState $savedState)
@@ -66,6 +65,8 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
      */
     public function updateSavedState(SavedState $savedState, $useBatch = true)
     {
+        // Force Doctrine to update state, because it does not notice any changes
+        $this->getEntityManager()->getUnitOfWork()->setOriginalEntityProperty(spl_object_hash($savedState), 'state', null);
         $this->persistSavedState($savedState, $useBatch);
     }
 
