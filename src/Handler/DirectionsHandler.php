@@ -140,9 +140,9 @@ class DirectionsHandler
         $directionsList = $this->driver->getDirections($locationList, self::MAXREQUESTS);
         // 4. Encoded route
         $encodedRoute = array_map(array($this->driver, 'getPolyline'), $directionsList);
-        // 5. Set data for Db and Flush it
+        // 5. Set data for Db
         array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
-        $route->setStage($stage, $encodedRoute);
+        array_map(array($route, 'addPolyline'), array_pad([], count($encodedRoute), $stage), $encodedRoute);
 
         $lastDirection = array_pop($directionsList);
         // Old check : match last location with last direction location + count check $locationCheck = $lastDirectionLocation == $lastLocation && $countCheck;
