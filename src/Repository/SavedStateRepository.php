@@ -67,7 +67,10 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
     public function updateSavedState(SavedState $savedState, $useBatch = true)
     {
         // Force Doctrine to update state, because it does not notice any changes
-        $this->getEntityManager()->getUnitOfWork()->setOriginalEntityProperty(spl_object_hash($savedState), 'state', null);
+        if (!empty($this->getEntityManager()->getUnitOfWork()->getOriginalEntityData($savedState))) {
+            $this->getEntityManager()->getUnitOfWork()->setOriginalEntityProperty(spl_object_hash($savedState), 'state', null);
+        }
+
         $this->persistSavedState($savedState, $useBatch);
     }
 

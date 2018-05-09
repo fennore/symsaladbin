@@ -74,7 +74,6 @@ class LocationImporter
             $state->addReadFile($file->getId());
         }
         // 4. Make sure to merge before updating saved state
-        $mergedSavedState = $this->savedStateRepository->mergeSavedState($savedState);
-        $this->savedStateRepository->updateSavedState($mergedSavedState);
+        $this->savedStateRepository->updateSavedState($this->savedStateRepository->mergeSavedState($savedState));
     }
 }
