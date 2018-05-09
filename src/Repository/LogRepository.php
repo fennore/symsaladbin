@@ -65,6 +65,23 @@ class LogRepository extends AbstractBatchableEntityRepository
         $this->startTransaction($useBatch);
     }
 
+    public function emptyLog()
+    {
+        // Flush any queries waiting
+        $this
+            ->getEntityManager()
+            ->flush();
+        // Execute bulk query
+        $qb = $this
+            ->createQueryBuilder('l');
+        $qb
+            ->delete()
+            ->where($qb->expr()->gte('l.id', ':id'))
+            ->setParameter(':id', 0)
+            ->getQuery()
+            ->execute();
+    }
+
     /**
      * Creates or updates the Log Entity data in the database.
      *
