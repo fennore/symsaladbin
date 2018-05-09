@@ -5,15 +5,17 @@ namespace App\Driver\Gapi;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Driver\DirectionsDriverInterface;
-use App\Entity\{Directions,Location};
+use App\Entity\Directions;
+use App\Entity\Location;
 
 /**
- * Directions Driver using Google API
+ * Directions Driver using Google API.
  */
 class GapiDirectionsDriver implements DirectionsDriverInterface
 {
     /**
-     * Maximum amount of locations sent per 1 direction request
+     * Maximum amount of locations sent per 1 direction request.
+     *
      * @see https://developers.google.com/maps/documentation/javascript/directions#UsageLimits
      */
     const REQUESTSIZE = 25;
@@ -22,7 +24,8 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
 
     /**
      * Keep track of the last Location Entity used in Directions Request.
-     * @var Location 
+     *
+     * @var Location
      */
     private $lastLocation;
 
@@ -37,7 +40,7 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDirections(IterableResult $locationList, $maxRequests = 0): array
     {
@@ -47,12 +50,13 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
         $origin = current($locationList->next());
         $destination = current($locationList->next());
 
-        while ($locationList->valid() && ($maxRequests === 0 || $requestCount < $maxRequests)) {
-
+        while (($locationList->valid() || !empty($list)) && (0 === $maxRequests || $requestCount < $maxRequests)) {
             $modes = GapiHelper::DIRECTIONMODES;
+
             do {
-                array_push($list, current($locationList->current())); // remember row[0] :(
-            } while (count($list) < self::REQUESTSIZE && $locationList->next());
+                $locationList->current() ? array_push($list, current($locationList->current())) : null; // remember row[0] :(
+            } while ($locationList->valid() && count($list) < self::REQUESTSIZE && $locationList->next());
+
             // Note: the origin must always be the same for every travel mode
             do {
                 $modeSet = array_shift($modes);
@@ -77,11 +81,12 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
             // From now on we reuse one location so we need one less from locationList
             $setBack = 1;
         }
+
         return $directionsList;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getLastLocation(): ?Location
     {
@@ -91,6 +96,7 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
     /**
      * Get encoded polyline.
      * Currently returning the less accurate overview_polyline.
+     *
      * @todo https://stackoverflow.com/questions/16180104/get-a-polyline-from-google-maps-directions-v3
      */
     public function getPolyline(Directions $directions): string
