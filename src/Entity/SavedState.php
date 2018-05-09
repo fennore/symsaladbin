@@ -48,8 +48,7 @@ class SavedState
     }
 
     /**
-     * Overwrite the full state object
-     * Warning!: do not use numeric values for state names!
+     * Overwrite the full state object.
      *
      * @param StateInterface $state
      */

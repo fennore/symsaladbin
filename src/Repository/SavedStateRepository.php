@@ -60,6 +60,7 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
 
     /**
      * Updates SavedState Entity in database.
+     * Note: will update regardless if anything changed or not.
      *
      * @param SavedState $savedState
      */

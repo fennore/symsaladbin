@@ -126,7 +126,7 @@ class DirectionsHandler
         $locationList = $this->locationRepository->getStageLocations($stage, $weight, $this->getLocationLimit());
         // - Stop processing when no locations are found and we ran out of stages to process
         if (!$locationList->valid() && $stage > $this->locationRepository->getLastStage()) {
-            return;
+            return $directionsState;
         }
         // - Stop processing when weight is 0 but there are already encoded route parts
         if (0 === $weight && !empty($route->getStage($stage))) {
@@ -134,14 +134,14 @@ class DirectionsHandler
             $directionsState->setStage(++$stage);
             $this->savedStateRepository->updateSavedState($savedDirectionsState);
 
-            return;
+            return $directionsState;
         }
         // 3. Directions
         $directionsList = $this->driver->getDirections($locationList, self::MAXREQUESTS);
         // 4. Encoded route
         $encodedRoute = array_map(array($this->driver, 'getPolyline'), $directionsList);
         // 5. Set data for Db and Flush it
-        //array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
+        array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
         $route->setStage($stage, $encodedRoute);
 
         $lastDirection = array_pop($directionsList);
