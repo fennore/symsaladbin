@@ -10,6 +10,7 @@ use App\Entity\Directions;
 
 class DirectionsRepository extends AbstractBatchableEntityRepository
 {
+    use Traits\RepositoryStageTrait;
 
     public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
@@ -18,6 +19,7 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
 
     /**
      * @param int $stage
+     *
      * @return IterableResult
      */
     public function getDirections(int $stage)
@@ -27,6 +29,7 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
             ->join('d.origin', 'l', Join::ON, 'd.stage = :stage')
             ->setParameter(':stage', $stage)
             ->orderBy('l.weight', 'ASC');
+
         return $qb->getQuery()->iterate();
     }
 

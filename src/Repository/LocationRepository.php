@@ -2,13 +2,15 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\{Query,Internal\Hydration\IterableResult};
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Handler\DbBatchHandler;
 use App\Entity\Location;
 
 class LocationRepository extends AbstractBatchableEntityRepository
 {
+    use Traits\RepositoryStageTrait;
 
     public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
     {
