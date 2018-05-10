@@ -11,6 +11,7 @@ use App\Repository\SavedStateRepository;
 use App\Repository\LocationRepository;
 use App\Repository\DirectionsRepository;
 use App\States\EncodedRoute;
+use App\States\DirectionsState;
 use App\Lists\Route as LocationRoute;
 use App\Entity\Location;
 use App\Entity\Coordinate;
@@ -61,6 +62,7 @@ class ApiController extends AbstractController
         SerializerInterface $serializer,
         LocationRepository $locationRepo,
         DirectionsRepository $directionsRepo,
+        SavedStateRepository $savedStateRepo,
         int $stage)
     {
         $locations = \json_decode($request->getContent());
@@ -75,9 +77,20 @@ class ApiController extends AbstractController
         }
 
         // Saved state empty stage route ? => no replace old when updated route has been fully calculated
-        // Saved state set directions calculation back to this stage ? => no -> too limited
+        // Only if Locations are empty, remove encoded route as well
+        if (empty($locations)) {
+            $route = new EncodedRoute();
+            $savedState = $savedStateRepo->checkState($route);
+            $route->setStage($stage, []);
+            $savedStateRepo->updateSavedState($savedState);
+        }
 
+        // Saved state set directions calculation back to this stage ? => no -> too limited
         // NEW => introducing updated stage application state
+        $directionsState = new DirectionsState();
+        $savedState = $savedStateRepo->checkState($directionsState);
+        $directionsState->addPendingUpdate($stage);
+        $savedStateRepo->updateSavedState($savedState);
 
         $route = new LocationRoute($stage, $locationRepo);
         $json = $serializer->serialize($route, 'json');

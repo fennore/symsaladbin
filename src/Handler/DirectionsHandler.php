@@ -120,16 +120,16 @@ class DirectionsHandler
         $savedDirectionsState = $this->savedStateRepository->checkState($directionsState);
         $route = new EncodedRoute();
         $savedRoute = $this->savedStateRepository->checkState($route);
-        $stage = $directionsState->getStage() ?? 1;
-        $weight = $directionsState->getWeight() ?? 0;
+        $stage = $directionsState->getStage();
+        $weight = $directionsState->getWeight();
         // 2. Get Locations
         $locationList = $this->locationRepository->getStageLocations($stage, $weight, $this->getLocationLimit());
         // - Stop processing when no locations are found and we ran out of stages to process
         if (!$locationList->valid() && $stage > $this->locationRepository->getLastStage()) {
             return $directionsState;
         }
-        // - Stop processing when weight is 0 but there are already encoded route parts
-        if (0 === $weight && !empty($route->getStage($stage))) {
+        // - Stop processing when weight is 0 but there are already encoded route parts and no update is running
+        if (0 === $weight && !empty($route->getStage($stage)) && is_null($directionsState->getCurrentUpdate())) {
             // Also set Direction SavedState to next stage
             $directionsState->setStage(++$stage);
             $this->savedStateRepository->updateSavedState($savedDirectionsState);
@@ -142,18 +142,24 @@ class DirectionsHandler
         $encodedRoute = array_map(array($this->driver, 'getPolyline'), $directionsList);
         // 5. Set data for Db
         array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
-        array_map(array($route, 'addPolyline'), array_pad([], count($encodedRoute), $stage), $encodedRoute);
+        // 5.1 When directions calculations are not flagged as an update, update the encodedRoute
+        if (is_null($directionsState->getCurrentUpdate())) {
+            array_map(array($route, 'addPolyline'), array_pad([], count($encodedRoute), $stage), $encodedRoute);
+        // 5.2 When flagged as update but unfinished save the encodedroute under the directionsstate update
+        } elseif ($this->driver->hasUncalculatedDirectionsLeft()) {
+            $directionsState->addUpdatePolylines($encodedRoute);
+        // 5.3 When flagged as update and finished overwrite the encoded route on $route with setStage
+        } else {
+            $directionsState->addUpdatePolylines($encodedRoute);
+            $route->setStage($stage, $directionsState->getUpdatedRoute());
+        }
 
         $lastDirection = array_pop($directionsList);
-        // Old check : match last location with last direction location + count check $locationCheck = $lastDirectionLocation == $lastLocation && $countCheck;
+        // 6. Update states
         if (!$this->driver->hasUncalculatedDirectionsLeft()) {
-            $directionsState
-                ->setWeight(0)
-                ->setStage(++$stage);
+            $directionsState->setNextStage();
         } else {
-            $directionsState
-                ->setWeight($lastDirection->getDestination()->getWeight())
-                ->setStage($stage);
+            $directionsState->saveStageForContinuation($lastDirection->getDestination()->getWeight());
         }
 
         // Note: merges are required because the objects might have been detached during writing the directions to database
