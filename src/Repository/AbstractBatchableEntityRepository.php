@@ -8,6 +8,7 @@ use App\Handler\DbBatchHandler;
 
 abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
 {
+    use Traits\RepositoryGeneralTrait;
     /**
      * @var DbBatchHandler
      */
