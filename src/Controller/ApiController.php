@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\SavedStateRepository;
 use App\Repository\LocationRepository;
 use App\Repository\DirectionsRepository;
+use App\Repository\StoryRepository;
 use App\States\EncodedRoute;
 use App\States\DirectionsState;
 use App\Lists\Route as LocationRoute;
@@ -29,6 +30,7 @@ class ApiController extends AbstractController
      */
     public function index()
     {
+        // @todo display API index? One page leads to all?
         return $this->json('Hello Api');
     }
 
@@ -55,7 +57,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/route/{stage}", name="api_route_update", methods={"POST"})
+     * @Route("/api/route/{currentStage}", name="api_route_update", methods={"POST"})
      */
     public function updateRouteStage(
         Request $request,
@@ -63,38 +65,106 @@ class ApiController extends AbstractController
         LocationRepository $locationRepo,
         DirectionsRepository $directionsRepo,
         SavedStateRepository $savedStateRepo,
-        int $stage)
+        int $currentStage)
     {
         $locations = \json_decode($request->getContent());
         // Remove calculated Directions from stage
-        $directionsRepo->clearStage($stage);
+        $directionsRepo->clearStage($currentStage);
         // Remove all Locations from stage
-        $locationRepo->clearStage($stage);
+        $locationRepo->clearStage($currentStage);
+
+        // Saved state set directions calculation back to this stage ? => no -> too limited
+        // NEW => introducing updated stage application state
+        $directionsState = new DirectionsState();
+        $savedState = $savedStateRepo->checkState($directionsState);
+        $directionsState->addPendingUpdate($currentStage);
+
         // Write new Locations to stage
         foreach ($locations as $weight => $location) {
             \extract($location);
+            $directionsState->addPendingUpdate($stage);
             $locationRepo->createLocation(new Location(new Coordinate((float) $coordinate['lat'], (float) $coordinate['lng']), $name, $stage, $weight));
         }
+        $savedStateRepo->updateSavedState($savedStateRepo->mergeSavedState($savedState));
 
         // Saved state empty stage route ? => no replace old when updated route has been fully calculated
         // Only if Locations are empty, remove encoded route as well
         if (empty($locations)) {
             $route = new EncodedRoute();
             $savedState = $savedStateRepo->checkState($route);
-            $route->setStage($stage, []);
+            $route->setStage($currentStage, []);
             $savedStateRepo->updateSavedState($savedState);
         }
 
-        // Saved state set directions calculation back to this stage ? => no -> too limited
-        // NEW => introducing updated stage application state
-        $directionsState = new DirectionsState();
-        $savedState = $savedStateRepo->checkState($directionsState);
-        $directionsState->addPendingUpdate($stage);
-        $savedStateRepo->updateSavedState($savedState);
-
-        $route = new LocationRoute($stage, $locationRepo);
+        $route = new LocationRoute($currentStage, $locationRepo);
         $json = $serializer->serialize($route, 'json');
 
-        return JsonResponse::fromJsonString($json, 204);
+        return JsonResponse::fromJsonString($json);
+    }
+
+    /**
+     * Clear the route data.
+     *
+     * @Route("/api/route/clear", name="api_route_clear", methods={"POST"})
+     */
+    public function clearRoute(
+        LocationRepository $locationRepo,
+        DirectionsRepository $directionsRepo,
+        SavedStateRepository $savedStateRepo)
+    {
+        // empty location list
+        // $locationRepo->clearAll();
+        // empty directions list
+        // $directionsRepo->clearAll();
+        // empty encoded route
+        $state = new EncodedRoute();
+        $savedStateRepo->deleteSavedState($savedStateRepo->checkState($state));
+        // reset directions state
+        $state = new DirectionsState();
+        $savedStateRepo->deleteSavedState($savedStateRepo->checkState($state));
+
+        return JsonResponse::create(null, 204);
+    }
+
+    /**
+     * Returns a list of stories starting from given offset and as many as given length.
+     *
+     * @Route("/api/story/{offset}/{length}", name="api_story", methods={"GET", "HEAD"})
+     */
+    public function getStory(StoryRepository $storyRepo, int $offset, int $length)
+    {
+    }
+
+    /**
+     * Update the story using given identifier.
+     *
+     * @Route("/api/story/{id}", name="api_story_update", methods={"PUT"})
+     */
+    public function updateStory(int $id)
+    {
+    }
+
+    /**
+     * Clear stories.
+     *
+     * @Route("/api/stories/clear", name="api_stories_clear", methods={"POST"})
+     */
+    public function clearStories()
+    {
+        // empty stories list
+        // reset stories state
+        return JsonResponse::create(null, 204);
+    }
+
+    /**
+     * Clear the images data.
+     *
+     * @Route("/api/images/clear", name="api_images_clear", methods={"POST"})
+     */
+    public function clearImages()
+    {
+        // empty images list
+        // reset images state
+        return JsonResponse::create(null, 204);
     }
 }

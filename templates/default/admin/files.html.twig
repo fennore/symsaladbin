@@ -1,0 +1,24 @@
+{% extends "default/base.html.twig" %}
+
+{% block title %}Files{% endblock %}
+
+{% block body %}
+  <main id="content">
+    <p>
+      List of all files that can be used.<br>
+      You can upload more files here as well.
+    </p>
+    <p>
+      <a href="{{path('admin_files_sync')}}">Synchronize Files</a>
+    </p>
+    <dl>
+      {% for row in filelist %}
+        {% set file = row[0] %}
+        <dt>{{file.fileName}}</dt>
+        <dd>source: {{file.source}}</dd>
+        <dd>type: {{file.mimeType}}</dd>
+        <dd>last modified: {{file.lastModified|date('d-m-Y H:i:s')}}</dd>
+      {% endfor %}
+    </dl>
+  </main>
+{% endblock %}

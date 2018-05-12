@@ -15,4 +15,13 @@ class DefaultController extends AbstractSmartController
     {
         return $this->smartRender('default/intro.html.twig');
     }
+
+    /**
+     * Matches /.
+     *
+     * @Route("/story/{title}", name="story", schemes="https", defaults={"_format": "html"})
+     */
+    public function viewStory()
+    {
+    }
 }

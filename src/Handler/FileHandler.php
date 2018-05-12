@@ -62,6 +62,6 @@ class FileHandler
             $this->fileRepository->deleteFile($file);
         }
 
-        return array_values($dbFileSources);
+        return $this->fileRepository->getFiles();
     }
 }
