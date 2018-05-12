@@ -46,7 +46,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/route/{stage}", name="api_route_locations", methods={"GET","HEAD"})
+     * @Route("/api/route/{stage}", name="api_route_locations", methods={"GET","HEAD"}, requirements={"stage"="\d+"})
      */
     public function getLocations(LocationRepository $locationRepo, SerializerInterface $serializer, int $stage)
     {
@@ -57,7 +57,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/route/{currentStage}", name="api_route_update", methods={"POST"})
+     * @Route("/api/route/{currentStage}", name="api_route_update", methods={"POST"}, requirements={"currentStage"="\d+"})
      */
     public function updateRouteStage(
         Request $request,
@@ -67,7 +67,7 @@ class ApiController extends AbstractController
         SavedStateRepository $savedStateRepo,
         int $currentStage)
     {
-        $locations = \json_decode($request->getContent());
+        $locations = json_decode($request->getContent(), true);
         // Remove calculated Directions from stage
         $directionsRepo->clearStage($currentStage);
         // Remove all Locations from stage
@@ -81,9 +81,9 @@ class ApiController extends AbstractController
 
         // Write new Locations to stage
         foreach ($locations as $weight => $location) {
-            \extract($location);
+            extract($location);
             $directionsState->addPendingUpdate($stage);
-            $locationRepo->createLocation(new Location(new Coordinate((float) $coordinate['lat'], (float) $coordinate['lng']), $name, $stage, $weight));
+            $locationRepo->createLocation(new Location(new Coordinate((float) $coordinate['lat'], (float) $coordinate['lng']), $name, $stage, $weight, $status));
         }
         $savedStateRepo->updateSavedState($savedStateRepo->mergeSavedState($savedState));
 
@@ -96,10 +96,7 @@ class ApiController extends AbstractController
             $savedStateRepo->updateSavedState($savedState);
         }
 
-        $route = new LocationRoute($currentStage, $locationRepo);
-        $json = $serializer->serialize($route, 'json');
-
-        return JsonResponse::fromJsonString($json);
+        return JsonResponse::create(null, 204);
     }
 
     /**
@@ -113,9 +110,9 @@ class ApiController extends AbstractController
         SavedStateRepository $savedStateRepo)
     {
         // empty location list
-        // $locationRepo->clearAll();
+        $locationRepo->truncateTable();
         // empty directions list
-        // $directionsRepo->clearAll();
+        $directionsRepo->truncateTable();
         // empty encoded route
         $state = new EncodedRoute();
         $savedStateRepo->deleteSavedState($savedStateRepo->checkState($state));
@@ -129,18 +126,27 @@ class ApiController extends AbstractController
     /**
      * Returns a list of stories starting from given offset and as many as given length.
      *
-     * @Route("/api/story/{offset}/{length}", name="api_story", methods={"GET", "HEAD"})
+     * @Route("/api/story/{offset}/{length}", name="api_story", methods={"GET", "HEAD"}, requirements={"offset"="\d+","length"="\d+"})
      */
-    public function getStory(StoryRepository $storyRepo, int $offset, int $length)
+    public function getStory(StoryRepository $storyRepo, int $offset = 0, int $length = 1)
     {
     }
 
     /**
      * Update the story using given identifier.
      *
-     * @Route("/api/story/{id}", name="api_story_update", methods={"PUT"})
+     * @Route("/api/story/{id}", name="api_story_update", methods={"PUT"}, requirements={"id"="\d+"})
      */
     public function updateStory(int $id)
+    {
+    }
+
+    /**
+     * Delete the story using given identifier.
+     *
+     * @Route("/api/story/{id}", name="api_story_delete", methods={"DELETE"}, requirements={"id"="\d+"})
+     */
+    public function deleteStory(int $id)
     {
     }
 

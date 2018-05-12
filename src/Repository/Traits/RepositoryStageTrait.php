@@ -15,6 +15,11 @@ trait RepositoryStageTrait
      */
     public function clearStage(int $stage)
     {
+        // Flush execution and clear
+        $this->getEntityManager()->flush();
+        $this->clear();
+
+        // Clear stage
         $qb = $this->createQueryBuilder('rst');
 
         $qb

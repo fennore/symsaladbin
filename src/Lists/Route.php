@@ -9,7 +9,7 @@ use App\Repository\LocationRepository;
 
 /**
  * Route wrapper for locations.
- * 
+ *
  * @Hateoas\Relation(
  *     name = "self",
  *     href = @Hateoas\Route(
@@ -21,7 +21,7 @@ use App\Repository\LocationRepository;
  *     name = "update",
  *     href = @Hateoas\Route(
  *         "api_route_update",
- *         parameters = { "stage" = "expr(object.getStage())" },
+ *         parameters = { "currentStage" = "expr(object.getStage())" },
  *     ),
  *     attributes = { "method" = "POST" }
  * )
@@ -61,13 +61,14 @@ use App\Repository\LocationRepository;
 class Route
 {
     private $stage;
-    
+
     /**
      * @Serializer\Exclude
-     * @var LocationRepository 
+     *
+     * @var LocationRepository
      */
     private $locationRepo;
-    
+
     /**
      * @param int $stage Stage number of the route
      */
@@ -76,32 +77,33 @@ class Route
         $this->stage = $stage;
         $this->locationRepo = $locationRepo;
     }
-    
+
     public function getStage(): int
     {
         return $this->stage;
     }
-    
+
     public function getLocations(): array
     {
         $locations = $this->locationRepo->getStageLocations($this->stage);
         $list = [];
-        foreach($locations as $row) {
+        foreach ($locations as $row) {
             $list[] = $row[0];
         }
+
         return $list;
     }
-    
+
     public function getNextStage(): int
     {
         return \min($this->stage + 1, $this->locationRepo->getLastStage());
     }
-    
+
     public function getPreviousStage(): int
     {
         return \max($this->stage - 1, 1);
     }
-    
+
     public function getLastStage(): int
     {
         return $this->locationRepo->getLastStage();
