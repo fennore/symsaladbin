@@ -23,5 +23,6 @@ class DefaultController extends AbstractSmartController
      */
     public function viewStory()
     {
+        return $this->smartRender('default/story.html.twig');
     }
 }
