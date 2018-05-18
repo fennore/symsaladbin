@@ -1,7 +1,7 @@
 <?php
 
 /*
-    Note:
+  Note:
   mappedSuperclass + class table inheritance no worky!
   This does not work in combination with Class Inheritance
   As doctrine will read X extending SourceItem extending Item differently
@@ -19,7 +19,6 @@ namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\File;
-use App\Entity\Item\Item;
 
 /**
  * Trait for Items that have a one-to-one relation with the File entity.
@@ -44,18 +43,24 @@ trait SourceItem
     {
         $this->file = $file;
 
-        // Update Item title
-        if (empty($this->title) && $this instanceof Item) {
-            $this->setTitle($file->getFileName());
-        }
+        // Update object title
+        $this->setTitle($file->getFileName());
+
+        return $this;
     }
+
+    abstract public function setTitle(string $title);
 
     /**
      * Remove File from Item.
+     *
+     * @return self
      */
     public function detachFile()
     {
         unset($this->file);
+
+        return $this;
     }
 
     /**
@@ -65,9 +70,9 @@ trait SourceItem
      * The function returns self::MIMEMATCH by default.
      * Preferably just add class constant MIMEMATCH to your class using this trait.
      *
-     * @return string|array
+     * @return array
      */
-    public static function matchMimeType()
+    public static function matchMimeType(): array
     {
         return self::MIMEMATCH;
     }

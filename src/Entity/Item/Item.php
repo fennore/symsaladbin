@@ -102,7 +102,12 @@ class Item
         $this->created = $this->updated;
     }
 
-    public function setTitle(string $title)
+    /**
+     * @param string $title
+     *
+     * @return \App\Entity\Item\Item
+     */
+    public function setTitle(string $title): Item
     {
         $this->title = $title;
 
@@ -114,7 +119,12 @@ class Item
         return $this;
     }
 
-    public function setContent(string $content)
+    /**
+     * @param string $content
+     *
+     * @return \App\Entity\Item\Item
+     */
+    public function setContent(string $content): Item
     {
         $this->content = $content;
         // Flag updated
@@ -123,7 +133,12 @@ class Item
         return $this;
     }
 
-    public function setPath(CleanPathString $path)
+    /**
+     * @param CleanPathString $path
+     *
+     * @return \App\Entity\Item\Item
+     */
+    public function setPath(CleanPathString $path): Item
     {
         $this->path = (string) $path;
 
@@ -135,30 +150,41 @@ class Item
      *
      * @param ArrayCollection $items a collection of Item entities
      *
-     * @return $this
+     * @return \App\Entity\Item\Item
      */
-    public function setLink(ArrayCollection $items)
+    public function setLink(ArrayCollection $items): Item
     {
         $this->link = $items;
 
         return $this;
     }
 
-    public function setWeight(int $weight)
+    /**
+     * @param int $weight
+     *
+     * @return \App\Entity\Item\Item
+     */
+    public function setWeight(int $weight): Item
     {
         $this->weight = $weight;
 
         return $this;
     }
 
-    public function setActive()
+    /**
+     * @return \App\Entity\Item\Item
+     */
+    public function setActive(): Item
     {
         $this->status = 1;
 
         return $this;
     }
 
-    public function setInactive()
+    /**
+     * @return \App\Entity\Item\Item
+     */
+    public function setInactive(): Item
     {
         $this->status = 0;
 
@@ -169,9 +195,9 @@ class Item
      * Flag this Item as updated.
      * This means setting the updated property to the current timestamp value.
      *
-     * @return $this
+     * @return \App\Entity\Item\Item
      */
-    public function setUpdated()
+    public function setUpdated(): Item
     {
         $currentDT = new DateTime();
         $this->updated = $currentDT->getTimestamp();
