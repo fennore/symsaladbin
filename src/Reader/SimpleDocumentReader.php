@@ -4,9 +4,17 @@ namespace App\Reader;
 
 use ZipArchive;
 use XMLReader;
+use DOMDocument;
 use App\Entity\File;
 use App\Entity\Item\Story;
 
+/**
+ * @todo use a separate document reader like:
+ * https://github.com/PHPOffice/PHPWord
+ *
+ * Reader code is currently mixed with App specific code (story entity) this should not be the case.
+ * This class is supposed to be the glue using the reader and filling App entities with data received from the reader.
+ */
 class SimpleDocumentReader
 {
     /**
@@ -16,12 +24,13 @@ class SimpleDocumentReader
      *
      * @return Story
      */
-    public function saveDocumentAsStory(File $file)
+    public function saveDocumentAsStory(File $file): Story
     {
         $xml = $this->readZippedXml($file);
 
-        return new Story();
-        //$this->xmlToHtml($xml);
+        $html = $this->xmlToHtml($xml);
+
+        return new Story($file->getFileName(), $html);
     }
 
     /**
@@ -31,19 +40,19 @@ class SimpleDocumentReader
      *
      * @return string
      */
-    private function readZippedXml(File $file)
+    private function readZippedXml(File $file): string
     {
         // Create new ZIP archive
         $zip = new ZipArchive();
 
         switch ($file->getMimeType()) {
-      case 'odt':
-        $dataFile = 'content.xml';
-        break;
-      case 'docx':
-        $dataFile = 'word/document.xml';
-        break;
-    }
+            case 'odt':
+              $dataFile = 'content.xml';
+              break;
+            case 'docx':
+              $dataFile = 'word/document.xml';
+              break;
+        }
 
         // Open received archive file
         if (true === $zip->open($file->getSource()) && false !== ($zip->locateName($dataFile))) {
@@ -65,7 +74,7 @@ class SimpleDocumentReader
         return '';
     }
 
-    private function xmlToHtml($xmlString)
+    private function xmlToHtml($xmlString): string
     {
         // Read XML string
         $reader = new XMLReader();
@@ -89,7 +98,7 @@ class SimpleDocumentReader
         // loop through docx xml dom
         while ($reader->read()) {
             // look for new paragraphs
-            if (XMLREADER::ELEMENT == $reader->nodeType && $reader->name === $ns.':p') {
+            if (XMLReader::ELEMENT == $reader->nodeType && $reader->name === $ns.':p') {
                 // read paragraph outerXML
                 $p = $reader->readOuterXML();
 
@@ -119,6 +128,6 @@ class SimpleDocumentReader
         // Load as HTML without html/body and doctype
         @$doc->loadHTML($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         // @todo remove strip tags if allowed with contenteditable / wysiwyg implementation
-        return strip_tags(simplexml_import_dom($doc)->asXML(), '<br>');
+        return strip_tags(simplexml_import_dom($doc)->asXML() ?? '', '<br>');
     }
 }
