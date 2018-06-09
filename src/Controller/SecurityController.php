@@ -12,7 +12,7 @@ class SecurityController extends AbstractController
     /**
      * Matches /login on GET, HEAD.
      *
-     * @Route("/login", name="login_page", methods={"GET","HEAD"}, schemes="https")
+     * @Route("/login", name="login_page", methods={"GET","HEAD"})
      */
     public function login(AuthenticationUtils $authUtils)
     {
@@ -31,16 +31,17 @@ class SecurityController extends AbstractController
     /**
      * Matches /login on POST.
      *
-     * @Route("/login", name="login_action", methods="POST", schemes="https")
+     * @Route("/login", name="login_action", methods="POST")
      */
     public function doLogin(Request $request)
     {
+	return null;
     }
 
     /**
      * Matches /logout.
      *
-     * @Route("/logout", name="logout", schemes="https")
+     * @Route("/logout", name="logout")
      */
     public function doLogout(Request $request)
     {

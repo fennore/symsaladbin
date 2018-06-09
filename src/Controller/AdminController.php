@@ -13,7 +13,7 @@ use App\Handler\DirectionsHandler;
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/admin", name="admin_overview", schemes="https")
+     * @Route("/admin", name="admin_overview")
      */
     public function overview()
     {

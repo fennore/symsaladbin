@@ -9,7 +9,7 @@ class DefaultController extends AbstractSmartController
     /**
      * Matches /.
      *
-     * @Route("/", name="intro", schemes="https", defaults={"_format": "html"})
+     * @Route("/", name="intro", defaults={"_format": "html"})
      */
     public function intro()
     {
