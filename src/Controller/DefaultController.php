@@ -17,9 +17,9 @@ class DefaultController extends AbstractSmartController
     }
 
     /**
-     * Matches /.
+     * Matches /story/xxxx.
      *
-     * @Route("/story/{title}", name="story", schemes="https", defaults={"_format": "html"})
+     * @Route("/story/{title}", name="story", defaults={"_format": "html"})
      */
     public function viewStory()
     {

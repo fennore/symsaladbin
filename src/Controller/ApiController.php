@@ -23,7 +23,6 @@ class ApiController extends AbstractController
      * @Route(
      *      "/api",
      *      name="api_index",
-     *      schemes="https",
      *      defaults={"_format": "json"},
      *      requirements={"_format": "json"}
      * )
