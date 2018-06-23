@@ -13,8 +13,8 @@ class Story extends Item implements SourceItemInterface
 {
     use SourceItem;
 
-    const MIMEMATCH = array(
+    const MIMEMATCH = [ 
         'application/vnd.oasis.opendocument.text',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    );
+    ];
 }
