@@ -3,6 +3,7 @@
 namespace App\Entity\Item;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\ImageSourceItem;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TimelineItemRepository")
@@ -11,11 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TimelineItem extends Item implements SourceItemInterface
 {
+    use ImageSourceItem;
+
     /**
      * For now only jpeg and png support.
      */
-    const MIMEMATCH = array(
-    'image/jpeg',
-    'image/png',
-  );
+    const MIMEMATCH = [ 
+    	'image/jpeg',
+    	'image/png',
+    ];
 }

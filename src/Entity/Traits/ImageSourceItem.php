@@ -5,11 +5,11 @@ namespace App\Entity\Traits;
 use Throwable;
 use App\Entity\File;
 
-trait ImageSource
+trait ImageSourceItem
 {
     use SourceItem {
-    setFile as sourceItemSetFile;
-  }
+	setFile as sourceItemSetFile;
+    }
 
     /**
      * @ORM\Column(type="json", nullable=true);
