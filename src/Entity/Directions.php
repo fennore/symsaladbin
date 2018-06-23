@@ -22,33 +22,38 @@ class Directions
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Location")
-     * @var Location 
+     *
+     * @var Location
      */
     private $origin;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Location")
-     * @var Location 
+     *
+     * @var Location
      */
     private $destination;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned":true})
-     * @var int 
+     *
+     * @var int
      */
     private $stage;
 
     /**
      * @ORM\Column(type="json")
-     * @var stdClass|null 
+     *
+     * @var stdClass|null
      */
     private $data;
 
     /**
      * Called on postLoad Entity life cycle.
      * Because doctrine converts json objects to associative arrays instead of objects and we want objects, which is default php behaviour!
+     *
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#lifecycle-callbacks
-     * 
+     *
      * @ORM\PostLoad
      */
     public function postLoad()
@@ -59,7 +64,7 @@ class Directions
     /**
      * @param \App\Entity\Location $origin
      * @param \App\Entity\Location $destination
-     * @param string $data Json directions information
+     * @param string               $data        Json directions information
      */
     public function __construct(Location $origin, Location $destination, stdClass $data)
     {
@@ -81,12 +86,12 @@ class Directions
     {
         return $this->destination;
     }
-    
+
     public function getData(): ?stdClass
     {
         return $this->data;
     }
-    
+
     public function getId(): ?int
     {
         return $this->id;

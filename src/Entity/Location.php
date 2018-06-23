@@ -46,8 +46,8 @@ class Location
      * @param Coordinate $coordinate
      * @param string     $name
      * @param int        $stage
-     * @param int        $weight Defaults to 0.
-     * @param int        $status Defaults to 1.
+     * @param int        $weight     defaults to 0
+     * @param int        $status     defaults to 1
      */
     public function __construct(Coordinate $coordinate, string $name, int $stage, int $weight = 0, int $status = 1)
     {

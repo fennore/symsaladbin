@@ -6,8 +6,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use App\Data\ContentSecurityPolicy;
 
-/**
- */
 class GlobalHeaderSubscriber implements EventSubscriberInterface
 {
     private $csp;
@@ -20,7 +18,7 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'kernel.response' => 'addCSPHeaderToResponse' // XSS protection
+            'kernel.response' => 'addCSPHeaderToResponse', // XSS protection
         ];
     }
 
@@ -58,7 +56,7 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
             ;
         }
         $policy = $this->csp->getPolicy();
-        if(!empty($policy)) {
+        if (!empty($policy)) {
             $event
                 ->getResponse()
                 ->headers

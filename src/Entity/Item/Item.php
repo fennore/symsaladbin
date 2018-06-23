@@ -3,7 +3,6 @@
 namespace App\Entity\Item;
 
 use DateTime;
-use ReflecionClass;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Tools\CleanPathString;
@@ -213,60 +212,67 @@ class Item
     //    }
     public function getTitle(): string
     {
-	return $this-title;
+        return $this - title;
     }
+
     public function getContent(): string
     {
-	return $this->content;
+        return $this->content;
     }
+
     public function getId(): int
     {
-	return $this->id;
+        return $this->id;
     }
+
     /**
      * @param string $format Date format to return the created date in.
-     * 		Defaults to Y-m-d H:i:s
+     *                       Defaults to Y-m-d H:i:s
      */
-    public function getCreated(string $format = 'Y-m-d H:i:s'): string 
+    public function getCreated(string $format = 'Y-m-d H:i:s'): string
     {
-	return DateTime::createFromFormat('U', $this->created)->format($format);
+        return DateTime::createFromFormat('U', $this->created)->format($format);
     }
+
     /**
      * @param string $format Date format to return the updated date in.
-     * 		Defaults to Y-m-d H:i:s
+     *                       Defaults to Y-m-d H:i:s
      */
-    public function getUpdated(string $format = 'Y-m-d H:i:s'): string 
+    public function getUpdated(string $format = 'Y-m-d H:i:s'): string
     {
-	return DateTime::createFromFormat('U', $this->updated)->format($format);
+        return DateTime::createFromFormat('U', $this->updated)->format($format);
     }
+
     /**
      * @return bool
      */
     public function isActive(): bool
     {
-	return $this->status;
+        return $this->status;
     }
 
     public function getPath(): string
     {
-    	return $this->path;
+        return $this->path;
     }
 
     public function getLink(): string
     {
-    	return $this->link;
-    }
-    public function getWeight(): int
-    {
-	return $this->weight;
-    }
-    public function getType(): string
-    {
-	return $this->type;
-    }
-    public function jsonSerialize()
-    {
-	return get_object_vars($this);
+        return $this->link;
     }
 
+    public function getWeight(): int
+    {
+        return $this->weight;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
 }

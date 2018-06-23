@@ -7,7 +7,7 @@ class GapiHelper
     const VALIDDIRECTIONMODES = array(
         'bicycling',
         'walking',
-        'driving'
+        'driving',
     );
 
     /**
@@ -18,12 +18,11 @@ class GapiHelper
         array('bicycling' => null),
         array('bicycling' => 5),
         array('walking' => 5),
-        array('driving' => 5)
+        array('driving' => 5),
     );
 
     /**
-     * Google Directions API request url with json response
+     * Google Directions API request url with json response.
      */
     const DIRECTIONSREQUESTURL = 'https://maps.googleapis.com/maps/api/directions/json';
-
 }

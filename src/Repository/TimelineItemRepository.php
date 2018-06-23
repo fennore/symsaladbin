@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\TimelineItem;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -12,7 +11,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method TimelineItem[]    findAll()
  * @method TimelineItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TimelineItemRepository extends AbstractBatchableEntityRepository 
+class TimelineItemRepository extends AbstractBatchableEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {

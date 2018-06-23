@@ -62,7 +62,7 @@ class AdminController extends AbstractController
 
         return $this->json(['status' => 'ok', 'files-total' => iterator_count($files)]);
     }
- 
+
     /**
      * @Route("/admin/route/sync", name="admin_route_sync")
      */

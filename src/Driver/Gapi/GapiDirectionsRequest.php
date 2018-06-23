@@ -7,6 +7,7 @@ use App\Entity\Location;
 
 /**
  * Represents a google API directions request using waypoints.
+ *
  * @see https://developers.google.com/maps/documentation/directions/intro#Waypoints
  */
 class GapiDirectionsRequest
@@ -15,41 +16,44 @@ class GapiDirectionsRequest
      * @var string Google API authentication key
      */
     private $apiKey;
-    
+
     /**
      * Directions mode (fe BICYCLE | WALKING).
-     * @var string 
+     *
+     * @var string
      */
     private $mode;
 
     /**
-     * @var Location 
+     * @var Location
      */
     private $origin;
 
     /**
-     * @var Location 
+     * @var Location
      */
     private $destination;
 
     /**
-     * Array of Location entities
-     * @var array 
+     * Array of Location entities.
+     *
+     * @var array
      */
     private $waypoints = [];
 
     /**
-     * @var string 
+     * @var string
      */
     private $avoid;
 
     /**
-     * @param string $apiKey
+     * @param string   $apiKey
      * @param Location $origin
      * @param Location $destination
-     * @param string $mode Optional, defaults to GAPI default (driving)
-     * @param string $avoid Optional, defaults to GAPI default (none)
-     * @throws ErrorException When invalid directions mode is used.
+     * @param string   $mode        Optional, defaults to GAPI default (driving)
+     * @param string   $avoid       Optional, defaults to GAPI default (none)
+     *
+     * @throws ErrorException when invalid directions mode is used
      */
     public function __construct(string $apiKey, Location $origin, Location $destination, string $mode = null, string $avoid = null)
     {
@@ -70,7 +74,6 @@ class GapiDirectionsRequest
 
     public function getDirections()
     {
-
         $url = GapiHelper::DIRECTIONSREQUESTURL.'?'.$this;
         // Get cURL resource
         $curl = curl_init();
@@ -86,6 +89,7 @@ class GapiDirectionsRequest
         curl_close($curl);
         // Take a break;
         usleep(100);
+
         return $response;
     }
 

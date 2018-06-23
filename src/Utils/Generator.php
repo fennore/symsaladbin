@@ -3,7 +3,7 @@
 namespace App\Utils;
 
 /**
- * Generator of simple data
+ * Generator of simple data.
  */
 class Generator
 {

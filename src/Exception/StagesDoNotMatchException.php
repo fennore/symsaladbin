@@ -7,7 +7,6 @@ use App\Entity\Location;
 
 class StagesDoNotMatchException extends RuntimeException
 {
-
     /**
      * @param Location $originLocation
      * @param Location $compareLocation
