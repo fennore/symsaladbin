@@ -36,12 +36,11 @@ class SimpleGpxFileReader
      * @param File $file  the GPX file to read from
      * @param int  $stage which stage GPX locations belong to
      */
-    public function saveGpxAsLocations(File $file, int $stage)
+    public function getGpxAsLocations(File $file, int $stage)
     {
         $gpx = new SimpleXMLIterator($file->getSource(), LIBXML_NOCDATA, true);
-        // Validate gpx file
         $gpx->rewind();
-
+        // Validate gpx file
         if (!$gpx->valid() || !$gpx->hasChildren()) {
             return;
         }

@@ -28,9 +28,11 @@ class SimpleDocumentReader
     {
         $xml = $this->readZippedXml($file);
 
-        $html = $this->xmlToHtml($xml);
+        $html = $this->xmlToHtml($file, $xml);
 
-        return new Story($file->getFileName(), $html);
+	$story = new Story($file->getFileName(), $html);
+	$story->setFile($file);
+        return $story;
     }
 
     /**
@@ -44,28 +46,23 @@ class SimpleDocumentReader
     {
         // Create new ZIP archive
         $zip = new ZipArchive();
+	// Open zipped archive file
+	$isOpen = $zip->open($file->getSource());
 
-        switch ($file->getMimeType()) {
-            case 'odt':
-              $dataFile = 'content.xml';
-              break;
-            case 'docx':
-              $dataFile = 'word/document.xml';
-              break;
-        }
+	if(true === $isOpen) {
+	   $index = $zip->locateName($this->getContentIdentifier($file));
+	}
 
         // Open received archive file
-        if (true === $zip->open($file->getSource()) && false !== ($zip->locateName($dataFile))) {
-            // If done, search for the data file in the archive
-            $index = $zip->locateName($dataFile);
+        if (true === $isOpen && false !== $index) {
             // If found, read it to the string
-            $data = $zip->getFromIndex($index);
+            $content = $zip->getFromIndex($index);
             // Close archive file
             $zip->close();
             // Load XML from a string
             // Skip errors and warnings
             $doc = new DOMDocument();
-            $doc->loadXML($data, LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+            $doc->loadXML($content, LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
             // Read XML data
             return $doc->saveXML();
         }
@@ -74,55 +71,96 @@ class SimpleDocumentReader
         return '';
     }
 
-    private function xmlToHtml($xmlString): string
+    /**
+     * Get the xml content identifier from given file.
+     * This uses a mime type match.
+     *
+     * @param File $file
+     */
+    private function getContentIdentifier(File $file): string
+    {
+	switch ($file->getMimeType()) {
+	    case 'application/vnd.oasis.opendocument.text':
+        	return 'content.xml';
+      	    /**
+             * @todo check why octet-stream happens on docx.
+       	     * It's default MIME for unknown and could be anything.
+             */
+	    case 'application/octet-stream':
+      	    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        	return 'word/document.xml';
+    	}
+	return '';
+    }
+
+    /**
+     * Get the xml namespace identifier from given file.
+     * This uses a mime type match.
+     *
+     * @param File $file
+     */
+    private function getNamespaceIdentifier(File $file): string
+    {
+        switch ($file->getMimeType()) {
+	    case 'application/vnd.oasis.opendocument.text':
+              // xpath('text:p/*?/text()')
+              return 'text';
+	    case 'application/octet-stream':
+      	    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+              // xpath('w:p/*?/text()')
+              return 'w';
+        }
+    }
+
+    /**
+     * Converts an xml string to a html string.
+     *
+     * @param File $file
+     * @param string $xmlString Xml string to convert to supported and cleaned up HTML
+     */
+    private function xmlToHtml(File $file, string $xmlString): string
     {
         // Read XML string
         $reader = new XMLReader();
         $reader->xml($xmlString);
 
-        switch ($this->ext) {
-            case 'odt':
-              // xpath('text:p/*?/text()')
-              $ns = 'text';
-              break;
-            case 'docx':
-              // xpath('w:p/*?/text()')
-              $ns = 'w';
-              break;
-        }
-
-        // set up variables for formatting
+	// Initialize variables
         $text = '';
         $formatting['header'] = 0;
 
-        // loop through docx xml dom
+        // Loop through XML DOM
         while ($reader->read()) {
-            // look for new paragraphs
-            if (XMLReader::ELEMENT == $reader->nodeType && $reader->name === $ns.':p') {
-                // read paragraph outerXML
-                $p = $reader->readOuterXML();
+            // Look for new paragraphs
+	    $nodeTypeCheck = XMLReader::ELEMENT === $reader->nodeType;
+	    $ns = $this->getNamespaceIdentifier($file);
+	    $nsCheck = $ns.':p' === $reader->name;
 
-                // search for heading
-                preg_match('/<'.$ns.':pStyle '.$ns.':val="Heading.*?([1-6])"/', $p, $matches);
+	    if(!$nodeTypeCheck || !$nsCheck) {
+		continue;
+	    }
+            // Read paragraph outerXML
+            $p = $reader->readOuterXML();
 
-                if (!empty($matches)) {
-                    $formatting['header'] = $matches[1];
-                } else {
-                    $formatting['header'] = 0;
-                }
+	    // Search for heading
+            preg_match('/<'.$ns.':pStyle '.$ns.':val="Heading.*?([1-6])"/', $p, $matches);
 
-                // open h-tag or paragraph
-                $text .= ($formatting['header'] > 0) ? '<h'.$formatting['header'].'>' : '';
-
-                $text .= htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $reader->expand()->textContent));
-
-                $text .= ($formatting['header'] > 0) ? '</h'.$formatting['header'].'>' : '<br>';
+            if (!empty($matches)) {
+                $formatting['header'] = $matches[1];
+            } else {
+                $formatting['header'] = 0;
             }
+
+            // Open h-tag or paragraph
+            $text .= ($formatting['header'] > 0) ? '<h'.$formatting['header'].'>' : '';
+	    // Concatenate content
+            $text .= htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $reader->expand()->textContent));
+	    // Close h-tag or paragraph
+            $text .= ($formatting['header'] > 0) ? '</h'.$formatting['header'].'>' : '<br>';
         }
         $reader->close();
 
-        // suppress warnings. loadHTML does not require valid HTML but still warns against it...
-        // fix invalid html
+        // Suppress warnings. loadHTML does not require valid HTML but still warns against it...
+        // Fix invalid html
         $doc = new DOMDocument();
         $doc->encoding = 'UTF-8';
         // Load as HTML without html/body and doctype

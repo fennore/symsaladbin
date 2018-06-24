@@ -68,7 +68,7 @@ class LocationImporter
             if (in_array($file->getId(), $state->getReadFiles())) {
                 continue; // Skip
             }
-            foreach ($this->gpxReader->saveGpxAsLocations($file, ++$lastStage) as $location) {
+            foreach ($this->gpxReader->getGpxAsLocations($file, ++$lastStage) as $location) {
                 $this->locationRepository->createLocation($location);
             }
             $state->addReadFile($file->getId());

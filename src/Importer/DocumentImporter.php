@@ -34,7 +34,7 @@ class DocumentImporter
     /**
      * Import stories from documents.
      */
-    public function importDocuments()
+    public function importDocuments(): void
     {
         $fileList = $this->fileRepository->getFiles(Story::MIMEMATCH);
         foreach ($fileList as $row) {

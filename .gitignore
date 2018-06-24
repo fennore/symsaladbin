@@ -13,4 +13,4 @@
 .todo
 .phpintel
 .php_cs.cache
-tags.vendors
+tags.*
