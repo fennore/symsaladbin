@@ -24,7 +24,7 @@ class SimpleDocumentReader
      *
      * @return Story
      */
-    public function saveDocumentAsStory(File $file): Story
+    public function getDocumentAsStory(File $file): Story
     {
         $xml = $this->readZippedXml($file);
 

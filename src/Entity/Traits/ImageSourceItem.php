@@ -8,7 +8,7 @@ use App\Entity\File;
 trait ImageSourceItem
 {
     use SourceItem {
-	setFile as sourceItemSetFile;
+    setFile as sourceItemSetFile;
     }
 
     /**

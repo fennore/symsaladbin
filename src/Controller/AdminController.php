@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\LocationRepository;
 use App\Repository\FileRepository;
 use App\Importer\LocationImporter;
+use App\Importer\DocumentImporter;
 use App\Handler\FileHandler;
 use App\Handler\DirectionsHandler;
 
@@ -66,10 +67,10 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/route/sync", name="admin_route_sync")
      */
-    public function syncRoute(LocationImporter $locationImporter)
+    public function syncRoute(LocationImporter $locImporter)
     {
         // Save gpx data as locations
-        $locationImporter->syncWithGpx();
+        $locImporter->syncWithGpx();
 
         return $this->json(['status' => 'ok']);
     }
@@ -77,8 +78,10 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/stories/sync", name="admin_stories_sync")
      */
-    public function syncStories()
+    public function syncStories(DocumentImporter $docImporter)
     {
+        $docImporter->importDocuments();
+
         return $this->json(['status' => 'ok']);
     }
 

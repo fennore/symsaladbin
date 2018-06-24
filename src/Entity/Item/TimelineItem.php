@@ -17,8 +17,8 @@ class TimelineItem extends Item implements SourceItemInterface
     /**
      * For now only jpeg and png support.
      */
-    const MIMEMATCH = [ 
-    	'image/jpeg',
-    	'image/png',
+    const MIMEMATCH = [
+        'image/jpeg',
+        'image/png',
     ];
 }
