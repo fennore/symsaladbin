@@ -30,8 +30,9 @@ class SimpleDocumentReader
 
         $html = $this->xmlToHtml($file, $xml);
 
-	$story = new Story($file->getFileName(), $html);
-	$story->setFile($file);
+        $story = new Story($file->getBaseName(), $html);
+        $story->setFile($file);
+
         return $story;
     }
 
@@ -46,12 +47,12 @@ class SimpleDocumentReader
     {
         // Create new ZIP archive
         $zip = new ZipArchive();
-	// Open zipped archive file
-	$isOpen = $zip->open($file->getSource());
+        // Open zipped archive file
+        $isOpen = $zip->open($file->getSource());
 
-	if(true === $isOpen) {
-	   $index = $zip->locateName($this->getContentIdentifier($file));
-	}
+        if (true === $isOpen) {
+            $index = $zip->locateName($this->getContentIdentifier($file));
+        }
 
         // Open received archive file
         if (true === $isOpen && false !== $index) {
@@ -79,18 +80,19 @@ class SimpleDocumentReader
      */
     private function getContentIdentifier(File $file): string
     {
-	switch ($file->getMimeType()) {
-	    case 'application/vnd.oasis.opendocument.text':
-        	return 'content.xml';
-      	    /**
+        switch ($file->getMimeType()) {
+            case 'application/vnd.oasis.opendocument.text':
+                return 'content.xml';
+            /*
              * @todo check why octet-stream happens on docx.
-       	     * It's default MIME for unknown and could be anything.
+             * It's default MIME for unknown and could be anything.
              */
-	    case 'application/octet-stream':
-      	    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        	return 'word/document.xml';
-    	}
-	return '';
+            case 'application/octet-stream':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                return 'word/document.xml';
+        }
+
+        return '';
     }
 
     /**
@@ -102,20 +104,20 @@ class SimpleDocumentReader
     private function getNamespaceIdentifier(File $file): string
     {
         switch ($file->getMimeType()) {
-	    case 'application/vnd.oasis.opendocument.text':
-              // xpath('text:p/*?/text()')
-              return 'text';
-	    case 'application/octet-stream':
-      	    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-              // xpath('w:p/*?/text()')
-              return 'w';
+            case 'application/vnd.oasis.opendocument.text':
+                // xpath('text:p/*?/text()')
+                return 'text';
+            case 'application/octet-stream':
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                // xpath('w:p/*?/text()')
+                return 'w';
         }
     }
 
     /**
      * Converts an xml string to a html string.
      *
-     * @param File $file
+     * @param File   $file
      * @param string $xmlString Xml string to convert to supported and cleaned up HTML
      */
     private function xmlToHtml(File $file, string $xmlString): string
@@ -124,24 +126,24 @@ class SimpleDocumentReader
         $reader = new XMLReader();
         $reader->xml($xmlString);
 
-	// Initialize variables
+        // Initialize variables
         $text = '';
         $formatting['header'] = 0;
 
         // Loop through XML DOM
         while ($reader->read()) {
             // Look for new paragraphs
-	    $nodeTypeCheck = XMLReader::ELEMENT === $reader->nodeType;
-	    $ns = $this->getNamespaceIdentifier($file);
-	    $nsCheck = $ns.':p' === $reader->name;
+            $nodeTypeCheck = XMLReader::ELEMENT === $reader->nodeType;
+            $ns = $this->getNamespaceIdentifier($file);
+            $nsCheck = $ns.':p' === $reader->name;
 
-	    if(!$nodeTypeCheck || !$nsCheck) {
-		continue;
-	    }
+            if (!$nodeTypeCheck || !$nsCheck) {
+                continue;
+            }
             // Read paragraph outerXML
             $p = $reader->readOuterXML();
 
-	    // Search for heading
+            // Search for heading
             preg_match('/<'.$ns.':pStyle '.$ns.':val="Heading.*?([1-6])"/', $p, $matches);
 
             if (!empty($matches)) {
@@ -152,9 +154,9 @@ class SimpleDocumentReader
 
             // Open h-tag or paragraph
             $text .= ($formatting['header'] > 0) ? '<h'.$formatting['header'].'>' : '';
-	    // Concatenate content
+            // Concatenate content
             $text .= htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT', $reader->expand()->textContent));
-	    // Close h-tag or paragraph
+            // Close h-tag or paragraph
             $text .= ($formatting['header'] > 0) ? '</h'.$formatting['header'].'>' : '<br>';
         }
         $reader->close();

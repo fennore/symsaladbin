@@ -38,8 +38,7 @@ class DocumentImporter
     {
         $fileList = $this->fileRepository->getFiles(Story::MIMEMATCH);
         foreach ($fileList as $row) {
-            $doc = $row[0];
-            $story = $this->simpleDocumentReader->getDocumentAsStory($doc);
+            $story = $this->simpleDocumentReader->getDocumentAsStory($row[0]);
             $this->storyRepository->createStory($story);
         }
     }

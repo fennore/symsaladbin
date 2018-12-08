@@ -129,7 +129,7 @@ class DirectionsHandler
             return $directionsState;
         }
         // - Stop processing when weight is 0 but there are already encoded route parts and no update is running
-        if (0 === $weight && !empty($route->getStage($stage)) && is_null($directionsState->getCurrentUpdate())) {
+        if (0 === $weight && !empty($route->getStage($stage)) && null === $directionsState->getCurrentUpdate()) {
             // Also set Direction SavedState to next stage
             $directionsState->setStage(++$stage);
             $this->savedStateRepository->updateSavedState($savedDirectionsState);
@@ -143,7 +143,7 @@ class DirectionsHandler
         // 5. Set data for Db
         array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
         // 5.1 When directions calculations are not flagged as an update, update the encodedRoute
-        if (is_null($directionsState->getCurrentUpdate())) {
+        if (null === $directionsState->getCurrentUpdate()) {
             array_map(array($route, 'addPolyline'), array_pad([], count($encodedRoute), $stage), $encodedRoute);
         // 5.2 When flagged as update but unfinished save the encodedroute under the directionsstate update
         } elseif ($this->driver->hasUncalculatedDirectionsLeft()) {

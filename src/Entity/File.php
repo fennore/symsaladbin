@@ -20,7 +20,7 @@ class File
      *
      * @Vich\UploadableField(mapping="files", fileNameProperty="fileName", mimeType="mimeType")
      *
-     * @var File
+     * @var BaseFile
      */
     private $file;
 
@@ -119,13 +119,32 @@ class File
         $this->path = str_replace('\\', '/', $this->path);
     }
 
+    /**
+     * In accordance with php pathinfo.
+     */
     public function getFileName(): string
+    {
+        if (null === $this->file) {
+            return pathinfo($this->source, PATHINFO_FILENAME);
+        }
+
+        return $file->getBasename('.'.$file->getExtension());
+    }
+
+    /**
+     * In accordance with php pathinfo.
+     */
+    public function getBaseName(): string
     {
         return $this->fileName;
     }
 
     public function getFile(): BaseFile
     {
+        if (null === $this->file) {
+            $this->file = new BaseFile();
+        }
+
         return $this->file;
     }
 

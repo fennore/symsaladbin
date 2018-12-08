@@ -60,7 +60,6 @@ class ApiController extends AbstractController
      */
     public function updateRouteStage(
         Request $request,
-        SerializerInterface $serializer,
         LocationRepository $locationRepo,
         DirectionsRepository $directionsRepo,
         SavedStateRepository $savedStateRepo,
