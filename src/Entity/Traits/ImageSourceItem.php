@@ -8,7 +8,7 @@ use App\Entity\File;
 trait ImageSourceItem
 {
     use SourceItem {
-    setFile as sourceItemSetFile;
+        setFile as sourceItemSetFile;
     }
 
     /**
@@ -33,20 +33,21 @@ trait ImageSourceItem
         $this->sourceItemSetFile($file);
         // Add exif data
         try {
-            if (!isset($this->property)) {
-                $this->property = (object) array();
+            if (null === $this->property) {
+                $this->property = (object) [];
             }
-            $exif = @\exif_read_data($this->file->getFullSource(), 'FILE,COMPUTED', true, false);
-            $check = array('FILE' => null, 'COMPUTED' => null);
+            $exif = exif_read_data($file->getSource(), 'FILE,COMPUTED', true, false);
+            $check = ['FILE' => null, 'COMPUTED' => null];
             $this->property->exif = array_intersect_key($exif, $check);
+            // @todo put lat and lng data from exif into settings
         } catch (Throwable $ex) {
             // @todo Warning for exif data failure
         }
+        $this->content = $exif['COMPUTED']['UserComment'] ?? null;
         // Created date should match date of picture taken
-        if (isset($exif['EXIF']['DateTimeOriginal'])) {
-            $this->created = strtotime($exif['EXIF']['DateTimeOriginal']);
-        } elseif (isset($exif['IFD0']['DateTime'])) {
-            $this->created = strtotime($exif['IFD0']['DateTime']);
+        $timeOfCreation = $exif['EXIF']['DateTimeOriginal'] ?? $exif['IFD0']['DateTime'] ?? null;
+        if (null !== $timeOfCreation) {
+            $this->created = strtotime($timeOfCreation);
         }
     }
 

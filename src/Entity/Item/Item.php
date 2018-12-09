@@ -9,7 +9,11 @@ use App\Entity\Tools\CleanPathString;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="item",indexes={@ORM\Index(name="item_list_select", columns={"status", "created", "weight"})})
+ * @ORM\Table(
+ *      name="item",
+ *      indexes={@ORM\Index(name="item_list_select", columns={"status", "created", "weight"})},
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="unique_path", columns={"path", "type"})}
+ * )
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  */
@@ -57,9 +61,9 @@ class Item
     protected $content;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      *
-     * @var type
+     * @var string
      */
     protected $path;
 

@@ -8,6 +8,7 @@ use App\Repository\LocationRepository;
 use App\Repository\FileRepository;
 use App\Importer\LocationImporter;
 use App\Importer\DocumentImporter;
+use App\Importer\ImageImporter;
 use App\Handler\FileHandler;
 use App\Handler\DirectionsHandler;
 
@@ -88,8 +89,10 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/images/sync", name="admin_images_sync")
      */
-    public function syncImages()
+    public function syncImages(ImageImporter $imgImporter)
     {
+        $imgImporter->importImages();
+
         return $this->redirectToRoute('admin_overview');
     }
 }

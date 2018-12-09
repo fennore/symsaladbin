@@ -30,7 +30,7 @@ class SimpleDocumentReader
 
         $html = $this->xmlToHtml($file, $xml);
 
-        $story = new Story($file->getBaseName(), $html);
+        $story = new Story($file->getFileName(), $html);
         $story->setFile($file);
 
         return $story;
