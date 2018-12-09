@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Handler\DbBatchHandler;
 use App\Entity\Location;

@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RoleRepository extends ServiceEntityRepository
 {

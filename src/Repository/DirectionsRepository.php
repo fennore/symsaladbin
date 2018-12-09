@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bridge\Doctrine\RegistryInterface;

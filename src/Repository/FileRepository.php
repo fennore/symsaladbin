@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Entity\File;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use App\Handler\DbBatchHandler;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\ORMInvalidArgumentException;
+use App\Handler\DbBatchHandler;
+use App\Entity\File;
 
 class FileRepository extends AbstractBatchableEntityRepository
 {

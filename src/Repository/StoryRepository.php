@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\ORMInvalidArgumentException;
 use App\Entity\Item\Story;
 use App\Handler\DbBatchHandler;
 
@@ -19,23 +20,6 @@ class StoryRepository extends AbstractBatchableEntityRepository
     {
         parent::__construct($registry, $batchHandler, Story::class);
     }
-
-//    /**
-//     * @return Story[] Returns an array of Story objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
     public function getStories(): IterableResult
     {
