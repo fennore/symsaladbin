@@ -51,7 +51,7 @@ class AdminController extends AbstractController
         // Build encoded route
         $state = $directionsHandler->buildEncodedRoute();
 
-        return $this->json(['status' => 'ok', 'state' => ['stage' => $state->getStage(), 'weight' => $state->getWeight()]]);
+        return $this->redirectToRoute('admin_route');
     }
 
     /**
@@ -61,7 +61,7 @@ class AdminController extends AbstractController
     {
         $files = $fileHandler->syncSourceWithFileEntity();
 
-        return $this->json(['status' => 'ok', 'files-total' => iterator_count($files)]);
+        return $this->redirectToRoute('admin_files');
     }
 
     /**
@@ -72,7 +72,7 @@ class AdminController extends AbstractController
         // Save gpx data as locations
         $locImporter->syncWithGpx();
 
-        return $this->json(['status' => 'ok']);
+        return $this->redirectToRoute('admin_route');
     }
 
     /**
@@ -82,7 +82,7 @@ class AdminController extends AbstractController
     {
         $docImporter->importDocuments();
 
-        return $this->json(['status' => 'ok']);
+        return $this->redirectToRoute('admin_overview');
     }
 
     /**
@@ -90,6 +90,6 @@ class AdminController extends AbstractController
      */
     public function syncImages()
     {
-        return $this->json(['status' => 'ok']);
+        return $this->redirectToRoute('admin_overview');
     }
 }

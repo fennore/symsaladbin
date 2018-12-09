@@ -37,9 +37,26 @@ class DocumentImporter
     public function importDocuments(): void
     {
         $fileList = $this->fileRepository->getFiles(Story::MIMEMATCH);
+        $storyList = $this->storyRepository->getStories();
+        $storyCheckList = [];
+        foreach ($storyList as $row) {
+            $storyCheckList[$row[0]->getPath()] = $row[0];
+        }
         foreach ($fileList as $row) {
             $story = $this->simpleDocumentReader->getDocumentAsStory($row[0]);
-            $this->storyRepository->createStory($story);
+            if (
+                isset($storyCheckList[$story->getPath()]) &&
+                $story->getUpdated() > $storyCheckList[$story->getPath()]->getUpdated()
+            ) {
+                $this->storyRepository->updateStory(
+                    $storyCheckList[$story->getPath()]
+                        ->setContent($story->getContent())
+                );
+            } elseif (isset($storyCheckList[$story->getPath()])) {
+                continue; // skip
+            } else {
+                $this->storyRepository->createStory($story);
+            }
         }
     }
 }

@@ -209,7 +209,8 @@ class Item
 //        $this->type = strtolower((new \ReflectionClass($this))->getShortName());
 //
 //        return $this;
-    //    }
+//    }
+
     public function getTitle(): string
     {
         return $this - title;

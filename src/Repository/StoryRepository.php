@@ -2,8 +2,9 @@
 
 namespace App\Repository;
 
-use App\Entity\Item\Story;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
+use App\Entity\Item\Story;
 use App\Handler\DbBatchHandler;
 
 /**
@@ -35,6 +36,13 @@ class StoryRepository extends AbstractBatchableEntityRepository
         ;
     }
     */
+
+    public function getStories(): IterableResult
+    {
+        return $this->createQueryBuilder('s')
+            ->getQuery()
+            ->iterate();
+    }
 
     public function getStoryFromPath(string $pathString): ?Story
     {

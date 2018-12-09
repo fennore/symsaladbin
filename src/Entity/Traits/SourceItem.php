@@ -46,6 +46,8 @@ trait SourceItem
         // Update object title
         $this->setTitle($file->getFileName());
 
+        $this->updated = $file->getLastModified();
+
         return $this;
     }
 
