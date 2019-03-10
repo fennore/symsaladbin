@@ -28,6 +28,16 @@ class TimelineItemRepository extends AbstractBatchableEntityRepository
             ->iterate();
     }
 
+    public function getTimelineItemFromPath(string $pathString): ?TimelineItem
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.path = :path')
+            ->setParameter('path', $pathString)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     /**
      * Writes a new TimelineItem Entity to database.
      *

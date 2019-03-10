@@ -10,6 +10,9 @@
         {% block menu %}
           <nav>
             <a href="{{path('intro')}}">Intro</a>
+            <a href="{{path('story')}}">Story</a>
+            <a href="{{path('timeline')}}">Timeline</a>
+            <a href="{{path('about')}}">About</a>
             {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{path('admin_overview')}}">Admin</a>
             {% endif %}

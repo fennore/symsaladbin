@@ -209,18 +209,12 @@ class Item
         return $this;
     }
 
-//    public function setType() {
-//        $this->type = strtolower((new \ReflectionClass($this))->getShortName());
-//
-//        return $this;
-//    }
-
     public function getTitle(): string
     {
-        return $this - title;
+        return $this->title;
     }
 
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }

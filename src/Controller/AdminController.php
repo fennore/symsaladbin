@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\LocationRepository;
 use App\Repository\FileRepository;
 use App\Importer\LocationImporter;
@@ -12,7 +11,7 @@ use App\Importer\ImageImporter;
 use App\Handler\FileHandler;
 use App\Handler\DirectionsHandler;
 
-class AdminController extends AbstractController
+class AdminController extends AbstractSmartController
 {
     /**
      * @Route("/admin", name="admin_overview")
@@ -20,7 +19,7 @@ class AdminController extends AbstractController
     public function overview()
     {
         // replace this line with your own code!
-        return $this->render('default/admin/overview.html.twig');
+        return $this->smartRender('default/admin/overview.html.twig');
     }
 
     /**
@@ -28,7 +27,7 @@ class AdminController extends AbstractController
      */
     public function manageRoute(LocationRepository $locationRepository, $stage = 1)
     {
-        return $this->render('default/admin/route.html.twig', [
+        return $this->smartRender('default/admin/route.html.twig', [
             'locationlist' => $locationRepository->getStageLocations($stage),
             'stagelist' => $locationRepository->getStageList(),
         ]);
@@ -39,7 +38,7 @@ class AdminController extends AbstractController
      */
     public function manageFiles(FileRepository $fileRepository)
     {
-        return $this->render('default/admin/files.html.twig', [
+        return $this->smartRender('default/admin/files.html.twig', [
             'filelist' => $fileRepository->getFiles(),
         ]);
     }

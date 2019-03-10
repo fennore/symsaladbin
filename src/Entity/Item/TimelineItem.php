@@ -4,6 +4,7 @@ namespace App\Entity\Item;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Traits\ImageSourceItem;
+use App\Entity\File;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TimelineItemRepository")
@@ -21,4 +22,12 @@ class TimelineItem extends Item implements SourceItemInterface
         'image/jpeg',
         'image/png',
     ];
+
+    /**
+     * @return File
+     */
+    public function getFile(): File
+    {
+        return $this->file;
+    }
 }

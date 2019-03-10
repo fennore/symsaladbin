@@ -128,7 +128,7 @@ class File
             return pathinfo($this->source, PATHINFO_FILENAME);
         }
 
-        return $file->getBasename('.'.$file->getExtension());
+        return $this->file->getBasename('.'.$this->file->getExtension());
     }
 
     /**

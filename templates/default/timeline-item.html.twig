@@ -1,0 +1,7 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+  <h1>{{ timelineitem.title }}</h1>
+  <img src="{{ timelineitem.file.path }}{{ timelineitem.file.getFileName() }}" />
+  {{ timelineitem.content | raw }}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+  <h1>Timeline</h1>
+  <ul>
+  {% for row in timeline %}
+    {% set timelineitem = row[0] %}
+    <li><a href="timeline/{{ timelineitem.path }}">{{timelineitem.title}}</a></li>
+  {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'default/base.html.twig' %}
+
+{% block body %}
+  <h1>Stories</h1>
+  <ul>
+  {% for row in storylist %}
+    {% set story = row[0] %}
+    <li><a href="/story/{{ story.path }}">{{story.title}}</a></li>
+  {% endfor %}
+  </ul>
+{% endblock %}
