@@ -2,7 +2,7 @@
 
 namespace App\Handler;
 
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -36,7 +36,7 @@ class DbBatchHandler
      */
     private $batchCount = [];
 
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         $this->managers = $registry->getManagers();
         $this->batchCount = array_fill_keys(array_keys($this->managers), 0);

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use App\Handler\DbBatchHandler;
 
 abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
@@ -14,7 +14,7 @@ abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
      */
     protected $batchHandler;
 
-    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler, $entityClass)
+    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler, $entityClass)
     {
         $this->batchHandler = $batchHandler;
 

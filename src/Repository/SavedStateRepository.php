@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use App\Handler\DbBatchHandler;
 use App\States\StateInterface;
 use App\Entity\SavedState;
 
 class SavedStateRepository extends AbstractBatchableEntityRepository
 {
-    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
+    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, SavedState::class);
     }

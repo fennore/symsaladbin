@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -20,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields="username", message="Username already taken")
  */
-class User implements AdvancedUserInterface, Serializable, EquatableInterface
+class User implements UserInterface, Serializable, EquatableInterface
 {
     /**
      * @ORM\Column(type="integer")
@@ -128,21 +127,6 @@ class User implements AdvancedUserInterface, Serializable, EquatableInterface
     public function isEqualTo(UserInterface $user): bool
     {
         return $this->id === $user->getId() && $user instanceof self;
-    }
-
-    public function isAccountNonExpired(): bool
-    {
-        return true;
-    }
-
-    public function isAccountNonLocked(): bool
-    {
-        return true;
-    }
-
-    public function isCredentialsNonExpired(): bool
-    {
-        return true;
     }
 
     public function isEnabled(): bool

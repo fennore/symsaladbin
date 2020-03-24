@@ -5,7 +5,7 @@ namespace App\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use App\Handler\DbBatchHandler;
 use App\Entity\Location;
 
@@ -13,7 +13,7 @@ class LocationRepository extends AbstractBatchableEntityRepository
 {
     use Traits\RepositoryStageTrait;
 
-    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
+    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, Location::class);
     }

@@ -3,7 +3,7 @@
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use App\Data\ContentSecurityPolicy;
 
 class GlobalHeaderSubscriber implements EventSubscriberInterface
@@ -22,7 +22,7 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function addCSPHeaderToResponse(FilterResponseEvent $event)
+    public function addCSPHeaderToResponse(ResponseEvent $event)
     {
         // Do not allow the App to be displayed in an iframe
         $event

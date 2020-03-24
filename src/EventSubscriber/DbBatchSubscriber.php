@@ -3,7 +3,7 @@
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use App\Handler\DbBatchHandler;
 
 class DbBatchSubscriber implements EventSubscriberInterface
@@ -15,7 +15,7 @@ class DbBatchSubscriber implements EventSubscriberInterface
         $this->batchHandler = $batchHandler;
     }
 
-    public function onKernelTerminate(PostResponseEvent $event)
+    public function onKernelTerminate(TerminateEvent $event)
     {
         $this->batchHandler->cleanUpBatch();
     }

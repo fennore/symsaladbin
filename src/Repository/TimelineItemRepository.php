@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use App\Handler\DbBatchHandler;
@@ -16,7 +16,7 @@ use App\Entity\Item\TimelineItem;
  */
 class TimelineItemRepository extends AbstractBatchableEntityRepository
 {
-    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
+    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, TimelineItem::class);
     }

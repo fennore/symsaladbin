@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
  * Role Entity for database.
@@ -13,7 +12,7 @@ use Symfony\Component\Security\Core\Role\Role as BaseRole;
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  * @ORM\Table(name="role")
  */
-class Role extends BaseRole
+class Role
 {
     /**
      * @ORM\Id

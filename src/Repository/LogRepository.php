@@ -4,12 +4,12 @@ namespace App\Repository;
 
 use App\Entity\Log;
 use App\Handler\DbBatchHandler;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\ORMInvalidArgumentException;
 
 class LogRepository extends AbstractBatchableEntityRepository
 {
-    public function __construct(RegistryInterface $registry, DbBatchHandler $batchHandler)
+    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
         parent::__construct($registry, $batchHandler, Log::class);
     }
