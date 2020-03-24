@@ -55,7 +55,7 @@ class DbLogHandler extends AbstractProcessingHandler
      *
      * @param array $record Monolog record
      */
-    public function write(array $record)
+    public function write(array $record): void
     {
         $log = new Log($record);
         $this->container

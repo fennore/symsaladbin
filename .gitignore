@@ -1,12 +1,13 @@
 ###> symfony/framework-bundle ###
-.env
+*.lock
+.env*
 /public/bundles/
 /var/
 /vendor/
 /config/parameters*.yaml
 ###< symfony/framework-bundle ###
 ###> phpunit/phpunit ###
-/phpunit.xml
+phpunit.xml*
 ###< phpunit/phpunit ###
 .htaccess
 !.htaccess.default
