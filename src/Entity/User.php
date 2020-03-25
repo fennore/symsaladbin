@@ -117,7 +117,7 @@ class User implements UserInterface, Serializable, EquatableInterface
      */
     public function getRoles(): array
     {
-        return $this->roles->toArray();
+        return $this->roles->map(function($role) { return (string) $role; })->toArray();
     }
 
     public function eraseCredentials(): void

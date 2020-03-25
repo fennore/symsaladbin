@@ -1,7 +1,8 @@
 security:
     encoders:
         App\Entity\User:
-            algorithm: 'argon2i'
+            algorithm: auto
+            # auto = sodium = argon2 if available
     # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         db_provider:
@@ -14,6 +15,7 @@ security:
             security: false
         main:
             anonymous: ~
+            user_checker: App\Security\UserChecker
             form_login:
                 login_path: login_page
                 check_path: login_action
@@ -30,8 +32,7 @@ security:
 
             # form_login: ~
             # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
-    role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+
     access_control:
         - { path: /admin, roles: ROLE_ADMIN, requires_channel: '%app.webprotocol%' }
         - { methods: [POST], path: /login, roles: ~, requires_channel: '%app.webprotocol%' }
