@@ -39,7 +39,6 @@ class Role
     {
         $this->users = new ArrayCollection();
         $this->name = $name;
-        parent::__construct($name);
     }
 
     /**
