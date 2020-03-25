@@ -87,5 +87,7 @@ class CreateUserCommand extends Command
         $this->userRepository->createUser($user);
 
         $io->success('New user created.');
+
+        return 0;
     }
 }

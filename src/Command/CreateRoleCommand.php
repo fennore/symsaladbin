@@ -57,5 +57,7 @@ class CreateRoleCommand extends Command
         $this->roleRepository->createRole($role);
 
         $io->success('New role created.');
+
+        return 0;
     }
 }
