@@ -5,6 +5,7 @@ namespace App\Repository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\Common\Collections\Criteria;
 use App\Entity\Item\Story;
 use App\Handler\DbBatchHandler;
 
@@ -21,11 +22,48 @@ class StoryRepository extends AbstractBatchableEntityRepository
         parent::__construct($registry, $batchHandler, Story::class);
     }
 
-    public function getStories(): IterableResult
+    public function getAllStories(): IterableResult
     {
         return $this->createQueryBuilder('s')
             ->getQuery()
             ->iterate();
+    }
+
+    /**
+     * @param int $offset
+     * @param int $limit
+     * @param bool $showDisabled
+     * @return IterableResult
+     */
+    public function getStories(int $offset, int $limit, bool $showDisabled = false): IterableResult
+    {
+        $qb = $this->createQueryBuilder('s');
+        if(!$showDisabled) {
+            $qb
+                ->andWhere('s.status > :status')
+                ->setParameter('status', 0);
+        }
+        return $qb
+            ->addOrderBy('s.weight')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->iterate();
+    }
+
+    /**
+     * @param bool $showDisabled
+     * @return int
+     */
+    public function countStories(bool $showDisabled = false): int
+    {
+        if(!$showDisabled) {
+            return $this->countByCriteria(
+                $this->getEnabledCriteria()
+            );
+        }
+
+        return $this->getTotal();
     }
 
     public function getStoryFromPath(string $pathString): ?Story
@@ -90,5 +128,12 @@ class StoryRepository extends AbstractBatchableEntityRepository
         $em = $this->getEntityManager();
         $em->persist($story);
         $this->startTransaction($useBatch);
+    }
+
+    protected function getEnabledCriteria() {
+        $criteria = (new Criteria);
+        
+        return $criteria->andWhere(
+                $criteria->expr()->gt('status', 0));
     }
 }

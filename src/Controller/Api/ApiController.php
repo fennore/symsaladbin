@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +14,7 @@ use App\Repository\StoryRepository;
 use App\States\EncodedRoute;
 use App\States\DirectionsState;
 use App\Lists\Route as LocationRoute;
+use App\Lists\StoryPager;
 use App\Entity\Location;
 use App\Entity\Coordinate;
 
@@ -24,8 +25,7 @@ class ApiController extends AbstractController
      *      "/api",
      *      name="api_index",
      *      defaults={"_format": "json"},
-     *      requirements={"_format": "json"}
-     * )
+     *      requirements={"_format": "json"})
      */
     public function index()
     {
@@ -45,9 +45,16 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/route/{stage}", name="api_route_locations", methods={"GET","HEAD"}, requirements={"stage"="\d+"})
+     * @Route(
+     *      "/api/route/{stage}", 
+     *      name="api_route_locations", 
+     *      methods={"GET","HEAD"}, 
+     *      requirements={"stage"="\d+"})
      */
-    public function getLocations(LocationRepository $locationRepo, SerializerInterface $serializer, int $stage)
+    public function getLocations(
+        LocationRepository $locationRepo, 
+        SerializerInterface $serializer, 
+        int $stage)
     {
         $route = new LocationRoute($stage, $locationRepo);
         $json = $serializer->serialize($route, 'json');
@@ -56,7 +63,11 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/api/route/{currentStage}", name="api_route_update", methods={"POST"}, requirements={"currentStage"="\d+"})
+     * @Route(
+     *      "/api/route/{currentStage}",
+     *      name="api_route_update", 
+     *      methods={"PUT"}, 
+     *      requirements={"currentStage"="\d+"})
      */
     public function updateRouteStage(
         Request $request,
@@ -100,7 +111,7 @@ class ApiController extends AbstractController
     /**
      * Clear the route data.
      *
-     * @Route("/api/route/clear", name="api_route_clear", methods={"POST"})
+     * @Route("/api/route/all", name="api_route_clear", methods={"DELETE"})
      */
     public function clearRoute(
         LocationRepository $locationRepo,
@@ -124,34 +135,44 @@ class ApiController extends AbstractController
     /**
      * Returns a list of stories starting from given offset and as many as given length.
      *
-     * @Route("/api/story/{offset}/{length}", name="api_story", methods={"GET", "HEAD"}, requirements={"offset"="\d+","length"="\d+"})
+     * @Route(
+     *      "/api/stories/{offset}/{limit}", 
+     *      name="api_stories", methods={"GET", "HEAD"}, 
+     *      requirements={"offset"="\d+","length"="\d+"})
      */
-    public function getStory(StoryRepository $storyRepo, int $offset = 0, int $length = 1)
+    public function getStories(StoryRepository $storyRepo, SerializerInterface $serializer, int $offset = 0, int $limit = 1)
     {
+        $pager = new StoryPager($offset, $limit, $storyRepo);
+        $pager->setShowDisabled($this->isGranted('ROLE_ADMIN'));
+        $json = $serializer->serialize($pager, 'json');
+
+        return JsonResponse::fromJsonString($json);
     }
 
     /**
-     * Update the story using given identifier.
+     * Update the stories using given identifier.
      *
-     * @Route("/api/story/{id}", name="api_story_update", methods={"PUT"}, requirements={"id"="\d+"})
+     * @Route("/api/stories", name="api_stories_update", methods={"PUT"})
      */
-    public function updateStory(int $id)
+    public function updateStories()
     {
+        
     }
 
     /**
-     * Delete the story using given identifier.
+     * Delete the stories using given identifier.
      *
-     * @Route("/api/story/{id}", name="api_story_delete", methods={"DELETE"}, requirements={"id"="\d+"})
+     * @Route("/api/stories", name="api_stories_delete", methods={"DELETE"})
      */
-    public function deleteStory(int $id)
+    public function deleteStories()
     {
+        
     }
 
     /**
      * Clear stories.
      *
-     * @Route("/api/stories/clear", name="api_stories_clear", methods={"POST"})
+     * @Route("/api/stories/all", name="api_stories_clear", methods={"DELETE"})
      */
     public function clearStories()
     {
@@ -163,7 +184,7 @@ class ApiController extends AbstractController
     /**
      * Clear the images data.
      *
-     * @Route("/api/images/clear", name="api_images_clear", methods={"POST"})
+     * @Route("/api/images/all", name="api_images_clear", methods={"DELETE"})
      */
     public function clearImages()
     {

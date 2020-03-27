@@ -26,6 +26,8 @@ use App\Entity\File;
 trait SourceItem
 {
     /**
+     * @Serializer\Exclude
+     * 
      * @ORM\OneToOne(targetEntity="App\Entity\File")
      * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
      *

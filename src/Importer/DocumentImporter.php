@@ -37,7 +37,7 @@ class DocumentImporter
     public function importDocuments(): void
     {
         $fileList = $this->fileRepository->getFiles(Story::MIMEMATCH);
-        $storyList = $this->storyRepository->getStories();
+        $storyList = $this->storyRepository->getAllStories();
         $storyCheckList = [];
         foreach ($storyList as $row) {
             $storyCheckList[$row[0]->getPath()] = $row[0];

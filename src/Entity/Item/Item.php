@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Tools\CleanPathString;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
@@ -29,6 +30,8 @@ class Item
     protected $id;
 
     /**
+     * @Serializer\Exclude
+     * 
      * The Item type.
      *
      * @var string
@@ -109,9 +112,9 @@ class Item
     /**
      * @param string $title
      *
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setTitle(string $title): Item
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -126,9 +129,9 @@ class Item
     /**
      * @param string $content
      *
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setContent(string $content): Item
+    public function setContent(string $content): self
     {
         $this->content = $content;
         // Flag updated
@@ -140,9 +143,9 @@ class Item
     /**
      * @param CleanPathString $path
      *
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setPath(CleanPathString $path): Item
+    public function setPath(CleanPathString $path): self
     {
         $this->path = (string) $path;
 
@@ -154,9 +157,9 @@ class Item
      *
      * @param ArrayCollection $items a collection of Item entities
      *
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setLink(ArrayCollection $items): Item
+    public function setLink(ArrayCollection $items): self
     {
         $this->link = $items;
 
@@ -166,9 +169,9 @@ class Item
     /**
      * @param int $weight
      *
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setWeight(int $weight): Item
+    public function setWeight(int $weight): self
     {
         $this->weight = $weight;
 
@@ -176,9 +179,9 @@ class Item
     }
 
     /**
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setActive(): Item
+    public function setActive(): self
     {
         $this->status = 1;
 
@@ -186,9 +189,9 @@ class Item
     }
 
     /**
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setInactive(): Item
+    public function setInactive(): self
     {
         $this->status = 0;
 
@@ -199,9 +202,9 @@ class Item
      * Flag this Item as updated.
      * This means setting the updated property to the current timestamp value.
      *
-     * @return \App\Entity\Item\Item
+     * @return static
      */
-    public function setUpdated(): Item
+    public function setUpdated(): self
     {
         $currentDT = new DateTime();
         $this->updated = $currentDT->getTimestamp();

@@ -60,7 +60,7 @@ class PublicPageController extends AbstractSmartController
     public function viewStoryList(StoryRepository $storyRepository)
     {
         return $this->smartRender('default/story-list.html.twig', [
-            'storylist' => $storyRepository->getStories(),
+            'storylist' => $storyRepository->getAllStories(),
         ]);
     }
 

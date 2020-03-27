@@ -2,6 +2,14 @@
 
 namespace App\Repository\Traits;
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+/**
+ * @todo Add method to get path criteria here and make use of it.
+ * 
+ * Trait to use in Repository classes
+ */
 trait RepositoryGeneralTrait
 {
     /**
@@ -45,5 +53,19 @@ trait RepositoryGeneralTrait
             ->select('count(*)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @param Criteria $criteria
+     * @return int
+     */
+    protected function countByCriteria(Criteria $criteria): int
+    {
+        return (new Paginator(
+            $this
+                ->createQueryBuilder('rgt')
+                ->addCriteria($criteria)
+            , false))
+                ->count();
     }
 }
