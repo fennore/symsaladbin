@@ -3,6 +3,7 @@
 namespace App\Entity\Item;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use App\Entity\Traits\ImageSourceItem;
 use App\Entity\File;
 
@@ -29,5 +30,10 @@ class TimelineItem extends Item implements SourceItemInterface
     public function getFile(): File
     {
         return $this->file;
+    }
+
+    public function getFileLocation(): string
+    {
+        return $this->file->getSource();
     }
 }
