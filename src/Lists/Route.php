@@ -4,10 +4,13 @@ namespace App\Lists;
 
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
-//use Doctrine\ORM\Internal\Hydration\IterableResult;
 use App\Repository\LocationRepository;
 
 /**
+ * @todo Add relation condition for the update link to be only visible when accessible
+ * @todo Add route clear conditional relation
+ * @todo Only show links that actually work (no non existing stages)
+ * 
  * Route wrapper for locations.
  *
  * @Hateoas\Relation(
@@ -83,6 +86,9 @@ class Route
         return $this->stage;
     }
 
+    /**
+     * @return Location[]
+     */
     public function getLocations(): array
     {
         $locations = $this->locationRepo->getStageLocations($this->stage);
