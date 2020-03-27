@@ -26,7 +26,7 @@ use App\Repository\LocationRepository;
  *         "api_route_update",
  *         parameters = { "currentStage" = "expr(object.getStage())" },
  *     ),
- *     attributes = { "method" = "POST" }
+ *     attributes = { "method" = "PUT" }
  * )
  * @Hateoas\Relation(
  *     name = "next",
