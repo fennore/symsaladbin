@@ -117,7 +117,7 @@ class User implements UserInterface, Serializable, EquatableInterface
      */
     public function getRoles(): array
     {
-        return $this->roles->map(function($role) { return (string) $role; })->toArray();
+        return $this->roles->map(fn (Role $role) => (string) $role)->toArray();
     }
 
     public function eraseCredentials(): void
@@ -141,7 +141,6 @@ class User implements UserInterface, Serializable, EquatableInterface
             $this->username,
             $this->password,
             $this->status,
-            // see section on salt below
             // $this->salt,
         ]);
     }
@@ -153,7 +152,6 @@ class User implements UserInterface, Serializable, EquatableInterface
             $this->username,
             $this->password,
             $this->status
-            // see section on salt below
             // $this->salt
         ) = \unserialize($serialized);
     }
