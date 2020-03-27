@@ -18,14 +18,14 @@ matrix:
   # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
   fast_finish: true
   include:
-    - php: 7.2
+    - php: 7.4.2
     - php: hhvm
   allow_failures:
     - php: hhvm
 
 # Define an environment variable
 env:
-  - SYMFONY_VERSION="4.0.*"
+  - SYMFONY_VERSION="5.0.*"
 
 before_install:
   # Manually compile the libsodium library
@@ -41,11 +41,10 @@ install:
   # Install composer dependencies,
   # Create database, schema and fixtures
   - composer install
-  - cp .env.dist .env
+  - cp .env .env.test
   # Create directories
   - mkdir -p var/db/ var/files/gpx/ var/files/stories/ var/files/images/
   # Create empty db file
-  - touch var/db/mytravel.sqlite
   - touch var/db/mytravel.test.sqlite
   - php bin/console doctrine:database:create --env=test
   - php bin/console doctrine:schema:create --env=test
