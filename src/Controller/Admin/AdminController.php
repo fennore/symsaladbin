@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\AbstractSmartController;
 use App\Repository\LocationRepository;
 use App\Repository\FileRepository;
 use App\Importer\LocationImporter;
