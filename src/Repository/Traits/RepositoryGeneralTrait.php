@@ -50,7 +50,7 @@ trait RepositoryGeneralTrait
     {
         return (int) $this
             ->createQueryBuilder('rgt')
-            ->select('count(*)')
+            ->select('count(rgt.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
