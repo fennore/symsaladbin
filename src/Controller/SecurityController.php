@@ -3,11 +3,10 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends AbstractController
+class SecurityController extends AbstractSmartController
 {
     /**
      * Matches /login on GET, HEAD.
@@ -22,7 +21,7 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authUtils->getLastUsername();
 
-        return $this->render('default/security/login.html.twig', [
+        return $this->smartRender('default/security/login.html.twig', [
                 'last_username' => $lastUsername,
                 'error' => $error,
         ]);
