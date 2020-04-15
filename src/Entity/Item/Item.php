@@ -5,7 +5,9 @@ namespace App\Entity\Item;
 use App\Entity\Tools\CleanPathString;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -43,9 +45,9 @@ class Item
      *      joinColumns={@ORM\JoinColumn(name="item_id_1", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_2", referencedColumnName="id")})
      *
-     * @var ArrayCollection Linked Item
+     * @var Collection Linked Item
      */
-    protected ArrayCollection $link;
+    protected Collection $link;
 
     /**
      * @ORM\Column()
@@ -101,7 +103,7 @@ class Item
             ->setContent($content)
             ->setActive()
             ->setWeight(0)
-            ->setLink(new ArrayCollection());
+            ->setLink(new PersistentCollection());
         $this->created = $this->updated;
     }
 
@@ -145,11 +147,11 @@ class Item
     /**
      * Link other Items to this Item.
      *
-     * @param ArrayCollection $items a collection of Item entities
+     * @param Collection $items a collection of Item entities
      *
      * @return static
      */
-    public function setLink(ArrayCollection $items): self
+    public function setLink(Collection $items): self
     {
         $this->link = $items;
 
