@@ -11,13 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 class AbstractSmartController extends AbstractController
 {
     /**
-     * @param string   $view
-     * @param array    $parameters
      * @param Response $response
-     *
-     * @return Response
      */
-    protected function smartRender(string $view, array $parameters = array(), Response $response = null): Response
+    protected function smartRender(string $view, array $parameters = [], Response $response = null): Response
     {
         $response = $this->render($view, $parameters, $response);
         if (preg_match('/.+\.html(\..+)?$/i', $view)) {

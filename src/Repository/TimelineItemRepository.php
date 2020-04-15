@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\ORMInvalidArgumentException;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
-use App\Handler\DbBatchHandler;
 use App\Entity\Item\TimelineItem;
+use App\Handler\DbBatchHandler;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\ORMInvalidArgumentException;
 
 /**
  * @method TimelineItem|null find($id, $lockMode = null, $lockVersion = null)
@@ -41,8 +41,7 @@ class TimelineItemRepository extends AbstractBatchableEntityRepository
     /**
      * Writes a new TimelineItem Entity to database.
      *
-     * @param TimelineItem $item
-     * @param bool         $useBatch
+     * @param bool $useBatch
      */
     public function createTimelineItem(TimelineItem $item, $useBatch = true)
     {
@@ -55,8 +54,7 @@ class TimelineItemRepository extends AbstractBatchableEntityRepository
     /**
      * Updates TimelineItem Entity in database.
      *
-     * @param TimelineItem $item
-     * @param bool         $useBatch
+     * @param bool $useBatch
      */
     public function updateTimelineItem(TimelineItem $item, $useBatch = true)
     {
@@ -69,8 +67,7 @@ class TimelineItemRepository extends AbstractBatchableEntityRepository
     /**
      * Removes TimelineItem Entity from database.
      *
-     * @param TimelineItem $item
-     * @param bool         $useBatch
+     * @param bool $useBatch
      */
     public function deleteTimelineItem(TimelineItem $item, $useBatch = true)
     {
@@ -82,8 +79,7 @@ class TimelineItemRepository extends AbstractBatchableEntityRepository
     /**
      * Creates or updates the TimelineItem Entity data in the database.
      *
-     * @param TimelineItem $item
-     * @param bool         $useBatch
+     * @param bool $useBatch
      */
     protected function persistTimelineItem(TimelineItem $item, $useBatch)
     {

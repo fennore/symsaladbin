@@ -2,12 +2,12 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
+use App\Entity\Location;
+use App\Handler\DbBatchHandler;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use App\Handler\DbBatchHandler;
-use App\Entity\Location;
+use Doctrine\ORM\Query;
 
 class LocationRepository extends AbstractBatchableEntityRepository
 {
@@ -20,8 +20,6 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Get the last recorded stage.
-     *
-     * @return int
      */
     public function getLastStage(): int
     {
@@ -33,8 +31,6 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Get the list of all stages.
-     *
-     * @return array
      */
     public function getStageList(): array
     {
@@ -46,11 +42,7 @@ class LocationRepository extends AbstractBatchableEntityRepository
     /**
      * Get locations by stage and weight.
      *
-     * @param int  $stage
-     * @param int  $weight
      * @param type $limit
-     *
-     * @return IterableResult
      */
     public function getStageLocations(int $stage, int $weight = 0, $limit = 0): IterableResult
     {
@@ -72,8 +64,6 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Writes a new Location Entity to database.
-     *
-     * @param Location $location
      */
     public function createLocation(Location $location, $useBatch = true)
     {
@@ -85,8 +75,6 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Updates Location Entity in database.
-     *
-     * @param Location $location
      */
     public function updateLocation(Location $location, $useBatch = true)
     {
@@ -98,8 +86,6 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Removes Location Entity from database.
-     *
-     * @param Location $location
      */
     public function deleteLocation(Location $location, $useBatch = true)
     {
@@ -110,8 +96,6 @@ class LocationRepository extends AbstractBatchableEntityRepository
 
     /**
      * Creates or updates the Location Entity data in the database.
-     *
-     * @param Location $location
      */
     protected function persistLocation(Location $location, $useBatch)
     {

@@ -46,8 +46,7 @@ class DbBatchHandler
      * Batch counter for given ObjectManager.
      * Automatically flushes the ObjectManager when enough operations are queued for transaction.
      *
-     * @param ObjectManager $manager
-     * @param string        $objectClassName ObjectManager related object
+     * @param string $objectClassName ObjectManager related object
      */
     public function addToBatch(ObjectManager $manager, string $objectClassName)
     {
@@ -79,8 +78,6 @@ class DbBatchHandler
 
     /**
      * Set the size of a batch.
-     *
-     * @param int $size
      */
     public function setBatchProcessSize(int $size)
     {

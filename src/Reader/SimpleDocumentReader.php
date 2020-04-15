@@ -2,11 +2,11 @@
 
 namespace App\Reader;
 
-use ZipArchive;
-use XMLReader;
-use DOMDocument;
 use App\Entity\File;
 use App\Entity\Item\Story;
+use DOMDocument;
+use XMLReader;
+use ZipArchive;
 
 /**
  * @todo use a separate document reader like:
@@ -21,8 +21,6 @@ class SimpleDocumentReader
      * Creates a new Story from given File.
      *
      * @param File $file The file to create a story from. This should be a document.
-     *
-     * @return Story
      */
     public function getDocumentAsStory(File $file): Story
     {
@@ -38,10 +36,6 @@ class SimpleDocumentReader
 
     /**
      * Reads XML from archived text document.
-     *
-     * @param File $file
-     *
-     * @return string
      */
     private function readZippedXml(File $file): string
     {
@@ -75,8 +69,6 @@ class SimpleDocumentReader
     /**
      * Get the xml content identifier from given file.
      * This uses a mime type match.
-     *
-     * @param File $file
      */
     private function getContentIdentifier(File $file): string
     {
@@ -98,8 +90,6 @@ class SimpleDocumentReader
     /**
      * Get the xml namespace identifier from given file.
      * This uses a mime type match.
-     *
-     * @param File $file
      */
     private function getNamespaceIdentifier(File $file): string
     {
@@ -117,7 +107,6 @@ class SimpleDocumentReader
     /**
      * Converts an xml string to a html string.
      *
-     * @param File   $file
      * @param string $xmlString Xml string to convert to supported and cleaned up HTML
      */
     private function xmlToHtml(File $file, string $xmlString): string

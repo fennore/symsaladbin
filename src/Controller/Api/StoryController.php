@@ -2,12 +2,14 @@
 
 namespace App\Controller\Api;
 
+use App\Lists\StoryPager;
+use App\Repository\{StoryRepository};
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\{Request,Response,JsonResponse};
-use App\Repository\{StoryRepository};
-use App\Lists\StoryPager;
 
 class StoryController extends AbstractController
 {
@@ -15,14 +17,14 @@ class StoryController extends AbstractController
      * Returns a list of stories starting from given offset and as many as given length.
      *
      * @Route(
-     *      "/api/stories/{offset}/{limit}", 
-     *      name="api_stories", methods={"GET", "HEAD"}, 
+     *      "/api/stories/{offset}/{limit}",
+     *      name="api_stories", methods={"GET", "HEAD"},
      *      requirements={"offset"="\d+","length"="\d+"})
      */
     public function getStories(
-        StoryRepository $storyRepo, 
-        SerializerInterface $serializer, 
-        int $offset = 0, 
+        StoryRepository $storyRepo,
+        SerializerInterface $serializer,
+        int $offset = 0,
         int $limit = 1): Response
     {
         $pager = new StoryPager($offset, $limit, $storyRepo);
@@ -43,9 +45,10 @@ class StoryController extends AbstractController
         SerializerInterface $serializer)
     {
         $stories = $serializer->deserialize($request->getContent(), 'array<App\Entity\Item\Story>', 'json');
-        foreach($stories as $story) {
+        foreach ($stories as $story) {
             $storyRepository->createStory($story);
         }
+
         return JsonResponse::create(null, 201);
     }
 
@@ -61,7 +64,7 @@ class StoryController extends AbstractController
     {
         $stories = $serializer->deserialize($request->getContent(), 'array<App\Entity\Item\Story>', 'json');
 
-        if(is_array($stories) && count($stories) > 0) {
+        if (is_array($stories) && count($stories) > 0) {
             $storyRepository->updateStories($stories);
         }
 
@@ -89,6 +92,7 @@ class StoryController extends AbstractController
     public function clearStories(StoryRepository $storyRepository)
     {
         $storyRepository->truncateTable();
+
         return JsonResponse::create(null, 204);
     }
 }

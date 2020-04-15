@@ -2,15 +2,11 @@
 
 namespace App\Exception;
 
-use RuntimeException;
 use App\Entity\Location;
+use RuntimeException;
 
 class StagesDoNotMatchException extends RuntimeException
 {
-    /**
-     * @param Location $originLocation
-     * @param Location $compareLocation
-     */
     public function __construct(Location $originLocation, Location $compareLocation)
     {
         $message = 'Stage of location named "'.$originLocation->getName().'" being '.$originLocation->getStage().' does not match with the '.

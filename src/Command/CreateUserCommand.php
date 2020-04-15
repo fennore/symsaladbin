@@ -2,6 +2,9 @@
 
 namespace App\Command;
 
+use App\Entity\User;
+use App\Repository\RoleRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -9,9 +12,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Repository\UserRepository;
-use App\Repository\RoleRepository;
-use App\Entity\User;
 
 class CreateUserCommand extends Command
 {
@@ -35,11 +35,6 @@ class CreateUserCommand extends Command
      */
     protected $userPasswordEncoder;
 
-    /**
-     * @param UserRepository               $userRepository
-     * @param RoleRepository               $roleRepository
-     * @param UserPasswordEncoderInterface $userPasswordEncoder
-     */
     public function __construct(UserRepository $userRepository, RoleRepository $roleRepository, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->userRepository = $userRepository;

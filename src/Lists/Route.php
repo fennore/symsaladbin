@@ -2,15 +2,15 @@
 
 namespace App\Lists;
 
-use JMS\Serializer\Annotation as Serializer;
-use Hateoas\Configuration\Annotation as Hateoas;
 use App\Repository\LocationRepository;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @todo Add relation condition for the update link to be only visible when accessible
  * @todo Add route clear conditional relation
  * @todo Only show links that actually work (no non existing stages)
- * 
+ *
  * Route wrapper for locations.
  *
  * @Hateoas\Relation(

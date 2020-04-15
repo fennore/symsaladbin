@@ -10,8 +10,6 @@ trait RepositoryStageTrait
 {
     /**
      * Remove all records related to a stage.
-     *
-     * @param int $stage
      */
     public function clearStage(int $stage)
     {

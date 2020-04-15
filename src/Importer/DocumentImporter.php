@@ -2,10 +2,10 @@
 
 namespace App\Importer;
 
+use App\Entity\Item\Story;
+use App\Reader\SimpleDocumentReader;
 use App\Repository\FileRepository;
 use App\Repository\StoryRepository;
-use App\Reader\SimpleDocumentReader;
-use App\Entity\Item\Story;
 
 class DocumentImporter
 {

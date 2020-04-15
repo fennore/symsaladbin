@@ -2,10 +2,10 @@
 
 namespace App\Handler;
 
-use App\Repository\FileRepository;
 use App\Entity\File;
-use Symfony\Component\HttpFoundation\File\File as BaseFile;
 use App\Reader\DirectoryReader;
+use App\Repository\FileRepository;
+use Symfony\Component\HttpFoundation\File\File as BaseFile;
 
 /**
  * Handles files in the files directory.
@@ -22,10 +22,6 @@ class FileHandler
      */
     private $fileRepository;
 
-    /**
-     * @param DirectoryReader $directoryReader
-     * @param FileRepository  $fileRepository
-     */
     public function __construct(DirectoryReader $directoryReader, FileRepository $fileRepository)
     {
         $this->directoryReader = $directoryReader;

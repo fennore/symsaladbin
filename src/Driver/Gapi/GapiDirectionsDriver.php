@@ -2,11 +2,11 @@
 
 namespace App\Driver\Gapi;
 
-use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Driver\DirectionsDriverInterface;
 use App\Entity\Directions;
 use App\Entity\Location;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Directions Driver using Google API.
@@ -31,8 +31,6 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
 
     /**
      * Array of leftover locations when directions calculation hit request limit.
-     *
-     * @var array[Location]
      */
     private $leftovers;
 
@@ -72,7 +70,7 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
                 $listChunk = array_slice($list, 0, $size);
                 $destination = array_pop($listChunk);
                 $directionsRequest = new GapiDirectionsRequest($this->apiKey, $origin, $destination, $mode, 'ferries|tolls|highways');
-                array_map(array($directionsRequest, 'addWaypoint'), $listChunk);
+                array_map([$directionsRequest, 'addWaypoint'], $listChunk);
                 $response = $directionsRequest->getDirections();
                 ++$requestCount;
             } while (empty($response->routes) && !empty($modes));

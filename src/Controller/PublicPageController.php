@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\StoryRepository;
 use App\Repository\TimelineItemRepository;
+use Symfony\Component\Routing\Annotation\Route;
 
 class PublicPageController extends AbstractSmartController
 {

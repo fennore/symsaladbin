@@ -17,9 +17,9 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\File;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
-use App\Entity\File;
 
 /**
  * Trait for Items that have a one-to-one relation with the File entity.
@@ -28,7 +28,7 @@ trait SourceItem
 {
     /**
      * @Serializer\Exclude
-     * 
+     *
      * @ORM\OneToOne(targetEntity="App\Entity\File")
      * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
      *
@@ -39,8 +39,6 @@ trait SourceItem
     /**
      * Overwrite default Doctrine setFile,
      * So we can set the Item title according to file name when empty.
-     *
-     * @param File $file
      */
     public function setFile(File $file)
     {
@@ -74,8 +72,6 @@ trait SourceItem
      * Use an array for exact IN match.
      * The function returns self::MIMEMATCH by default.
      * Preferably just add class constant MIMEMATCH to your class using this trait.
-     *
-     * @return array
      */
     public static function matchMimeType(): array
     {

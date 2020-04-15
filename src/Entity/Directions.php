@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
-use stdClass;
-use Doctrine\ORM\Mapping as ORM;
 use App\Exception\StagesDoNotMatchException;
+use Doctrine\ORM\Mapping as ORM;
+use stdClass;
 
 /**
  * @ORM\Table(name="directions")

@@ -4,22 +4,22 @@ namespace App\Driver\Gapi;
 
 class GapiHelper
 {
-    const VALIDDIRECTIONMODES = array(
+    const VALIDDIRECTIONMODES = [
         'bicycling',
         'walking',
         'driving',
-    );
+    ];
 
     /**
      * Direction modes to query with fallbacks and sizes.
      * If no size is given default will be used.
      */
-    const DIRECTIONMODES = array(
-        array('bicycling' => null),
-        array('bicycling' => 5),
-        array('walking' => 5),
-        array('driving' => 5),
-    );
+    const DIRECTIONMODES = [
+        ['bicycling' => null],
+        ['bicycling' => 5],
+        ['walking' => 5],
+        ['driving' => 5],
+    ];
 
     /**
      * Google Directions API request url with json response.

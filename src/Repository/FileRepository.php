@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\File;
+use App\Handler\DbBatchHandler;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
-use App\Handler\DbBatchHandler;
-use App\Entity\File;
 
 class FileRepository extends AbstractBatchableEntityRepository
 {
@@ -21,8 +21,6 @@ class FileRepository extends AbstractBatchableEntityRepository
      * About IterableResult annoyance @see https://github.com/doctrine/doctrine2/issues/5287.
      *
      * @param string|array $mimeMatch
-     *
-     * @return IterableResult
      */
     public function getFiles($mimeMatch = null, $pathMatch = ''): IterableResult
     {
@@ -50,8 +48,6 @@ class FileRepository extends AbstractBatchableEntityRepository
 
     /**
      * Writes a new File Entity to database.
-     *
-     * @param File $file
      */
     public function createFile(File $file, $useBatch = true)
     {
@@ -63,8 +59,6 @@ class FileRepository extends AbstractBatchableEntityRepository
 
     /**
      * Updates File Entity in database.
-     *
-     * @param File $file
      */
     public function updateFile(File $file, $useBatch = true)
     {
@@ -76,8 +70,6 @@ class FileRepository extends AbstractBatchableEntityRepository
 
     /**
      * Removes File Entity from database.
-     *
-     * @param File $file
      */
     public function deleteFile(File $file, $useBatch = true)
     {
@@ -88,8 +80,6 @@ class FileRepository extends AbstractBatchableEntityRepository
 
     /**
      * Creates or updates the File Entity data in the database.
-     *
-     * @param File $file
      */
     protected function persistFile(File $file, $useBatch)
     {

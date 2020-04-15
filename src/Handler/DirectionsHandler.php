@@ -2,12 +2,12 @@
 
 namespace App\Handler;
 
-use App\Repository\LocationRepository;
-use App\Repository\DirectionsRepository;
-use App\Repository\SavedStateRepository;
 use App\Driver\DirectionsDriverInterface;
-use App\States\EncodedRoute;
+use App\Repository\DirectionsRepository;
+use App\Repository\LocationRepository;
+use App\Repository\SavedStateRepository;
 use App\States\DirectionsState;
+use App\States\EncodedRoute;
 
 /**
  * Use a DirectionsDriver to calculate a route from Location entities.
@@ -64,8 +64,6 @@ class DirectionsHandler
 
     /**
      * Get the encoded route.
-     *
-     * @return array
      */
     public function getEncodedRoute(): array
     {
@@ -80,8 +78,6 @@ class DirectionsHandler
      * so that it can be rebuild in chunks.
      *
      * @todo See if we can use some direction/location diff to perform a more accurate reset.
-     *
-     * @param int $stage
      */
     public function resetEncodedRoute(int $stage)
     {
@@ -139,12 +135,12 @@ class DirectionsHandler
         // 3. Directions
         $directionsList = $this->driver->getDirections($locationList, self::MAXREQUESTS);
         // 4. Encoded route
-        $encodedRoute = array_map(array($this->driver, 'getPolyline'), $directionsList);
+        $encodedRoute = array_map([$this->driver, 'getPolyline'], $directionsList);
         // 5. Set data for Db
-        array_map(array($this->directionsRepository, 'createDirections'), $directionsList);
+        array_map([$this->directionsRepository, 'createDirections'], $directionsList);
         // 5.1 When directions calculations are not flagged as an update, update the encodedRoute
         if (null === $directionsState->getCurrentUpdate()) {
-            array_map(array($route, 'addPolyline'), array_pad([], count($encodedRoute), $stage), $encodedRoute);
+            array_map([$route, 'addPolyline'], array_pad([], count($encodedRoute), $stage), $encodedRoute);
         // 5.2 When flagged as update but unfinished save the encodedroute under the directionsstate update
         } elseif ($this->driver->hasUncalculatedDirectionsLeft()) {
             $directionsState->addUpdatePolylines($encodedRoute);

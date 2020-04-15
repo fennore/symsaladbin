@@ -149,9 +149,6 @@ class DirectionsState implements StateInterface
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getStage(): int
     {
         if (is_null($this->getCurrentUpdate())) {
@@ -161,9 +158,6 @@ class DirectionsState implements StateInterface
         }
     }
 
-    /**
-     * @return int
-     */
     public function getWeight(): int
     {
         if (is_null($this->getCurrentUpdate())) {

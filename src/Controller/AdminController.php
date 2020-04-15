@@ -2,15 +2,14 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use App\Controller\AbstractSmartController;
-use App\Repository\LocationRepository;
-use App\Repository\FileRepository;
-use App\Importer\LocationImporter;
+use App\Handler\DirectionsHandler;
+use App\Handler\FileHandler;
 use App\Importer\DocumentImporter;
 use App\Importer\ImageImporter;
-use App\Handler\FileHandler;
-use App\Handler\DirectionsHandler;
+use App\Importer\LocationImporter;
+use App\Repository\FileRepository;
+use App\Repository\LocationRepository;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends AbstractSmartController
 {

@@ -2,13 +2,13 @@
 
 namespace App\Command;
 
+use App\Entity\Role;
+use App\Repository\RoleRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use App\Entity\Role;
-use App\Repository\RoleRepository;
 
 class CreateRoleCommand extends Command
 {
@@ -22,9 +22,6 @@ class CreateRoleCommand extends Command
      */
     protected $roleRepository;
 
-    /**
-     * @param RoleRepository $roleRepository
-     */
     public function __construct(RoleRepository $roleRepository)
     {
         $this->roleRepository = $roleRepository;
@@ -44,9 +41,6 @@ class CreateRoleCommand extends Command
 
     /**
      * {@inheritdoc}
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

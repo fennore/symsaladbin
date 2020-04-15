@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
+use App\Handler\DbBatchHandler;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use App\Handler\DbBatchHandler;
 
 abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
 {

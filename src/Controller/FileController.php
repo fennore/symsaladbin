@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\FileRepository;
 use App\Entity\File;
+use App\Repository\FileRepository;
+use Symfony\Component\Routing\Annotation\Route;
 
 class FileController extends AbstractSmartController
 {

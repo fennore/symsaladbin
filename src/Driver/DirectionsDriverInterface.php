@@ -21,22 +21,16 @@ interface DirectionsDriverInterface
      *
      * @param IterableResult $locationList list of Location Entities
      * @param int            $maxRequests  Maximum Direction requests to send
-     *
-     * @return array
      */
     public function getDirections(IterableResult $locationList, $maxRequests = 0): array;
 
     /**
      * If the directions calculation hit the request limit there will be locations left to calculate directions for.
-     *
-     * @return bool
      */
     public function hasUncalculatedDirectionsLeft(): bool;
 
     /**
      * Get the last Location used for Direction requests.
-     *
-     * @return Location|null
      */
     public function getLastLocation(): ?Location;
 

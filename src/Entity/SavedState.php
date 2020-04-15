@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\States\StateInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="savedstate")
@@ -28,8 +28,6 @@ class SavedState
 
     /**
      * Note: never gets called by Doctrine ORM.
-     *
-     * @param StateInterface $state
      */
     public function __construct(StateInterface $state)
     {
@@ -39,8 +37,6 @@ class SavedState
 
     /**
      * Get the full state object.
-     *
-     * @return StateInterface
      */
     public function getState(): StateInterface
     {
@@ -49,8 +45,6 @@ class SavedState
 
     /**
      * Overwrite the full state object.
-     *
-     * @param StateInterface $state
      */
     public function setState(StateInterface $state)
     {

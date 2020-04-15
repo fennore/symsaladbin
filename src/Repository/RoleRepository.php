@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\ORMInvalidArgumentException;
 
 class RoleRepository extends ServiceEntityRepository
 {
@@ -29,8 +29,6 @@ class RoleRepository extends ServiceEntityRepository
 
     /**
      * @param string $name Name for the role to search for. Each role has a unique name.
-     *
-     * @return Role
      */
     public function loadRoleByName(string $name): Role
     {
@@ -39,8 +37,6 @@ class RoleRepository extends ServiceEntityRepository
 
     /**
      * Writes a new Role Entity to database.
-     *
-     * @param Role $role
      */
     public function createRole(Role $role)
     {
@@ -52,8 +48,6 @@ class RoleRepository extends ServiceEntityRepository
 
     /**
      * Updates Role Entity in database.
-     *
-     * @param Role $role
      */
     public function updateRole(Role $role)
     {
@@ -65,8 +59,6 @@ class RoleRepository extends ServiceEntityRepository
 
     /**
      * Removes Role Entity from database.
-     *
-     * @param Role $role
      */
     public function deleteRole(Role $role)
     {
@@ -75,8 +67,6 @@ class RoleRepository extends ServiceEntityRepository
 
     /**
      * Creates or updates the Role Entity data in the database.
-     *
-     * @param Role $role
      */
     protected function persistRole(Role $role)
     {

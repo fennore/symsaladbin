@@ -2,9 +2,9 @@
 
 namespace App\EventSubscriber;
 
+use App\Data\ContentSecurityPolicy;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use App\Data\ContentSecurityPolicy;
 
 class GlobalHeaderSubscriber implements EventSubscriberInterface
 {
@@ -33,7 +33,7 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
         if ($event->getResponse()->headers->contains('content-type', 'text/html')) {
             // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src
             $this->csp
-                ->set('default-src', array("'self'"))
+                ->set('default-src', ["'self'"])
 //                ->set('script-src', array(
 //                    "'self'",
 ////                    "'unsafe-inline'",

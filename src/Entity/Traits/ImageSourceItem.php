@@ -2,9 +2,9 @@
 
 namespace App\Entity\Traits;
 
-use Throwable;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\File;
+use Doctrine\ORM\Mapping as ORM;
+use Throwable;
 
 trait ImageSourceItem
 {
@@ -26,8 +26,6 @@ trait ImageSourceItem
      * Overwrite SourceItem setFile.
      * Adding image exif data to property.
      * Setting Item created date to picture taken time.
-     *
-     * @param File $file
      */
     public function setFile(File $file)
     {

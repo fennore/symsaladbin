@@ -2,9 +2,9 @@
 
 namespace App\EventSubscriber;
 
+use App\Handler\DbBatchHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use App\Handler\DbBatchHandler;
 
 class DbBatchSubscriber implements EventSubscriberInterface
 {

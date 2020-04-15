@@ -2,11 +2,10 @@
 
 namespace App\Entity\Item;
 
-use Doctrine\ORM\Mapping as ORM;
-/* note: bug? This is required as the annotation doesn't seem to work for multi level trait usages. */
-use JMS\Serializer\Annotation as Serializer;
-use App\Entity\Traits\ImageSourceItem;
 use App\Entity\File;
+/* note: bug? This is required as the annotation doesn't seem to work for multi level trait usages. */
+use App\Entity\Traits\ImageSourceItem;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TimelineItemRepository")
@@ -25,9 +24,6 @@ class TimelineItem extends Item implements SourceItemInterface
         'image/png',
     ];
 
-    /**
-     * @return File
-     */
     public function getFile(): File
     {
         return $this->file;

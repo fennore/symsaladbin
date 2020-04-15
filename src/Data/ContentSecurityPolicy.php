@@ -31,9 +31,6 @@ class ContentSecurityPolicy
 
     /**
      * Set a security policy directive.
-     *
-     * @param string $directive
-     * @param array  $sources
      */
     public function set(string $directive, array $sources)
     {
@@ -44,9 +41,6 @@ class ContentSecurityPolicy
 
     /**
      * Add to a security policy directive.
-     *
-     * @param string $directive
-     * @param string $source
      */
     public function add(string $directive, string $source)
     {
@@ -58,8 +52,6 @@ class ContentSecurityPolicy
     /**
      * Get the nonce value for in templates.
      * Automatically adds it to the content security policy on first usage.
-     *
-     * @return string
      */
     public function getNonce(): string
     {
@@ -72,8 +64,6 @@ class ContentSecurityPolicy
 
     /**
      * Get the string formatted policy for in the header.
-     *
-     * @return string|null
      */
     public function getPolicy(): ?string
     {

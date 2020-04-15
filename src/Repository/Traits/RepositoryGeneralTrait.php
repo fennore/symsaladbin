@@ -7,7 +7,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @todo Add method to get path criteria here and make use of it.
- * 
+ *
  * Trait to use in Repository classes
  */
 trait RepositoryGeneralTrait
@@ -43,8 +43,6 @@ trait RepositoryGeneralTrait
 
     /**
      * Get the total number of records for a specific entity.
-     *
-     * @return int
      */
     public function getTotal(): int
     {
@@ -55,17 +53,12 @@ trait RepositoryGeneralTrait
             ->getSingleScalarResult();
     }
 
-    /**
-     * @param Criteria $criteria
-     * @return int
-     */
     protected function countByCriteria(Criteria $criteria): int
     {
         return (new Paginator(
             $this
                 ->createQueryBuilder('rgt')
-                ->addCriteria($criteria)
-            , false))
+                ->addCriteria($criteria), false))
                 ->count();
     }
 }

@@ -19,10 +19,6 @@ class Coordinate
      */
     private $lng;
 
-    /**
-     * @param float $lat
-     * @param float $lng
-     */
     public function __construct(float $lat, float $lng)
     {
         $this->lat = $lat;

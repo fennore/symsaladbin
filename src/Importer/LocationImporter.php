@@ -2,10 +2,10 @@
 
 namespace App\Importer;
 
+use App\Reader\SimpleGpxFileReader;
 use App\Repository\FileRepository;
 use App\Repository\LocationRepository;
 use App\Repository\SavedStateRepository;
-use App\Reader\SimpleGpxFileReader;
 use App\States\ImportLocationState;
 
 /**
@@ -34,9 +34,8 @@ class LocationImporter
     private $gpxReader;
 
     /**
-     * @param FileRepository      $fileRepository
-     * @param LocationRepository  $locationRepository
-     * @param SimpleGpxFileReader $gpxReader
+     * @param FileRepository     $fileRepository
+     * @param LocationRepository $locationRepository
      */
     public function __construct(SavedStateRepository $savedStateRepo, FileRepository $fileRepo, LocationRepository $locationRepo, SimpleGpxFileReader $gpxReader)
     {

@@ -2,14 +2,19 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Coordinate;
+use App\Entity\Location;
+use App\Lists\Route as LocationRoute;
+use App\Repository\DirectionsRepository;
+use App\Repository\LocationRepository;
+use App\Repository\SavedStateRepository;
+use App\States\DirectionsState;
+use App\States\EncodedRoute;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\{Request,JsonResponse};
-use App\Repository\{SavedStateRepository,LocationRepository,DirectionsRepository};
-use App\States\{EncodedRoute,DirectionsState};
-use App\Lists\Route as LocationRoute;
-use App\Entity\{Location,Coordinate};
 
 class RouteController extends AbstractController
 {
@@ -26,14 +31,14 @@ class RouteController extends AbstractController
 
     /**
      * @Route(
-     *      "/api/route/{stage}", 
-     *      name="api_route_locations", 
-     *      methods={"GET","HEAD"}, 
+     *      "/api/route/{stage}",
+     *      name="api_route_locations",
+     *      methods={"GET","HEAD"},
      *      requirements={"stage"="\d+"})
      */
     public function getLocations(
-        LocationRepository $locationRepo, 
-        SerializerInterface $serializer, 
+        LocationRepository $locationRepo,
+        SerializerInterface $serializer,
         int $stage)
     {
         $route = new LocationRoute($stage, $locationRepo);
@@ -45,8 +50,8 @@ class RouteController extends AbstractController
     /**
      * @Route(
      *      "/api/route/{currentStage}",
-     *      name="api_route_update", 
-     *      methods={"PUT"}, 
+     *      name="api_route_update",
+     *      methods={"PUT"},
      *      requirements={"currentStage"="\d+"})
      */
     public function updateRouteStage(

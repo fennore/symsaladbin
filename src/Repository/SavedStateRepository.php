@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use App\Entity\SavedState;
 use App\Handler\DbBatchHandler;
 use App\States\StateInterface;
-use App\Entity\SavedState;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 class SavedStateRepository extends AbstractBatchableEntityRepository
 {
@@ -18,8 +18,6 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
      * Checks if a given State is already persistent as SavedState.
      * Returns a new or the already existing SavedState.
      * If the State exists the given State will change its reference to the existing state in SavedState.
-     *
-     * @param StateInterface $state
      *
      * @return SavedState
      */
@@ -38,10 +36,6 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
 
     /**
      * Returns a merged copy of the SavedState.
-     *
-     * @param SavedState $savedState
-     *
-     * @return SavedState
      */
     public function mergeSavedState(SavedState $savedState): SavedState
     {
@@ -50,8 +44,6 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
 
     /**
      * Writes a new SavedState Entity to database.
-     *
-     * @param SavedState $savedState
      */
     public function createSavedState(SavedState $savedState, $useBatch = true)
     {
@@ -61,8 +53,6 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
     /**
      * Updates SavedState Entity in database.
      * Note: will update regardless if anything changed or not.
-     *
-     * @param SavedState $savedState
      */
     public function updateSavedState(SavedState $savedState, $useBatch = true)
     {
@@ -76,8 +66,6 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
 
     /**
      * Removes SavedState Entity from database.
-     *
-     * @param SavedState $savedState
      */
     public function deleteSavedState(SavedState $savedState, $useBatch = true)
     {
@@ -88,8 +76,6 @@ class SavedStateRepository extends AbstractBatchableEntityRepository
 
     /**
      * Creates or updates the SavedState Entity data in the database.
-     *
-     * @param SavedState $savedState
      */
     protected function persistSavedState(SavedState $savedState, $useBatch)
     {

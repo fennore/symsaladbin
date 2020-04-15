@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Doctrine\ORM\{UnitOfWork, ORMInvalidArgumentException};
-use Doctrine\Common\Collections\Criteria;
 use App\Entity\Item\Story;
 use App\Handler\DbBatchHandler;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\UnitOfWork;
 
 /**
  * @method Story|null find($id, $lockMode = null, $lockVersion = null)
@@ -29,20 +30,15 @@ class StoryRepository extends AbstractBatchableEntityRepository
             ->iterate();
     }
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     * @param bool $showDisabled
-     * @return IterableResult
-     */
     public function getStories(int $offset, int $limit, bool $showDisabled = false): IterableResult
     {
         $qb = $this->createQueryBuilder('s');
-        if(!$showDisabled) {
+        if (!$showDisabled) {
             $qb
                 ->andWhere('s.status > :status')
                 ->setParameter('status', 0);
         }
+
         return $qb
             ->addOrderBy('s.weight')
             ->setFirstResult($offset)
@@ -51,13 +47,9 @@ class StoryRepository extends AbstractBatchableEntityRepository
             ->iterate();
     }
 
-    /**
-     * @param bool $showDisabled
-     * @return int
-     */
     public function countStories(bool $showDisabled = false): int
     {
-        if(!$showDisabled) {
+        if (!$showDisabled) {
             return $this->countByCriteria(
                 $this->getEnabledCriteria()
             );
@@ -79,8 +71,7 @@ class StoryRepository extends AbstractBatchableEntityRepository
     /**
      * Writes a new Story Entity to database.
      *
-     * @param Story $story
-     * @param bool  $useBatch
+     * @param bool $useBatch
      */
     public function createStory(Story $story, $useBatch = true): void
     {
@@ -93,8 +84,7 @@ class StoryRepository extends AbstractBatchableEntityRepository
     /**
      * Updates Story Entity in database.
      *
-     * @param Story $story
-     * @param bool  $useBatch
+     * @param bool $useBatch
      */
     public function updateStory(Story $story, $useBatch = true): void
     {
@@ -102,10 +92,10 @@ class StoryRepository extends AbstractBatchableEntityRepository
             throw ORMInvalidArgumentException::entityHasNoIdentity($story, 'updated');
         }
         $entityState = $this->getEntityManager()->getUnitOfWork()->getEntityState(
-            $story, 
+            $story,
             UnitOfWork::STATE_DETACHED
         );
-        if($entityState === UnitOfWork::STATE_DETACHED) {
+        if (UnitOfWork::STATE_DETACHED === $entityState) {
             throw ORMInvalidArgumentException::detachedEntityCannot($story, 'updated');
         }
         $this->persistStory($story, $useBatch);
@@ -113,19 +103,18 @@ class StoryRepository extends AbstractBatchableEntityRepository
 
     /**
      * @param Story[] $stories
-     * @return void
      */
     public function updateStories(array $stories): void
     {
         $matches = [];
         $ids = [];
-        foreach($stories as $story) {
+        foreach ($stories as $story) {
             $id = $story->getId();
             $matches[$id] = $story;
             $ids[] = $id;
         }
 
-        foreach(
+        foreach (
             $this
                 ->createQueryBuilder('s')
                 ->addCriteria($this->getIdListCriteria($ids))
@@ -134,17 +123,17 @@ class StoryRepository extends AbstractBatchableEntityRepository
         ) {
             $story = $row[0];
             $id = $story->getId();
-            if(!isset($matches[$id])) {
+            if (!isset($matches[$id])) {
                 continue;
             }
             $story
                 ->setWeight($matches[$id]->getWeight())
                 ->setTitle($matches[$id]->getTitle())
                 ->setContent($matches[$id]->getContent());
-            if($story->isActive() && !$matches[$id]->isActive()) {
+            if ($story->isActive() && !$matches[$id]->isActive()) {
                 $story->setInactive();
             }
-            if(!$story->isActive() && $matches[$id]->isActive()) {
+            if (!$story->isActive() && $matches[$id]->isActive()) {
                 $story->setActive();
             }
 //            $story->setLink($items);
@@ -155,8 +144,7 @@ class StoryRepository extends AbstractBatchableEntityRepository
     /**
      * Removes Story Entity from database.
      *
-     * @param Story $story
-     * @param bool  $useBatch
+     * @param bool $useBatch
      */
     public function deleteStory(Story $story, $useBatch = true)
     {
@@ -165,10 +153,8 @@ class StoryRepository extends AbstractBatchableEntityRepository
         $this->startTransaction($useBatch);
     }
 
-    /**
-     * @param array $ids
-     */
-    public function deleteStoriesById(array $ids) {
+    public function deleteStoriesById(array $ids)
+    {
         $this
             ->getEntityManager()
             ->createQueryBuilder()
@@ -180,8 +166,7 @@ class StoryRepository extends AbstractBatchableEntityRepository
     /**
      * Creates or updates the Story Entity data in the database.
      *
-     * @param Story $story
-     * @param bool  $useBatch
+     * @param bool $useBatch
      */
     protected function persistStory(Story $story, $useBatch)
     {
@@ -190,16 +175,18 @@ class StoryRepository extends AbstractBatchableEntityRepository
         $this->startTransaction($useBatch);
     }
 
-    protected function getEnabledCriteria() {
-        $criteria = (new Criteria);
-        
+    protected function getEnabledCriteria()
+    {
+        $criteria = (new Criteria());
+
         return $criteria->andWhere(
                 $criteria->expr()->gt('status', 0));
     }
 
-    protected function getIdListCriteria($ids) {
-        $criteria = (new Criteria);
-        
+    protected function getIdListCriteria($ids)
+    {
+        $criteria = (new Criteria());
+
         return $criteria->andWhere(
                 $criteria->expr()->in('id', $ids));
     }

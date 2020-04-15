@@ -2,8 +2,8 @@
 
 namespace App\Driver\Gapi;
 
-use ErrorException;
 use App\Entity\Location;
+use ErrorException;
 
 /**
  * Represents a google API directions request using waypoints.
@@ -47,11 +47,8 @@ class GapiDirectionsRequest
     private $avoid;
 
     /**
-     * @param string   $apiKey
-     * @param Location $origin
-     * @param Location $destination
-     * @param string   $mode        Optional, defaults to GAPI default (driving)
-     * @param string   $avoid       Optional, defaults to GAPI default (none)
+     * @param string $mode  Optional, defaults to GAPI default (driving)
+     * @param string $avoid Optional, defaults to GAPI default (none)
      *
      * @throws ErrorException when invalid directions mode is used
      */
@@ -78,11 +75,11 @@ class GapiDirectionsRequest
         // Get cURL resource
         $curl = curl_init();
         // Set some options - we are passing in a useragent too here
-        curl_setopt_array($curl, array(
+        curl_setopt_array($curl, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_URL => $url,
             CURLOPT_SSL_VERIFYPEER => false, // ssl verification seems to fail
-        ));
+        ]);
         // Send the request & save response to $resp
         $response = json_decode(curl_exec($curl));
         // Close request to clear up some resources
@@ -95,13 +92,13 @@ class GapiDirectionsRequest
 
     public function __toString()
     {
-        return http_build_query(array(
+        return http_build_query([
             'mode' => $this->mode,
             'origin' => (string) $this->origin,
             'destination' => (string) $this->destination,
             'waypoints' => 'via:'.(implode('|via:', $this->waypoints)),
             'avoid' => $this->avoid,
             'key' => $this->apiKey,
-        ));
+        ]);
     }
 }

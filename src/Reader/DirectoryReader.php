@@ -35,9 +35,6 @@ class DirectoryReader
      */
     private $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -45,8 +42,6 @@ class DirectoryReader
 
     /**
      * Get all files in the files directory.
-     *
-     * @return Finder
      */
     public function getAllFiles(): Finder
     {
@@ -57,8 +52,6 @@ class DirectoryReader
 
     /**
      * @param bool $getRelative Set to true if you want the path relative to the project root
-     *
-     * @return string
      */
     public function getFilesDirectory(bool $getRelative = false): string
     {
@@ -67,8 +60,6 @@ class DirectoryReader
 
     /**
      * @param bool $getRelative Set to true if you want to get the path relative to the files directory
-     *
-     * @return string
      */
     public function getGpxDirectory(bool $getRelative = false): string
     {
@@ -77,8 +68,6 @@ class DirectoryReader
 
     /**
      * @param bool $getRelative Set to true if you want to get the path relative to the files directory
-     *
-     * @return string
      */
     public function getStoriesDirectory(bool $getRelative = false): string
     {
@@ -87,8 +76,6 @@ class DirectoryReader
 
     /**
      * @param bool $getRelative Set to true if you want to get the path relative to the files directory
-     *
-     * @return string
      */
     public function getImagesDirectory(bool $getRelative = false): string
     {

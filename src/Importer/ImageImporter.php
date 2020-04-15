@@ -2,10 +2,10 @@
 
 namespace App\Importer;
 
-use App\Repository\FileRepository;
-use App\Repository\TimelineItemRepository;
 use App\Entity\Item\TimelineItem;
 use App\Reader\SimpleImageReader;
+use App\Repository\FileRepository;
+use App\Repository\TimelineItemRepository;
 
 class ImageImporter
 {

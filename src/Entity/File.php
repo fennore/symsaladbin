@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File as BaseFile;
-use Symfony\Component\HttpFoundation\File\UploadedFile; // Uploaded file will be of this type instead
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich; // Uploaded file will be of this type instead
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
@@ -74,7 +74,6 @@ class File
     /**
      * Holds the file data.
      * For now not using it.
-      type: blob
       nullable: true
      * @var object
      */

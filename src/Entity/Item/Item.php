@@ -2,10 +2,10 @@
 
 namespace App\Entity\Item;
 
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Tools\CleanPathString;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -25,17 +25,13 @@ class Item
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
     protected int $id;
 
     /**
      * @Serializer\Exclude
-     * 
-     * The Item type.
      *
-     * @var string
+     * The Item type.
      */
     protected string $type;
 
@@ -67,8 +63,6 @@ class Item
 
     /**
      * @ORM\Column()
-     *
-     * @var string
      */
     protected string $path;
 
@@ -112,8 +106,6 @@ class Item
     }
 
     /**
-     * @param string $title
-     *
      * @return static
      */
     public function setTitle(string $title): self
@@ -129,8 +121,6 @@ class Item
     }
 
     /**
-     * @param string $content
-     *
      * @return static
      */
     public function setContent(string $content): self
@@ -143,8 +133,6 @@ class Item
     }
 
     /**
-     * @param CleanPathString $path
-     *
      * @return static
      */
     public function setPath(CleanPathString $path): self
@@ -171,13 +159,12 @@ class Item
     /**
      * @param self $item
      */
-    public function addLink(Item $item) {
+    public function addLink(Item $item)
+    {
         $this->link->add($item);
     }
 
     /**
-     * @param int $weight
-     *
      * @return static
      */
     public function setWeight(int $weight): self
@@ -254,9 +241,6 @@ class Item
         return DateTime::createFromFormat('U', $this->updated)->format($format);
     }
 
-    /**
-     * @return bool
-     */
     public function isActive(): bool
     {
         return $this->status;

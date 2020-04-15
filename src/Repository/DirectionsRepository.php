@@ -2,12 +2,12 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\ORMInvalidArgumentException;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use App\Handler\DbBatchHandler;
 use App\Entity\Directions;
+use App\Handler\DbBatchHandler;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\Query\Expr\Join;
 
 class DirectionsRepository extends AbstractBatchableEntityRepository
 {
@@ -19,8 +19,6 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
     }
 
     /**
-     * @param int $stage
-     *
      * @return IterableResult
      */
     public function getDirections(int $stage)
@@ -36,8 +34,6 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
 
     /**
      * Writes a new Directions Entity to database.
-     *
-     * @param Directions $directions
      */
     public function createDirections(Directions $directions, $useBatch = true)
     {
@@ -49,8 +45,6 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
 
     /**
      * Updates Directions Entity in database.
-     *
-     * @param Directions $directions
      */
     public function updateDirections(Directions $directions, $useBatch = true)
     {
@@ -62,8 +56,6 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
 
     /**
      * Removes Directions Entity from database.
-     *
-     * @param Directions $directions
      */
     public function deleteDirections(Directions $directions, $useBatch = true)
     {
@@ -74,8 +66,6 @@ class DirectionsRepository extends AbstractBatchableEntityRepository
 
     /**
      * Creates or updates the Directions Entity data in the database.
-     *
-     * @param Directions $directions
      */
     protected function persistDirections(Directions $directions, $useBatch)
     {

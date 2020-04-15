@@ -28,7 +28,7 @@ class CleanPathString
     }
 
     /**
-     * Sets the original string to create a clean path string from
+     * Sets the original string to create a clean path string from.
      *
      * @param string $stringToConvert The original string
      */
@@ -82,7 +82,7 @@ class CleanPathString
         }
 
         $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $clean);
-	// @todo the delimiter should be part of the ignored match
+        // @todo the delimiter should be part of the ignored match
         $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
         $clean = preg_replace("/[\/_|+ -]+/", $this->delimiter, $clean);
         $clean = strtolower(trim($clean, $this->delimiter));
@@ -91,7 +91,7 @@ class CleanPathString
     }
 
     /**
-     * Get the clean path string
+     * Get the clean path string.
      *
      * @return string
      */

@@ -2,9 +2,9 @@
 
 namespace App\Lists;
 
-use JMS\Serializer\Annotation as Serializer;
-use Hateoas\Configuration\Annotation as Hateoas;
 use App\Repository\StoryRepository;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Story pager wrapper.
@@ -13,9 +13,9 @@ use App\Repository\StoryRepository;
  *     name = "self",
  *     href = @Hateoas\Route(
  *         "api_stories",
- *         parameters = { 
+ *         parameters = {
  *              "offset" = "expr(object.getOffset())",
- *              "limit" = "expr(object.getLimit())" 
+ *              "limit" = "expr(object.getLimit())"
  *         },
  *     )
  * )
@@ -23,9 +23,9 @@ use App\Repository\StoryRepository;
  *     name = "next",
  *     href = @Hateoas\Route(
  *         "api_stories",
- *         parameters = { 
+ *         parameters = {
  *              "offset" = "expr(object.getNext())",
- *              "limit" = "expr(object.getLimit())" 
+ *              "limit" = "expr(object.getLimit())"
  *         }
  *     )
  * )
@@ -33,9 +33,9 @@ use App\Repository\StoryRepository;
  *     name = "previous",
  *     href = @Hateoas\Route(
  *         "api_stories",
- *         parameters = { 
+ *         parameters = {
  *              "offset" = "expr(object.getPrevious())",
- *              "limit" = "expr(object.getLimit())" 
+ *              "limit" = "expr(object.getLimit())"
  *         }
  *     )
  * )
@@ -43,9 +43,9 @@ use App\Repository\StoryRepository;
  *     name = "first",
  *     href = @Hateoas\Route(
  *         "api_stories",
- *         parameters = { 
+ *         parameters = {
  *              "offset" = "0",
- *              "limit" = "expr(object.getLimit())" 
+ *              "limit" = "expr(object.getLimit())"
  *         }
  *     )
  * )
@@ -58,40 +58,29 @@ class StoryPager
 {
     /**
      * @Serializer\Exclude
-     * 
-     * @var bool 
      */
     private bool $showDisabled;
 
     /**
      * @Serializer\Exclude
-     * 
+     *
      * @var int
      */
     private int $offset;
 
     /**
      * @Serializer\Exclude
-     * 
-     * @var int 
      */
     private int $limit;
 
     /**
      * @Serializer\Exclude
-     * 
-     * @var StoryRepository 
      */
     private StoryRepository $storyRepo;
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     * @param StoryRepository $storyRepo
-     */
     public function __construct(
-        int $offset, 
-        int $limit, 
+        int $offset,
+        int $limit,
         StoryRepository $storyRepo)
     {
         $this->offset = $offset;
@@ -116,7 +105,6 @@ class StoryPager
     }
 
     /**
-     * @param bool $showDisabled
      * @return void
      */
     public function setShowDisabled(bool $showDisabled): self
@@ -134,11 +122,10 @@ class StoryPager
         $list = [];
         foreach (
             $this->storyRepo->getStories(
-                $this->offset, 
-                $this->limit, 
+                $this->offset,
+                $this->limit,
                 $this->showDisabled
-            ) as $row)
-        {
+            ) as $row) {
             $list[] = $row[0];
         }
 
@@ -151,7 +138,7 @@ class StoryPager
     public function getNext(): int
     {
         return min(
-            floor($this->offset/$this->limit) * $this->limit + $this->limit, 
+            floor($this->offset / $this->limit) * $this->limit + $this->limit,
             floor($this->storyRepo->countStories($this->showDisabled) / $this->limit) * $this->limit
         );
     }
@@ -161,6 +148,6 @@ class StoryPager
      */
     public function getPrevious(): int
     {
-        return max(floor($this->offset/$this->limit) * $this->limit - $this->limit, 0);
+        return max(floor($this->offset / $this->limit) * $this->limit - $this->limit, 0);
     }
 }

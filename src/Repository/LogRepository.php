@@ -16,8 +16,6 @@ class LogRepository extends AbstractBatchableEntityRepository
 
     /**
      * Writes a new Log Entity to database.
-     *
-     * @param Log $log
      */
     public function createLog(Log $log, $useBatch = true)
     {
@@ -29,8 +27,6 @@ class LogRepository extends AbstractBatchableEntityRepository
 
     /**
      * Updates Log Entity in database.
-     *
-     * @param Log $log
      */
     public function updateLog(Log $log, $useBatch = true)
     {
@@ -42,8 +38,6 @@ class LogRepository extends AbstractBatchableEntityRepository
 
     /**
      * Removes Log Entity from database.
-     *
-     * @param Log $log
      */
     public function deleteLog(Log $log, $useBatch = true)
     {
@@ -71,8 +65,6 @@ class LogRepository extends AbstractBatchableEntityRepository
 
     /**
      * Creates or updates the Log Entity data in the database.
-     *
-     * @param Log $log
      */
     protected function persistLog(Log $log, $useBatch)
     {

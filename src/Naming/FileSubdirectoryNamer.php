@@ -2,9 +2,9 @@
 
 namespace App\Naming;
 
-use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
-use Vich\UploaderBundle\Mapping\PropertyMapping;
 use App\Reader\DirectoryReader;
+use Vich\UploaderBundle\Mapping\PropertyMapping;
+use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
 
 /**
  * File directory namer for Vich Uploader bundle.
@@ -18,9 +18,6 @@ class FileSubdirectoryNamer implements DirectoryNamerInterface
      */
     private $directoryReader;
 
-    /**
-     * @param DirectoryReader $directoryReader
-     */
     public function __construct(DirectoryReader $directoryReader)
     {
         $this->directoryReader = $directoryReader;
@@ -39,8 +36,6 @@ class FileSubdirectoryNamer implements DirectoryNamerInterface
      * according to its MIME type.
      *
      * @param string $mimeType Given MIME type
-     *
-     * @return string
      */
     private function determineSubDirectoryForMimeType(string $mimeType): string
     {

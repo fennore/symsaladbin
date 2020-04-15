@@ -2,11 +2,11 @@
 
 namespace App\Handler;
 
-use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
-//use App\Repository\LogRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Entity\Log;
+use Monolog\Handler\AbstractProcessingHandler;
+//use App\Repository\LogRepository;
+use Monolog\Logger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Handler for Monolog as service.
@@ -40,9 +40,8 @@ class DbLogHandler extends AbstractProcessingHandler
     protected $container;
 
     /**
-     * @param ContainerInterface $container
-     * @param type               $level
-     * @param type               $bubble
+     * @param type $level
+     * @param type $bubble
      */
     public function __construct(ContainerInterface $container, $level = Logger::DEBUG, $bubble = true)
     {

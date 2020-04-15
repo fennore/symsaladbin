@@ -2,10 +2,10 @@
 
 namespace App\Reader;
 
-use SimpleXMLIterator;
-use App\Entity\File;
 use App\Entity\Coordinate;
+use App\Entity\File;
 use App\Entity\Location;
+use SimpleXMLIterator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,9 +21,6 @@ class SimpleGpxFileReader
 {
     private $filesDirectory;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->filesDirectory = $container->getParameter('app.files.directory');
