@@ -5,8 +5,8 @@ namespace App\Controller\Api;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repository\StoryRepository;
+use Symfony\Component\HttpFoundation\{Request,Response,JsonResponse};
+use App\Repository\{StoryRepository};
 use App\Lists\StoryPager;
 
 class StoryController extends AbstractController
@@ -19,7 +19,11 @@ class StoryController extends AbstractController
      *      name="api_stories", methods={"GET", "HEAD"}, 
      *      requirements={"offset"="\d+","length"="\d+"})
      */
-    public function getStories(StoryRepository $storyRepo, SerializerInterface $serializer, int $offset = 0, int $limit = 1)
+    public function getStories(
+        StoryRepository $storyRepo, 
+        SerializerInterface $serializer, 
+        int $offset = 0, 
+        int $limit = 1): Response
     {
         $pager = new StoryPager($offset, $limit, $storyRepo);
         $pager->setShowDisabled($this->isGranted('ROLE_ADMIN'));
@@ -29,13 +33,39 @@ class StoryController extends AbstractController
     }
 
     /**
+     * Create the new stories.
+     *
+     * @Route("/api/stories", name="api_stories_create", methods={"POST"})
+     */
+    public function createStories(
+        Request $request,
+        StoryRepository $storyRepository,
+        SerializerInterface $serializer)
+    {
+        $stories = $serializer->deserialize($request->getContent(), 'array<App\Entity\Item\Story>', 'json');
+        foreach($stories as $story) {
+            $storyRepository->createStory($story);
+        }
+        return JsonResponse::create(null, 201);
+    }
+
+    /**
      * Update the stories using given identifier.
      *
      * @Route("/api/stories", name="api_stories_update", methods={"PUT"})
      */
-    public function updateStories()
+    public function updateStories(
+        Request $request,
+        StoryRepository $storyRepository,
+        SerializerInterface $serializer)
     {
-        
+        $stories = $serializer->deserialize($request->getContent(), 'array<App\Entity\Item\Story>', 'json');
+
+        if(is_array($stories) && count($stories) > 0) {
+            $storyRepository->updateStories($stories);
+        }
+
+        return JsonResponse::create([], 204);
     }
 
     /**
@@ -43,9 +73,12 @@ class StoryController extends AbstractController
      *
      * @Route("/api/stories", name="api_stories_delete", methods={"DELETE"})
      */
-    public function deleteStories()
+    public function deleteStories(
+        Request $request,
+        StoryRepository $storyRepository,
+        SerializerInterface $serializer)
     {
-        
+        return JsonResponse::create(null, 204);
     }
 
     /**
@@ -53,10 +86,9 @@ class StoryController extends AbstractController
      *
      * @Route("/api/stories/all", name="api_stories_clear", methods={"DELETE"})
      */
-    public function clearStories()
+    public function clearStories(StoryRepository $storyRepository)
     {
-        // empty stories list
-        // reset stories state
+        $storyRepository->truncateTable();
         return JsonResponse::create(null, 204);
     }
 }

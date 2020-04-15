@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\{UnitOfWork, ORMInvalidArgumentException};
 use Doctrine\Common\Collections\Criteria;
 use App\Entity\Item\Story;
 use App\Handler\DbBatchHandler;
@@ -82,7 +82,7 @@ class StoryRepository extends AbstractBatchableEntityRepository
      * @param Story $story
      * @param bool  $useBatch
      */
-    public function createStory(Story $story, $useBatch = true)
+    public function createStory(Story $story, $useBatch = true): void
     {
         if (!is_null($story->getId())) {
             throw ORMInvalidArgumentException::scheduleInsertForManagedEntity($story);
@@ -96,12 +96,60 @@ class StoryRepository extends AbstractBatchableEntityRepository
      * @param Story $story
      * @param bool  $useBatch
      */
-    public function updateStory(Story $story, $useBatch = true)
+    public function updateStory(Story $story, $useBatch = true): void
     {
         if (is_null($story->getId())) {
-            throw ORMInvalidArgumentException::entityHasNoIdentity($story, 'update');
+            throw ORMInvalidArgumentException::entityHasNoIdentity($story, 'updated');
+        }
+        $entityState = $this->getEntityManager()->getUnitOfWork()->getEntityState(
+            $story, 
+            UnitOfWork::STATE_DETACHED
+        );
+        if($entityState === UnitOfWork::STATE_DETACHED) {
+            throw ORMInvalidArgumentException::detachedEntityCannot($story, 'updated');
         }
         $this->persistStory($story, $useBatch);
+    }
+
+    /**
+     * @param Story[] $stories
+     * @return void
+     */
+    public function updateStories(array $stories): void
+    {
+        $matches = [];
+        $ids = [];
+        foreach($stories as $story) {
+            $id = $story->getId();
+            $matches[$id] = $story;
+            $ids[] = $id;
+        }
+
+        foreach(
+            $this
+                ->createQueryBuilder('s')
+                ->addCriteria($this->getIdListCriteria($ids))
+                ->getQuery()
+                ->iterate() as $row
+        ) {
+            $story = $row[0];
+            $id = $story->getId();
+            if(!isset($matches[$id])) {
+                continue;
+            }
+            $story
+                ->setWeight($matches[$id]->getWeight())
+                ->setTitle($matches[$id]->getTitle())
+                ->setContent($matches[$id]->getContent());
+            if($story->isActive() && !$matches[$id]->isActive()) {
+                $story->setInactive();
+            }
+            if(!$story->isActive() && $matches[$id]->isActive()) {
+                $story->setActive();
+            }
+//            $story->setLink($items);
+            $this->updateStory($story);
+        }
     }
 
     /**
@@ -115,6 +163,18 @@ class StoryRepository extends AbstractBatchableEntityRepository
         $em = $this->getEntityManager();
         $em->remove($story);
         $this->startTransaction($useBatch);
+    }
+
+    /**
+     * @param array $ids
+     */
+    public function deleteStoriesById(array $ids) {
+        $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->delete($this->getEntityName())
+            ->where('id IN(:ids)')
+            ->setParameter('ids', $ids);
     }
 
     /**
@@ -135,5 +195,12 @@ class StoryRepository extends AbstractBatchableEntityRepository
         
         return $criteria->andWhere(
                 $criteria->expr()->gt('status', 0));
+    }
+
+    protected function getIdListCriteria($ids) {
+        $criteria = (new Criteria);
+        
+        return $criteria->andWhere(
+                $criteria->expr()->in('id', $ids));
     }
 }

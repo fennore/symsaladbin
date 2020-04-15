@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation as Serializer;
  * )
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @Serializer\Discriminator(field = "type", disabled = true, map = {"item" = "Item"})
  */
 class Item
 {
@@ -27,7 +28,7 @@ class Item
      *
      * @var int
      */
-    protected $id;
+    protected int $id;
 
     /**
      * @Serializer\Exclude
@@ -36,67 +37,68 @@ class Item
      *
      * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
+     * @Serializer\Type("ArrayCollection")
      * @ORM\ManyToMany(targetEntity="Item", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(
      *      name="itemlink",
      *      joinColumns={@ORM\JoinColumn(name="item_id_1", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_2", referencedColumnName="id")})
      *
-     * @var Item Linked Item
+     * @var ArrayCollection Linked Item
      */
-    protected $link;
+    protected ArrayCollection $link;
 
     /**
      * @ORM\Column()
      *
      * @var string title of the item
      */
-    protected $title;
+    protected string $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      *
      * @var string text that can contain HTML
      */
-    protected $content;
+    protected string $content;
 
     /**
      * @ORM\Column()
      *
      * @var string
      */
-    protected $path;
+    protected string $path;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      *
      * @var int date created
      */
-    protected $created;
+    protected int $created;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      *
      * @var int date last modified
      */
-    protected $updated;
+    protected int $updated;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned":true})
      *
      * @var int item weight for sorting
      */
-    protected $weight;
+    protected int $weight;
 
     /**
      * @ORM\Column(type="smallint", options={"unsigned":true})
      *
      * @var int Item status. Like open (1) / closed (0)
      */
-    protected $status;
+    protected int $status;
 
     public function __construct(string $title, string $content)
     {
@@ -164,6 +166,13 @@ class Item
         $this->link = $items;
 
         return $this;
+    }
+
+    /**
+     * @param self $item
+     */
+    public function addLink(Item $item) {
+        $this->link->add($item);
     }
 
     /**

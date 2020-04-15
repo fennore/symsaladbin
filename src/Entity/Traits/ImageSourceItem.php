@@ -3,6 +3,7 @@
 namespace App\Entity\Traits;
 
 use Throwable;
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\File;
 
 trait ImageSourceItem
