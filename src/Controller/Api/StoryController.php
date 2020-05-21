@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Lists\StoryPager;
-use App\Repository\{StoryRepository};
+use App\Repository\StoryRepository;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,8 +27,12 @@ class StoryController extends AbstractController
         int $offset = 0,
         int $limit = 1): Response
     {
-        $pager = new StoryPager($offset, $limit, $storyRepo);
-        $pager->setShowDisabled($this->isGranted('ROLE_ADMIN'));
+        $pager = new StoryPager(
+            $offset,
+            $limit,
+            $this->isGranted('ROLE_ADMIN'),
+            $storyRepo
+        );
         $json = $serializer->serialize($pager, 'json');
 
         return JsonResponse::fromJsonString($json);

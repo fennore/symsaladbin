@@ -50,28 +50,26 @@ use JMS\Serializer\Annotation as Serializer;
  *     )
  * )
  * @Hateoas\Relation(
+ *     name = "last",
+ *     href = @Hateoas\Route(
+ *         "api_stories",
+ *         parameters = {
+ *              "offset" = "expr(object.getLast())",
+ *              "limit" = "expr(object.getLimit())"
+ *         }
+ *     )
+ * )
+ * @Hateoas\Relation(
  *     name = "stories",
- *     embedded = "expr(object.getStories())"
+ *     embedded = "expr(object.showPage())"
  * )
  */
-class StoryPager
+class StoryPager extends AbstractPager
 {
     /**
      * @Serializer\Exclude
      */
     private bool $showDisabled;
-
-    /**
-     * @Serializer\Exclude
-     *
-     * @var int
-     */
-    private int $offset;
-
-    /**
-     * @Serializer\Exclude
-     */
-    private int $limit;
 
     /**
      * @Serializer\Exclude
@@ -81,43 +79,20 @@ class StoryPager
     public function __construct(
         int $offset,
         int $limit,
+        bool $showDisabled,
         StoryRepository $storyRepo)
     {
         $this->offset = $offset;
         $this->limit = $limit;
-        $this->storyRepo = $storyRepo;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOffset(): int
-    {
-        return $this->offset;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimit(): int
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @return void
-     */
-    public function setShowDisabled(bool $showDisabled): self
-    {
         $this->showDisabled = $showDisabled;
-
-        return $this;
+        $this->storyRepo = $storyRepo;
+        $this->total = $this->storyRepo->countStories($this->showDisabled);
     }
 
     /**
      * @return Story[]
      */
-    public function getStories(): array
+    public function showPage(): array
     {
         $list = [];
         foreach (
@@ -130,24 +105,5 @@ class StoryPager
         }
 
         return $list;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNext(): int
-    {
-        return min(
-            floor($this->offset / $this->limit) * $this->limit + $this->limit,
-            floor($this->storyRepo->countStories($this->showDisabled) / $this->limit) * $this->limit
-        );
-    }
-
-    /**
-     * @return int
-     */
-    public function getPrevious(): int
-    {
-        return max(floor($this->offset / $this->limit) * $this->limit - $this->limit, 0);
     }
 }
