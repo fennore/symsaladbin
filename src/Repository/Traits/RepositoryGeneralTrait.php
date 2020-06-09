@@ -4,6 +4,7 @@ namespace App\Repository\Traits;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\UnitOfWork;
 
 /**
  * Trait to use in Repository classes.
@@ -59,5 +60,15 @@ trait RepositoryGeneralTrait
                 ->createQueryBuilder('rgt')
                 ->addCriteria($criteria), false))
                 ->count();
+    }
+
+    protected function entityHasState(object $entity, int $state): bool
+    {
+        $entityState = $this->getEntityManager()->getUnitOfWork()->getEntityState(
+            $entity,
+            UnitOfWork::STATE_DETACHED
+        );
+
+        return $state === $entityState;
     }
 }

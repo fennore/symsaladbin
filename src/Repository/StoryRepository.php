@@ -40,13 +40,11 @@ class StoryRepository extends AbstractItemRepository
         if (is_null($story->getId())) {
             throw ORMInvalidArgumentException::entityHasNoIdentity($story, 'updated');
         }
-        $entityState = $this->getEntityManager()->getUnitOfWork()->getEntityState(
-            $story,
-            UnitOfWork::STATE_DETACHED
-        );
-        if (UnitOfWork::STATE_DETACHED === $entityState) {
+
+        if ($this->entityHasState(UnitOfWork::STATE_DETACHED)) {
             throw ORMInvalidArgumentException::detachedEntityCannot($story, 'updated');
         }
+
         $this->persistStory($story, $useBatch);
     }
 
