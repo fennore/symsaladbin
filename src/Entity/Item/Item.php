@@ -28,75 +28,71 @@ class Item
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    protected int $id;
+    protected ?int $id;
 
     /**
      * @Serializer\Exclude
-     *
-     * The Item type.
      */
-    protected string $type;
+    protected string $type = '';
 
     /**
+     * Linked Item.
+     *
      * @Serializer\Type("ArrayCollection")
      * @ORM\ManyToMany(targetEntity="Item", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(
      *      name="itemlink",
      *      joinColumns={@ORM\JoinColumn(name="item_id_1", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_2", referencedColumnName="id")})
-     *
-     * @var Collection Linked Item
      */
-    protected Collection $link;
+    protected ?Collection $link;
 
     /**
      * @ORM\Column()
-     *
-     * @var string title of the item
      */
-    protected string $title;
+    protected string $title = '';
 
     /**
+     * Text that can contain HTML.
+     *
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string text that can contain HTML
      */
-    protected string $content;
+    protected ?string $content = null;
 
     /**
      * @ORM\Column()
      */
-    protected string $path;
+    protected string $path = '';
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
+     * Date created.
      *
-     * @var int date created
-     */
-    protected int $created;
-
-    /**
      * @ORM\Column(type="integer", options={"unsigned":true})
-     *
-     * @var int date last modified
      */
-    protected int $updated;
+    protected int $created = 0;
 
     /**
+     * Date last modified.
+     *
      * @ORM\Column(type="integer", options={"unsigned":true})
-     *
-     * @var int item weight for sorting
      */
-    protected int $weight;
+    protected int $updated = 0;
 
     /**
+     * Weight for sorting.
+     *
+     * @ORM\Column(type="integer", options={"unsigned":true})
+     */
+    protected int $weight = 0;
+
+    /**
+     * Item status. Like open (1) / closed (0).
+     *
      * @ORM\Column(type="smallint", options={"unsigned":true})
-     *
-     * @var int Item status. Like open (1) / closed (0)
      */
-    protected int $status;
+    protected int $status = 0;
 
-    public function __construct(string $title, string $content)
+    public function __construct(string $title, ?string $content)
     {
         $this
             ->setTitle($title)
@@ -125,7 +121,7 @@ class Item
     /**
      * @return static
      */
-    public function setContent(string $content): self
+    public function setContent(?string $content): self
     {
         $this->content = $content;
         // Flag updated
