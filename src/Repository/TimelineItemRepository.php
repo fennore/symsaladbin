@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Item\TimelineItem;
 use App\Handler\DbBatchHandler;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
 
 /**
@@ -14,28 +13,11 @@ use Doctrine\ORM\ORMInvalidArgumentException;
  * @method TimelineItem[]    findAll()
  * @method TimelineItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TimelineItemRepository extends AbstractBatchableEntityRepository
+class TimelineItemRepository extends AbstractItemRepository
 {
     public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
-        parent::__construct($registry, $batchHandler, TimelineItem::class);
-    }
-
-    public function getTimelineItems(): IterableResult
-    {
-        return $this->createQueryBuilder('t')
-            ->getQuery()
-            ->iterate();
-    }
-
-    public function getTimelineItemFromPath(string $pathString): ?TimelineItem
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.path = :path')
-            ->setParameter('path', $pathString)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        parent::__construct($registry, $batchHandler, TimelineItem::class, 't');
     }
 
     /**
