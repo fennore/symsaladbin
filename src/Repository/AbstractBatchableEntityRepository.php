@@ -10,12 +10,12 @@ abstract class AbstractBatchableEntityRepository extends ServiceEntityRepository
 {
     use Traits\RepositoryGeneralTrait;
 
-    /**
-     * @var DbBatchHandler
-     */
-    protected $batchHandler;
+    protected DbBatchHandler $batchHandler;
 
-    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler, $entityClass)
+    /**
+     * @param string $entityClass Entity class for the repository
+     */
+    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler, string $entityClass)
     {
         $this->batchHandler = $batchHandler;
 
