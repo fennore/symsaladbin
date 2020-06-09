@@ -22,10 +22,8 @@ class TimelineItemRepository extends AbstractItemRepository
 
     /**
      * Writes a new TimelineItem Entity to database.
-     *
-     * @param bool $useBatch
      */
-    public function createTimelineItem(TimelineItem $item, $useBatch = true)
+    public function createTimelineItem(TimelineItem $item, bool $useBatch = true)
     {
         if (!is_null($item->getId())) {
             throw ORMInvalidArgumentException::scheduleInsertForManagedEntity($item);
@@ -35,23 +33,24 @@ class TimelineItemRepository extends AbstractItemRepository
 
     /**
      * Updates TimelineItem Entity in database.
-     *
-     * @param bool $useBatch
      */
-    public function updateTimelineItem(TimelineItem $item, $useBatch = true)
+    public function updateTimelineItem(TimelineItem $item, bool $useBatch = true)
     {
         if (is_null($item->getId())) {
-            throw ORMInvalidArgumentException::entityHasNoIdentity($item, 'update');
+            throw ORMInvalidArgumentException::entityHasNoIdentity($item, 'updated');
         }
+
+        if ($this->entityHasState(UnitOfWork::STATE_DETACHED)) {
+            throw ORMInvalidArgumentException::detachedEntityCannot($item, 'updated');
+        }
+
         $this->persistTimelineItem($item, $useBatch);
     }
 
     /**
      * Removes TimelineItem Entity from database.
-     *
-     * @param bool $useBatch
      */
-    public function deleteTimelineItem(TimelineItem $item, $useBatch = true)
+    public function deleteTimelineItem(TimelineItem $item, bool $useBatch = true)
     {
         $em = $this->getEntityManager();
         $em->remove($item);
@@ -60,10 +59,8 @@ class TimelineItemRepository extends AbstractItemRepository
 
     /**
      * Creates or updates the TimelineItem Entity data in the database.
-     *
-     * @param bool $useBatch
      */
-    protected function persistTimelineItem(TimelineItem $item, $useBatch)
+    protected function persistTimelineItem(TimelineItem $item, bool $useBatch)
     {
         $em = $this->getEntityManager();
         $em->persist($item);
