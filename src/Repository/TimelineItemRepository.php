@@ -48,6 +48,46 @@ class TimelineItemRepository extends AbstractItemRepository
     }
 
     /**
+     * @param TimelineItem[] $items
+     */
+    public function updateTimelineItems(array $items): void
+    {
+        $matches = [];
+        $ids = [];
+        foreach ($items as $item) {
+            $id = $item->getId();
+            $matches[$id] = $item;
+            $ids[] = $id;
+        }
+
+        foreach (
+            $this
+                ->createQueryBuilder('t')
+                ->addCriteria($this->getIdListCriteria($ids))
+                ->getQuery()
+                ->iterate() as $row
+        ) {
+            $item = $row[0];
+            $id = $item->getId();
+            if (!isset($matches[$id])) {
+                continue;
+            }
+            $item
+                ->setWeight($matches[$id]->getWeight())
+                ->setTitle($matches[$id]->getTitle())
+                ->setContent($matches[$id]->getContent());
+            if ($item->isActive() && !$matches[$id]->isActive()) {
+                $item->setInactive();
+            }
+            if (!$item->isActive() && $matches[$id]->isActive()) {
+                $item->setActive();
+            }
+//            $item->setLink($items);
+            $this->updateTimelineItem($item);
+        }
+    }
+
+    /**
      * Removes TimelineItem Entity from database.
      */
     public function deleteTimelineItem(TimelineItem $item, bool $useBatch = true)
