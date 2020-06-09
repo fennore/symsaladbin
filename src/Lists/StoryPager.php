@@ -86,7 +86,7 @@ class StoryPager extends AbstractPager
         $this->limit = $limit;
         $this->showDisabled = $showDisabled;
         $this->storyRepo = $storyRepo;
-        $this->total = $this->storyRepo->countStories($this->showDisabled);
+        $this->total = $this->storyRepo->countAll($this->showDisabled);
     }
 
     /**
@@ -96,7 +96,7 @@ class StoryPager extends AbstractPager
     {
         $list = [];
         foreach (
-            $this->storyRepo->getStories(
+            $this->storyRepo->getRange(
                 $this->offset,
                 $this->limit,
                 $this->showDisabled
