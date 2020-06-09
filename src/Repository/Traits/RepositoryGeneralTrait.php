@@ -6,9 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
- * @todo Add method to get path criteria here and make use of it.
- *
- * Trait to use in Repository classes
+ * Trait to use in Repository classes.
  */
 trait RepositoryGeneralTrait
 {
@@ -43,6 +41,7 @@ trait RepositoryGeneralTrait
 
     /**
      * Get the total number of records for a specific entity.
+     * Note: this is not 100% safe to use on any repository, as it requires the existence of the column "id".
      */
     public function getTotal(): int
     {
