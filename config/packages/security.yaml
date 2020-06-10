@@ -34,6 +34,9 @@ security:
             # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
 
     access_control:
-        - { path: /admin, roles: ROLE_ADMIN, requires_channel: '%app.webprotocol%' }
-        - { methods: [POST], path: /login, roles: ~, requires_channel: '%app.webprotocol%' }
-        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN, requires_channel: '%app.webprotocol%' }
+        - { path: /admin, roles: ROLE_ADMIN, ips: [127.0.0.1, ::1] }
+        - { path: /admin, roles: ROLE_ADMIN, requires_channel: 'https' }
+        - { methods: [POST], path: /login, roles: ~, ips: [127.0.0.1, ::1] }
+        - { methods: [POST], path: /login, roles: ~, requires_channel: 'https' }
+        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN, ips: [127.0.0.1, ::1] }
+        - { methods: [POST, PUT, DELETE], roles: ROLE_ADMIN, requires_channel: 'https' }

@@ -6,7 +6,6 @@ use App\Entity\Coordinate;
 use App\Entity\File;
 use App\Entity\Location;
 use SimpleXMLIterator;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple Reader of Gpx files.
@@ -21,9 +20,9 @@ class SimpleGpxFileReader
 {
     private $filesDirectory;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->filesDirectory = $container->getParameter('app.files.directory');
+        $this->filesDirectory = $_ENV[DirectoryReader::DIRECTORYNAME_FILES];
     }
 
     /**

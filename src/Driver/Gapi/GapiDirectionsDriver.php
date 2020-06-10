@@ -6,7 +6,6 @@ use App\Driver\DirectionsDriverInterface;
 use App\Entity\Directions;
 use App\Entity\Location;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Directions Driver using Google API.
@@ -34,9 +33,9 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
      */
     private $leftovers;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->apiKey = $container->getParameter('app.googledirections.apikey');
+        $this->apiKey = $_ENV['APP_GOOGLEDIRECTIONS_APIKEY'];
     }
 
     public function getRequestSize(): int

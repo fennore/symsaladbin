@@ -13,22 +13,22 @@ class DirectoryReader
     /**
      * Files directory parameter name.
      */
-    const DIRECTORYNAME_FILES = 'app.files.directory';
+    const DIRECTORYNAME_FILES = 'APP_FILES_DIRECTORY';
 
     /**
      * Gpx files subdirectory parameter name.
      */
-    const SUBDIRECTORYNAME_GPX = 'app.files.subdir.gpx';
+    const SUBDIRECTORYNAME_GPX = 'APP_FILES_SUBDIR_GPX';
 
     /**
      * Story files subdirectory parameter name.
      */
-    const SUBDIRECTORYNAME_STORIES = 'app.files.subdir.stories';
+    const SUBDIRECTORYNAME_STORIES = 'APP_FILES_SUBDIR_STORIES';
 
     /**
      * Image files subdirectory parameter name.
      */
-    const SUBDIRECTORYNAME_IMAGES = 'app.files.subdir.images';
+    const SUBDIRECTORYNAME_IMAGES = 'APP_FILES_SUBDIR_IMAGES';
 
     /**
      * @var ContainerInterface
@@ -55,7 +55,9 @@ class DirectoryReader
      */
     public function getFilesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->container->getParameter('kernel.project_dir').'/').($this->container->getParameter(self::DIRECTORYNAME_FILES) ?? 'var/files');
+        return
+            ($getRelative ? '' : $this->container->getParameter('kernel.project_dir').'/').
+            ($_ENV[self::DIRECTORYNAME_FILES] ?? 'var/files');
     }
 
     /**
@@ -63,7 +65,7 @@ class DirectoryReader
      */
     public function getGpxDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_GPX) ?? 'gpx');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').($_ENV[self::SUBDIRECTORYNAME_GPX] ?? 'gpx');
     }
 
     /**
@@ -71,7 +73,7 @@ class DirectoryReader
      */
     public function getStoriesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_STORIES) ?? 'stories');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').($_ENV[self::SUBDIRECTORYNAME_STORIES] ?? 'stories');
     }
 
     /**
@@ -79,6 +81,6 @@ class DirectoryReader
      */
     public function getImagesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').($this->container->getParameter(self::SUBDIRECTORYNAME_IMAGES) ?? 'images');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').($_ENV[self::SUBDIRECTORYNAME_IMAGES] ?? 'images');
     }
 }
