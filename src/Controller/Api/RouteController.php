@@ -54,7 +54,7 @@ class RouteController extends AbstractController
      *      methods={"PUT"},
      *      requirements={"currentStage"="\d+"})
      */
-    public function updateRouteStage(
+    public function updateLocations(
         Request $request,
         LocationRepository $locationRepo,
         DirectionsRepository $directionsRepo,
