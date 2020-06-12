@@ -2,40 +2,79 @@
 
 namespace App\Tests\Command;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
 use App\Command\CreateUserCommand;
-use App\Repository\UserRepository;
+use App\Entity\Role;
 use App\Repository\RoleRepository;
+use App\Repository\UserRepository;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class CreateUserCommandTest extends KernelTestCase
 {
+    private RoleRepository $roleRepository;
+    private UserRepository $userRepository;
+
+    public function setUp()
+    {
+        $this->roleRepository = $this->createMock(RoleRepository::class);
+        $this->userRepository = $this->createMock(UserRepository::class);
+        parent::setUp();
+    }
+
+    public function tearDown(): void
+    {
+        unset($this->roleRepository);
+        parent::tearDown();
+    }
+
     public function testExecute()
     {
-        $kernel = self::bootKernel();
-        $application = new Application($kernel);
-        // Create mocks
-        $userRepository = $this->createMock(UserRepository::class);
-        $roleRepository = $this->createMock(RoleRepository::class);
-        $userPasswordEncoder = $this->createMock(UserPasswordEncoder::class);
-        $application->add(new CreateUserCommand($userRepository, $roleRepository, $userPasswordEncoder));
-
-        $command = $application->find('app:user:create');
-        $commandTester = new CommandTester($command);
+        $commandTester = new CommandTester($this->initiateCommand());
         $commandTester->execute([
-            'command' => $command->getName(),
-            // pass arguments to the helper
+            'username' => 'testuser',
+            'password' => 'mytravel',
+        ]);
+
+        $output = $commandTester->getDisplay();
+        $this->assertContains('[OK]', $output);
+        $this->assertContains('Username: testuser', $output);
+        $this->assertContains('Encrypted password: ', $output);
+        $this->assertContains('Roles: []', $output);
+    }
+
+    public function testExecuteAsAdmin()
+    {
+        $role = new Role('ROLE_ADMIN');
+        $this->roleRepository->expects($this->once())
+            ->method('loadRoleByName')
+            ->with('ROLE_ADMIN')
+            ->willReturn($role);
+        $commandTester = new CommandTester($this->initiateCommand());
+        $commandTester->execute([
             'username' => 'testadmin',
             'password' => 'mytravel',
-            // prefix the key with two dashes when passing options,
-            // e.g: '--some-option' => 'option_value',
             '--is-admin' => true,
         ]);
 
-        // the output of the command in the console
         $output = $commandTester->getDisplay();
+        $this->assertContains('[OK]', $output);
         $this->assertContains('Username: testadmin', $output);
+        $this->assertContains('Encrypted password: ', $output);
+        $this->assertContains('Roles: [ROLE_ADMIN]', $output);
+    }
+
+    private function initiateCommand(): Command
+    {
+        $kernel = self::bootKernel();
+        $application = new Application($kernel);
+
+        $userRepository = $this->createMock(UserRepository::class);
+        $userPasswordEncoder = $this->createMock(UserPasswordEncoder::class);
+        $application->add(new CreateUserCommand($userRepository, $this->roleRepository, $userPasswordEncoder));
+
+        return $application->find('app:user:create');
     }
 }
