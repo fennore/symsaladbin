@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 /**
+ * @todo Utils is too generalistic, rename to Generator\SimpleGenerator
  * Generator of simple data.
  */
 class Generator
