@@ -3,10 +3,9 @@
 namespace App\Handler;
 
 use App\Entity\Log;
+use App\Repository\LogRepository;
 use Monolog\Handler\AbstractProcessingHandler;
-//use App\Repository\LogRepository;
 use Monolog\Logger;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Handler for Monolog as service.
@@ -14,38 +13,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Note: this should not log any generic doctrine logs that log writing to database,
  *       as this would result in an infinite cycle;
  *       hence the doctrine channel is excluded for this handler in logger config.
- *
- * @todo
- *  Ideally we should just inject App\Repository\LogRepository using the constructor.
- *  Unfortunately this somehow results in a circular reference with dependency injection
- *  on the default entity manager of doctrine, producing an error.
- *  No fix has been found for this yet. Injecting the full service container is the work-around for now.
- *  Trying to inject the EntityManagerInterface instead
- *  resulted in fatal error due to memory usage (infinite loop?).
  */
 class DbLogHandler extends AbstractProcessingHandler
 {
     /**
-     * Note: is not used but should be used instead.
-     *
      * @var LogRepository
      */
-    protected $logRepository;
+    protected $logRepo;
 
     /**
-     * Note: is used but should not be used instead.
-     *
-     * @var ContainerInterface
+     * {@includeDocs}.
      */
-    protected $container;
-
-    /**
-     * @param type $level
-     * @param type $bubble
-     */
-    public function __construct(ContainerInterface $container, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(/*LogRepository $logRepo, */$level = Logger::DEBUG, $bubble = true)
     {
-        $this->container = $container;
+//        $this->logRepo = $logRepo;
         parent::__construct($level, $bubble);
     }
 
@@ -57,10 +38,7 @@ class DbLogHandler extends AbstractProcessingHandler
     public function write(array $record): void
     {
         $log = new Log($record);
-        $this->container
-            ->get('doctrine')
-            ->getManager()
-            ->getRepository(Log::class)
-            ->createLog($log);
+//        $this->logRepo
+//            ->createLog($log);
     }
 }

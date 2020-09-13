@@ -2,21 +2,21 @@
 
 namespace App\Tests\Handler;
 
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use App\Handler\FileHandler;
 use App\Reader\DirectoryReader;
 use App\Repository\FileRepository;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class FileHandlerTest extends KernelTestCase
 {
     public function testSyncSourceWithFileEntity(): void
     {
-        self::bootKernel();
+        static::bootKernel();
 
-        $directoryReader = new DirectoryReader(self::$kernel->getContainer());
-        $fileRepository = $this->createMock(FileRepository::class);
-        $handler = new FileHandler($directoryReader, $fileRepository);
-        $this->assertDirectoryExists($directoryReader->getFilesDirectory());
-        $handler->syncSourceWithFileEntity();
+        $handler = new FileHandler(
+            static::$container->get(DirectoryReader::class),
+            static::$container->get(FileRepository::class)
+        );
+        $this->assertIsIterable($handler->syncSourceWithFileEntity());
     }
 }

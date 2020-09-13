@@ -19,13 +19,13 @@ class FileSubdirectoryNamerTest extends KernelTestCase
 
     public function fileDataProvider()
     {
-        yield ['0123456789.jpg', 'image/jpeg', $_ENV[DirectoryReader::SUBDIRECTORYNAME_IMAGES].'/'];
-        yield ['0123456789.png', 'image/png', $_ENV[DirectoryReader::SUBDIRECTORYNAME_IMAGES].'/'];
+        yield ['0123456789.jpg', 'image/jpeg', getenv(DirectoryReader::SUBDIRECTORYNAME_IMAGES).'/'];
+        yield ['0123456789.png', 'image/png', getenv(DirectoryReader::SUBDIRECTORYNAME_IMAGES).'/'];
         yield ['0123456789.gif', 'image/gif', '/'];
-        yield ['0123456789.doc', 'application/msword', $_ENV[DirectoryReader::SUBDIRECTORYNAME_STORIES].'/'];
-        yield ['0123456789.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', $_ENV[DirectoryReader::SUBDIRECTORYNAME_STORIES].'/'];
-        yield ['0123456789.odt', 'application/vnd.oasis.opendocument.text', $_ENV[DirectoryReader::SUBDIRECTORYNAME_STORIES].'/'];
-        yield ['0123456789.gpx', 'application/xml', $_ENV[DirectoryReader::SUBDIRECTORYNAME_GPX].'/'];
+        yield ['0123456789.doc', 'application/msword', getenv(DirectoryReader::SUBDIRECTORYNAME_STORIES).'/'];
+        yield ['0123456789.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', getenv(DirectoryReader::SUBDIRECTORYNAME_STORIES).'/'];
+        yield ['0123456789.odt', 'application/vnd.oasis.opendocument.text', getenv(DirectoryReader::SUBDIRECTORYNAME_STORIES).'/'];
+        yield ['0123456789.gpx', 'application/xml', getenv(DirectoryReader::SUBDIRECTORYNAME_GPX).'/'];
     }
 
     /**
@@ -38,8 +38,7 @@ class FileSubdirectoryNamerTest extends KernelTestCase
         $entity = new DummyFile();
         $entity->setMimeType($mimeType);
         $mapping = $this->createMock(PropertyMapping::class);
-        $reader = new DirectoryReader(static::$kernel->getContainer());
-        $namer = new FileSubdirectoryNamer($reader);
+        $namer = new FileSubdirectoryNamer(static::$container->get(DirectoryReader::class));
         $this->assertSame($expectedDirectory, $namer->directoryName($entity, $mapping));
     }
 }

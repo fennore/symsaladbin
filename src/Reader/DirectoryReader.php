@@ -2,7 +2,7 @@
 
 namespace App\Reader;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -31,13 +31,13 @@ class DirectoryReader
     const SUBDIRECTORYNAME_IMAGES = 'APP_FILES_SUBDIR_IMAGES';
 
     /**
-     * @var ContainerInterface
+     * @var ParameterBagInterface
      */
-    private $container;
+    private $params;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ParameterBagInterface $params)
     {
-        $this->container = $container;
+        $this->params = $params;
     }
 
     /**
@@ -56,8 +56,8 @@ class DirectoryReader
     public function getFilesDirectory(bool $getRelative = false): string
     {
         return
-            ($getRelative ? '' : $this->container->getParameter('kernel.project_dir').'/').
-            ($_ENV[self::DIRECTORYNAME_FILES] ?? 'var/files');
+            ($getRelative ? '' : $this->params->get('kernel.project_dir').'/').
+            (getenv(self::DIRECTORYNAME_FILES) ?? 'var/files');
     }
 
     /**
@@ -65,7 +65,7 @@ class DirectoryReader
      */
     public function getGpxDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').($_ENV[self::SUBDIRECTORYNAME_GPX] ?? 'gpx');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').(getenv(self::SUBDIRECTORYNAME_GPX) ?? 'gpx');
     }
 
     /**
@@ -73,7 +73,7 @@ class DirectoryReader
      */
     public function getStoriesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').($_ENV[self::SUBDIRECTORYNAME_STORIES] ?? 'stories');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').(getenv(self::SUBDIRECTORYNAME_STORIES) ?? 'stories');
     }
 
     /**
@@ -81,6 +81,6 @@ class DirectoryReader
      */
     public function getImagesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').($_ENV[self::SUBDIRECTORYNAME_IMAGES] ?? 'images');
+        return ($getRelative ? '' : $this->getFilesDirectory().'/').(getenv(self::SUBDIRECTORYNAME_IMAGES) ?? 'images');
     }
 }

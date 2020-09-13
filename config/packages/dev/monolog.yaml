@@ -8,7 +8,7 @@ monolog:
         dblog:
           type: service
           id: App\Handler\DbLogHandler
-          channels: ["!doctrine"]
+          channels: ["!event", "!doctrine"]
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:
