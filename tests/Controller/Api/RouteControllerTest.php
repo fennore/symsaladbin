@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Tests\Api\Controller;
+namespace App\Tests\Controller\Api;
 
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use App\Tests\Controller\TestClientTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RouteControllerTest extends WebTestCase
 {
-    private const TEST_STAGE = 3;
+    use TestClientTrait;
+    use HalJsonTrait;
 
     public function testEncodedRoute()
     {
@@ -20,12 +21,13 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('GET', 'api/route/'.self::TEST_STAGE);
+        $client->request('GET', 'api/route/0');
         $this->assertHalJson($client);
 
-        $client->request('GET', 'api/route/bla');
+        $client->request('GET', 'api/route/all');
         $this->assertTrue(
-            $client->getResponse()->isNotFound()
+            $client->getResponse()->isNotFound(),
+            'Check response on invalid path'
         );
     }
 
@@ -33,13 +35,15 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('PUT', 'api/route/'.self::TEST_STAGE);
+        $client->request('PUT', 'api/route/0');
         $this->assertTrue(
-            $client->getResponse()->isEmpty()
+            $client->getResponse()->isEmpty(),
+            'Verify response code 204'
         );
-        $client->request('PUT', 'api/route/bla');
+        $client->request('PUT', 'api/route/all');
         $this->assertTrue(
-            $client->getResponse()->isNotFound()
+            $client->getResponse()->isNotFound(),
+            'Check response on invalid path'
         );
     }
 
@@ -47,28 +51,15 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('DEL', 'api/route/0');
+        $client->request('DELETE', 'api/route/0');
         $this->assertTrue(
-            $client->getResponse()->isNotFound()
+            $client->getResponse()->isNotFound(),
+            'Check response on invalid path'
         );
-        $client->request('DEL', 'api/route/all');
+        $client->request('DELETE', 'api/route/all');
         $this->assertTrue(
-            $client->getResponse()->isEmpty()
+            $client->getResponse()->isEmpty(),
+            'Verify response code 204'
         );
-    }
-
-    private function assertHalJson(KernelBrowser $client): void
-    {
-        $this->assertTrue(
-            $client->getResponse()->isOK()
-        );
-        $this->assertTrue(
-            $client->getResponse()->headers->contains('Content-Type', 'application/hal+json')
-        );
-    }
-
-    private function getTestClient(): KernelBrowser
-    {
-        return static::createClient(['environment' => 'test']);
     }
 }
