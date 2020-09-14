@@ -15,12 +15,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 class CreateUserCommandTest extends KernelTestCase
 {
     private RoleRepository $roleRepository;
-    private UserRepository $userRepository;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->roleRepository = $this->createMock(RoleRepository::class);
-        $this->userRepository = $this->createMock(UserRepository::class);
         parent::setUp();
     }
 

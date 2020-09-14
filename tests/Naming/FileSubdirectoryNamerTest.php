@@ -10,13 +10,6 @@ use Vich\UploaderBundle\Mapping\PropertyMapping;
 
 class FileSubdirectoryNamerTest extends KernelTestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-
-        self::bootKernel();
-    }
-
     public function fileDataProvider()
     {
         yield ['0123456789.jpg', 'image/jpeg', getenv(DirectoryReader::SUBDIRECTORYNAME_IMAGES).'/'];
