@@ -17,6 +17,7 @@ security:
             anonymous: ~
             user_checker: App\Security\UserChecker
             form_login:
+                csrf_token_generator: security.csrf.token_manager
                 login_path: login_page
                 check_path: login_action
                 default_target_path: admin_overview
