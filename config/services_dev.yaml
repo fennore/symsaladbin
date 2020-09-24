@@ -1,2 +1,0 @@
-imports:
-    - { resource: 'parameters_dev.yaml', ignore_errors: true }

@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     encoders:
         App\Entity\User:
             algorithm: auto
@@ -13,11 +14,27 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+#        api_token:
+#            # Api Token authentication below...
+#            pattern: ^/api
+#            stateless: true
+        api_simple:
+            pattern: ^/api
+            context: session
+            stateless: false
+            lazy: true
+            user_checker: App\Security\UserChecker
+            entry_point: App\Security\AuthenticationEntryPoint
+            custom_authenticators:
+                - App\Security\ApiSimpleAuthenticator
+            provider: db_provider
         main:
-            anonymous: ~
+            context: session
+            stateless: false
+            lazy: true
             user_checker: App\Security\UserChecker
             form_login:
-                csrf_token_generator: security.csrf.token_manager
+                enable_csrf: true
                 login_path: login_page
                 check_path: login_action
                 default_target_path: admin_overview
@@ -31,7 +48,7 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-
+            
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
