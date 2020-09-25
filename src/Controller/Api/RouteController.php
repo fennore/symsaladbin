@@ -26,7 +26,11 @@ class RouteController extends AbstractController
         $state = new EncodedRoute();
         $savedStateRepo->checkState($state);
 
-        return $this->json($state->getRoute());
+        return $this->json(
+            $state->getRoute(),
+            JsonResponse::HTTP_OK,
+            ['Content-Type' => 'application/hal+json']
+        );
     }
 
     /**
@@ -44,7 +48,11 @@ class RouteController extends AbstractController
         $route = new LocationRoute($stage, $locationRepo);
         $json = $serializer->serialize($route, 'json');
 
-        return JsonResponse::fromJsonString($json);
+        return JsonResponse::fromJsonString(
+            $json,
+            JsonResponse::HTTP_OK,
+            ['Content-Type' => 'application/hal+json']
+        );
     }
 
     /**
@@ -62,6 +70,12 @@ class RouteController extends AbstractController
         int $currentStage)
     {
         $locations = json_decode($request->getContent(), true);
+
+        // An update requires data, otherwise it would be a removal and should be a DELETE
+        if (empty($locations)) {
+            return JsonResponse::create(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+
         // Remove calculated Directions from stage
         $directionsRepo->clearStage($currentStage);
         // Remove all Locations from stage
@@ -74,23 +88,20 @@ class RouteController extends AbstractController
         $directionsState->addPendingUpdate($currentStage);
 
         // Write new Locations to stage
-        foreach ($locations as $weight => $location) {
-            extract($location);
-            $directionsState->addPendingUpdate($stage);
+        foreach ($locations as $weight => [
+            'coordinate' => $coordinate,
+            'name' => $name,
+            'stage' => $stage,
+            'status' => $status,
+        ]) {
+//            $directionsState->addPendingUpdate($stage); Only do this if you make sure the weights are set correctly for their logical position in the previous or next stage (last and first respectively)
             $locationRepo->createLocation(new Location(new Coordinate((float) $coordinate['lat'], (float) $coordinate['lng']), $name, $stage, $weight, $status));
         }
         $savedStateRepo->updateSavedState($savedStateRepo->mergeSavedState($savedState));
 
         // Saved state empty stage route ? => no replace old when updated route has been fully calculated
-        // Only if Locations are empty, remove encoded route as well
-        if (empty($locations)) {
-            $route = new EncodedRoute();
-            $savedState = $savedStateRepo->checkState($route);
-            $route->setStage($currentStage, []);
-            $savedStateRepo->updateSavedState($savedState);
-        }
 
-        return JsonResponse::create(null, 204);
+        return JsonResponse::create(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
     /**
@@ -108,11 +119,11 @@ class RouteController extends AbstractController
         // empty directions list
         $directionsRepo->truncateTable();
         // empty encoded route
-        $state = new EncodedRoute();
-        $savedStateRepo->deleteSavedState($savedStateRepo->checkState($state));
+        $encodedRoute = new EncodedRoute();
+        $savedStateRepo->deleteSavedState($savedStateRepo->checkState($encodedRoute));
         // reset directions state
-        $state = new DirectionsState();
-        $savedStateRepo->deleteSavedState($savedStateRepo->checkState($state));
+        $directionsState = new DirectionsState();
+        $savedStateRepo->deleteSavedState($savedStateRepo->checkState($directionsState));
 
         return JsonResponse::create(null, 204);
     }
