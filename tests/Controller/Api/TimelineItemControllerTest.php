@@ -8,22 +8,29 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class TimelineItemControllerTest extends WebTestCase
 {
     use TestClientTrait;
-    use HalJsonTrait;
 
     public function testGetImages()
     {
         $client = $this->getTestClient();
 
         $client->request('GET', 'api/images');
-        $this->assertHalJson($client);
+        $this->assertResponseStatusCodeSame(
+            200,
+            'Assert status code for GET api/images'
+        );
+        $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
         $client->request('GET', 'api/images/0/1');
-        $this->assertHalJson($client);
+        $this->assertResponseStatusCodeSame(
+            200,
+            'Assert status code for GET api/images/0/1'
+        );
+        $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
         $client->request('GET', 'api/images/all');
-        $this->assertTrue(
-            $client->getResponse()->isNotFound(),
-            'Check response on invalid path'
+        $this->assertResponseStatusCodeSame(
+            405,
+            'Assert status code for GET api/images/all'
         );
     }
 
@@ -32,12 +39,22 @@ class TimelineItemControllerTest extends WebTestCase
         $client = $this->getTestClient();
 
         $client->request('DELETE', 'api/images/all');
-        $this->assertTrue($client->getResponse()->isEmpty());
+        $this->assertResponseStatusCodeSame(
+            403,
+            'Assert status code for DELETE api/images/all without access rights'
+        );
 
         $client->request('DELETE', 'api/images');
-        $this->assertTrue(
-            $client->getResponse()->isNotFound(),
-            'Check response on invalid path'
+        $this->assertResponseStatusCodeSame(
+            404,
+            'Assert status code for DELETE api/images'
+        );
+
+        $this->loginTestUser($client);
+        $client->request('DELETE', 'api/images/all');
+        $this->assertResponseStatusCodeSame(
+            204,
+            'Assert status code for DELETE api/images/all with access rights'
         );
     }
 }

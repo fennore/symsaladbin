@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -11,9 +12,15 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
  */
 trait TestClientTrait
 {
-    private function getTestClient(): KernelBrowser
+    final protected function getTestClient(): KernelBrowser
     {
         return static::createClient(['environment' => 'test']);
+    }
+
+    final protected function loginTestUser(KernelBrowser $client): void
+    {
+        $user = new User('test', 'test', ['ROLE_ADMIN']);
+        $client->loginUser($user, 'session');
     }
 
     abstract protected static function createClient(array $options = [], array $server = []);
