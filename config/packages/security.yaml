@@ -20,7 +20,7 @@ security:
 #            stateless: true
         api_simple:
             pattern: ^/api
-            context: session
+            context: main
             stateless: false
             lazy: true
             user_checker: App\Security\UserChecker
@@ -29,7 +29,6 @@ security:
                 - App\Security\ApiSimpleAuthenticator
             provider: db_provider
         main:
-            context: session
             stateless: false
             lazy: true
             user_checker: App\Security\UserChecker

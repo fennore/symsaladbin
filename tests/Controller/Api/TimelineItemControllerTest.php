@@ -14,22 +14,25 @@ class TimelineItemControllerTest extends WebTestCase
         $client = $this->getTestClient();
 
         $client->request('GET', 'api/images');
-        $this->assertResponseStatusCodeSame(
+        $this->assertEquals(
             200,
+            $client->getResponse()->getStatusCode(),
             'Assert status code for GET api/images'
         );
         $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
         $client->request('GET', 'api/images/0/1');
-        $this->assertResponseStatusCodeSame(
+        $this->assertEquals(
             200,
+            $client->getResponse()->getStatusCode(),
             'Assert status code for GET api/images/0/1'
         );
         $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
         $client->request('GET', 'api/images/all');
-        $this->assertResponseStatusCodeSame(
+        $this->assertEquals(
             405,
+            $client->getResponse()->getStatusCode(),
             'Assert status code for GET api/images/all'
         );
     }
@@ -39,21 +42,24 @@ class TimelineItemControllerTest extends WebTestCase
         $client = $this->getTestClient();
 
         $client->request('DELETE', 'api/images/all');
-        $this->assertResponseStatusCodeSame(
+        $this->assertEquals(
             403,
+            $client->getResponse()->getStatusCode(),
             'Assert status code for DELETE api/images/all without access rights'
         );
 
         $client->request('DELETE', 'api/images');
-        $this->assertResponseStatusCodeSame(
+        $this->assertEquals(
             404,
+            $client->getResponse()->getStatusCode(),
             'Assert status code for DELETE api/images'
         );
 
         $this->loginTestUser($client);
         $client->request('DELETE', 'api/images/all');
-        $this->assertResponseStatusCodeSame(
+        $this->assertEquals(
             204,
+            $client->getResponse()->getStatusCode(),
             'Assert status code for DELETE api/images/all with access rights'
         );
     }

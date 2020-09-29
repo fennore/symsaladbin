@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Role;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -19,7 +20,8 @@ trait TestClientTrait
 
     final protected function loginTestUser(KernelBrowser $client): void
     {
-        $user = new User('test', 'test', ['ROLE_ADMIN']);
+        $role = new Role('ROLE_ADMIN');
+        $user = new User('test', 'test', [$role]);
         $client->loginUser($user, 'session');
     }
 
