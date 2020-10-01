@@ -54,6 +54,9 @@ trait PagerTrait
 
     public function getLast(): int
     {
-        return floor(($this->total - 1) / $this->limit) * $this->limit;
+        return max(
+            floor(($this->total - 1) / $this->limit) * $this->limit,
+            0
+        );
     }
 }
