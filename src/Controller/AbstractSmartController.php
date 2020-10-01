@@ -15,11 +15,14 @@ class AbstractSmartController extends AbstractController
      */
     protected function smartRender(string $view, array $parameters = [], Response $response = null): Response
     {
-        $response = $this->render($view, $parameters, $response);
+        if (null === $response) {
+            $response = new Response();
+        }
+
         if (preg_match('/.+\.html(\..+)?$/i', $view)) {
             $response->headers->set('content-type', 'text/html');
         }
 
-        return $response;
+        return $this->render($view, $parameters, $response);
     }
 }

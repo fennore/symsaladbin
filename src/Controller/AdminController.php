@@ -19,7 +19,6 @@ class AdminController extends AbstractSmartController
      */
     public function overview(Security $security)
     {
-        // replace this line with your own code!
         return $this->smartRender('default/admin/overview.html.twig', [
             'user' => $security->getUser(),
         ]);
