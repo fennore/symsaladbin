@@ -39,6 +39,28 @@ class TimelineItemController extends AbstractController
     }
 
     /**
+     * Returns a list of images starting from given offset and as many as given length.
+     *
+     * @Route(
+     *      "/api/images",
+     *      name="api_images_del", methods={"DELETE"}
+     */
+    public function deleteImages(
+        Request $request,
+        TimelineItemRepository $itemRepo): Response
+    {
+        $content = json_decode($request->getContent(), true);
+
+        // A removal requires data
+        if (empty($content)) {
+            return new JsonResponse(null, JsonResponse::HTTP_BAD_REQUEST);
+        }
+        // remove the images with given id
+        // - optionally also physically remove the image from the server
+        return new JsonResponse(null, 204);
+    }
+
+    /**
      * Clear the images data.
      *
      * @Route("/api/images/all", name="api_images_clear", methods={"DELETE"})
@@ -47,6 +69,6 @@ class TimelineItemController extends AbstractController
     {
         // empty images list
         // reset images state
-        return JsonResponse::create(null, 204);
+        return new JsonResponse(null, 204);
     }
 }
