@@ -13,7 +13,7 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('GET', 'api/encoded-route');
+        $client->request('GET', '/api/encoded-route');
         $this->assertEquals(
             200,
             $client->getResponse()->getStatusCode(),
@@ -26,7 +26,7 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('GET', 'api/route/0');
+        $client->request('GET', '/api/route/0');
         $this->assertEquals(
             200,
             $client->getResponse()->getStatusCode(),
@@ -34,7 +34,7 @@ class RouteControllerTest extends WebTestCase
         );
         $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
-        $client->request('GET', 'api/route/all');
+        $client->request('GET', '/api/route/all');
         $this->assertEquals(
             405,
             $client->getResponse()->getStatusCode(),
@@ -46,14 +46,14 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('PUT', 'api/route/0');
+        $client->request('PUT', '/api/route/0');
         $this->assertEquals(
             403,
             $client->getResponse()->getStatusCode(),
             'Assert status code for PUT api/route/0 without access rights'
         );
 
-        $client->request('PUT', 'api/route/all');
+        $client->request('PUT', '/api/route/all');
         $this->assertEquals(
             405,
             $client->getResponse()->getStatusCode(),
@@ -61,7 +61,7 @@ class RouteControllerTest extends WebTestCase
         );
 
         $this->loginTestUser($client);
-        $client->request('PUT', 'api/route/0');
+        $client->request('PUT', '/api/route/0');
         $this->assertEquals(
             400,
             $client->getResponse()->getStatusCode(),
@@ -74,7 +74,7 @@ class RouteControllerTest extends WebTestCase
             'stage' => 0,
             'status' => 1,
         ]);
-        $client->request('PUT', 'api/route/0', [], [], [], $content);
+        $client->request('PUT', '/api/route/0', [], [], [], $content);
         $this->assertEquals(
             204,
             $client->getResponse()->getStatusCode(),
@@ -86,14 +86,14 @@ class RouteControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('DELETE', 'api/route/0');
+        $client->request('DELETE', '/api/route/0');
         $this->assertEquals(
-            404,
+            405,
             $client->getResponse()->getStatusCode(),
             'Assert status code for DELETE api/route/0'
         );
 
-        $client->request('DELETE', 'api/route/all');
+        $client->request('DELETE', '/api/route/all');
         $this->assertEquals(
             403,
             $client->getResponse()->getStatusCode(),
@@ -101,8 +101,8 @@ class RouteControllerTest extends WebTestCase
         );
 
         $this->loginTestUser($client);
-        $client->request('DELETE', 'api/route/all');
-        $this->assertResponseStatusCodeSame(
+        $client->request('DELETE', '/api/route/all');
+        $this->assertEquals(
             204,
             $client->getResponse()->getStatusCode(),
             'Assert status code for DELETE api/route/all with access rights'

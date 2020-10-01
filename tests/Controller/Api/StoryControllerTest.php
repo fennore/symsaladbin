@@ -13,7 +13,7 @@ class StoryControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('GET', 'api/stories');
+        $client->request('GET', '/api/stories');
         $this->assertEquals(
             200,
             $client->getResponse()->getStatusCode(),
@@ -21,7 +21,7 @@ class StoryControllerTest extends WebTestCase
         );
         $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
-        $client->request('GET', 'api/stories/0/1');
+        $client->request('GET', '/api/stories/0/1');
         $this->assertEquals(
             200,
             $client->getResponse()->getStatusCode(),
@@ -29,7 +29,7 @@ class StoryControllerTest extends WebTestCase
         );
         $this->assertResponseHeaderSame('Content-Type', 'application/hal+json');
 
-        $client->request('GET', 'api/stories/all');
+        $client->request('GET', '/api/stories/all');
         $this->assertEquals(
             405,
             $client->getResponse()->getStatusCode(),
@@ -41,14 +41,14 @@ class StoryControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('POST', 'api/stories');
+        $client->request('POST', '/api/stories');
         $this->assertEquals(
             403,
             $client->getResponse()->getStatusCode(),
             'Assert status code for POST api/stories without access rights'
         );
 
-        $client->request('POST', 'api/stories/all');
+        $client->request('POST', '/api/stories/all');
         $this->assertEquals(
             405,
             $client->getResponse()->getStatusCode(),
@@ -56,7 +56,7 @@ class StoryControllerTest extends WebTestCase
         );
 
         $this->loginTestUser($client);
-        $client->request('POST', 'api/stories');
+        $client->request('POST', '/api/stories');
         $this->assertEquals(
             400,
             $client->getResponse()->getStatusCode(),
@@ -70,14 +70,14 @@ class StoryControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('PUT', 'api/stories');
+        $client->request('PUT', '/api/stories');
         $this->assertEquals(
             403,
             $client->getResponse()->getStatusCode(),
             'Assert status code for PUT api/stories without access rights'
         );
 
-        $client->request('PUT', 'api/stories/all');
+        $client->request('PUT', '/api/stories/all');
         $this->assertEquals(
             405,
             $client->getResponse()->getStatusCode(),
@@ -85,7 +85,7 @@ class StoryControllerTest extends WebTestCase
         );
 
         $this->loginTestUser($client);
-        $client->request('PUT', 'api/stories');
+        $client->request('PUT', '/api/stories');
         $this->assertEquals(
             400,
             $client->getResponse()->getStatusCode(),
@@ -97,7 +97,7 @@ class StoryControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('DELETE', 'api/stories');
+        $client->request('DELETE', '/api/stories');
         $this->assertEquals(
             403,
             $client->getResponse()->getStatusCode(),
@@ -105,7 +105,7 @@ class StoryControllerTest extends WebTestCase
         );
 
         $this->loginTestUser($client);
-        $client->request('DELETE', 'api/stories');
+        $client->request('DELETE', '/api/stories');
         $this->assertEquals(
             400,
             $client->getResponse()->getStatusCode(),
@@ -117,7 +117,7 @@ class StoryControllerTest extends WebTestCase
     {
         $client = $this->getTestClient();
 
-        $client->request('DELETE', 'api/stories/all');
+        $client->request('DELETE', '/api/stories/all');
         $this->assertEquals(
             403,
             $client->getResponse()->getStatusCode(),
@@ -125,7 +125,7 @@ class StoryControllerTest extends WebTestCase
         );
 
         $this->loginTestUser($client);
-        $client->request('DELETE', 'api/stories/all');
+        $client->request('DELETE', '/api/stories/all');
         $this->assertEquals(
             204,
             $client->getResponse()->getStatusCode(),

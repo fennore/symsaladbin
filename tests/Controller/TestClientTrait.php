@@ -22,7 +22,7 @@ trait TestClientTrait
     {
         $role = new Role('ROLE_ADMIN');
         $user = new User('test', 'test', [$role]);
-        $client->loginUser($user, 'session');
+        $client->loginUser($user, 'main');
     }
 
     abstract protected static function createClient(array $options = [], array $server = []);
