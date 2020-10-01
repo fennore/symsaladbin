@@ -101,7 +101,7 @@ class RouteController extends AbstractController
 
         // Saved state empty stage route ? => no replace old when updated route has been fully calculated
 
-        return JsonResponse::create(null, JsonResponse::HTTP_NO_CONTENT);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
     /**
@@ -125,6 +125,6 @@ class RouteController extends AbstractController
         $directionsState = new DirectionsState();
         $savedStateRepo->deleteSavedState($savedStateRepo->checkState($directionsState));
 
-        return JsonResponse::create(null, 204);
+        return new JsonResponse(null, 204);
     }
 }

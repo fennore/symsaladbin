@@ -53,7 +53,7 @@ class StoryController extends AbstractController
             $storyRepository->createStory($story);
         }
 
-        return JsonResponse::create(null, 201);
+        return new JsonResponse(null, 201);
     }
 
     /**
@@ -72,7 +72,7 @@ class StoryController extends AbstractController
             $storyRepository->updateStories($stories);
         }
 
-        return JsonResponse::create([], 204);
+        return new JsonResponse([], 204);
     }
 
     /**
@@ -85,7 +85,7 @@ class StoryController extends AbstractController
         StoryRepository $storyRepository,
         SerializerInterface $serializer)
     {
-        return JsonResponse::create(null, 204);
+        return new JsonResponse(null, 204);
     }
 
     /**
@@ -97,6 +97,6 @@ class StoryController extends AbstractController
     {
         $storyRepository->truncateTable();
 
-        return JsonResponse::create(null, 204);
+        return new JsonResponse(null, 204);
     }
 }
