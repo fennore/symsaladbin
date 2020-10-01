@@ -10,16 +10,19 @@ use App\Importer\LocationImporter;
 use App\Repository\FileRepository;
 use App\Repository\LocationRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class AdminController extends AbstractSmartController
 {
     /**
      * @Route("/admin", name="admin_overview")
      */
-    public function overview()
+    public function overview(Security $security)
     {
         // replace this line with your own code!
-        return $this->smartRender('default/admin/overview.html.twig');
+        return $this->smartRender('default/admin/overview.html.twig', [
+            'user' => $security->getUser(),
+        ]);
     }
 
     /**
