@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @Hateoas\Relation(
  *     name = "self",
  *     href = @Hateoas\Route(
- *         "api_images",
+ *         "api_timelineitems",
  *         parameters = {
  *              "offset" = "expr(object.getOffset())",
  *              "limit" = "expr(object.getLimit())"
@@ -22,7 +22,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @Hateoas\Relation(
  *     name = "next",
  *     href = @Hateoas\Route(
- *         "api_images",
+ *         "api_timelineitems",
  *         parameters = {
  *              "offset" = "expr(object.getNext())",
  *              "limit" = "expr(object.getLimit())"
@@ -32,7 +32,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @Hateoas\Relation(
  *     name = "previous",
  *     href = @Hateoas\Route(
- *         "api_images",
+ *         "api_timelineitems",
  *         parameters = {
  *              "offset" = "expr(object.getPrevious())",
  *              "limit" = "expr(object.getLimit())"
@@ -42,7 +42,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @Hateoas\Relation(
  *     name = "first",
  *     href = @Hateoas\Route(
- *         "api_images",
+ *         "api_timelineitems",
  *         parameters = {
  *              "offset" = "0",
  *              "limit" = "expr(object.getLimit())"
@@ -50,7 +50,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     )
  * )
  * @Hateoas\Relation(
- *     name = "images",
+ *     name = "timelineitems",
  *     embedded = "expr(object.showPage())"
  * )
  */

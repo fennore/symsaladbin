@@ -17,10 +17,10 @@ class TimelineItemController extends AbstractController
      *
      * @Route(
      *      "/api/images/{offset}/{limit}",
-     *      name="api_images", methods={"GET", "HEAD"},
+     *      name="api_timelineitems", methods={"GET", "HEAD"},
      *      requirements={"offset"="\d+","length"="\d+"})
      */
-    public function getImages(
+    public function getTimelineItems(
         TimelineItemRepository $itemRepo,
         SerializerInterface $serializer,
         int $offset = 0,
@@ -41,11 +41,9 @@ class TimelineItemController extends AbstractController
     /**
      * Returns a list of images starting from given offset and as many as given length.
      *
-     * @Route(
-     *      "/api/images",
-     *      name="api_images_del", methods={"DELETE"}
+     * @Route("/api/images", name="api_timelineitems_del", methods={"DELETE"})
      */
-    public function deleteImages(
+    public function deleteTimelineItems(
         Request $request,
         TimelineItemRepository $itemRepo): Response
     {
@@ -63,9 +61,9 @@ class TimelineItemController extends AbstractController
     /**
      * Clear the images data.
      *
-     * @Route("/api/images/all", name="api_images_clear", methods={"DELETE"})
+     * @Route("/api/images/all", name="api_timelineitems_clear", methods={"DELETE"})
      */
-    public function clearImages()
+    public function clearTimelineItems(TimelineItemRepository $itemRepo): Response
     {
         // empty images list
         // reset images state
