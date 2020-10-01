@@ -5,7 +5,6 @@ namespace App\Handler;
 use App\Entity\File;
 use App\Reader\DirectoryReader;
 use App\Repository\FileRepository;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Symfony\Component\HttpFoundation\File\File as BaseFile;
 
 /**
@@ -29,12 +28,11 @@ class FileHandler
         $this->fileRepository = $fileRepository;
     }
 
-    public function syncSourceWithFileEntity(): IterableResult
+    public function syncSourceWithFileEntity(): iterable
     {
         // Create a file source hash list using iterator
         $dbFileSources = [];
-        foreach ($this->fileRepository->getFiles() as $row) {
-            $file = $row[0];
+        foreach ($this->fileRepository->getFiles() as $file) {
             $dbFileSources[$file->getSource()] = $file->getId();
         }
         // Fetch all files from files directory

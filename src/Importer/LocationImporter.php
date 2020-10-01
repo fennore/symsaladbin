@@ -62,8 +62,7 @@ class LocationImporter
         $savedState = $this->savedStateRepository->checkState($state);
         // 3. Add any locations from new files to subsequent stages.
         $files = $this->fileRepository->getFiles(['application/xml', 'text/xml']);
-        foreach ($files as $row) {
-            $file = $row[0];
+        foreach ($files as $file) {
             if (in_array($file->getId(), $state->getReadFiles())) {
                 continue; // Skip
             }

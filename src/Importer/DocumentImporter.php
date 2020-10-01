@@ -42,8 +42,8 @@ class DocumentImporter
         foreach ($storyList as $row) {
             $storyCheckList[$row[0]->getPath()] = $row[0];
         }
-        foreach ($fileList as $row) {
-            $story = $this->simpleDocumentReader->getDocumentAsStory($row[0]);
+        foreach ($fileList as $file) {
+            $story = $this->simpleDocumentReader->getDocumentAsStory($file);
             if (
                 isset($storyCheckList[$story->getPath()]) &&
                 $story->getUpdated() > $storyCheckList[$story->getPath()]->getUpdated()

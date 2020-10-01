@@ -5,8 +5,8 @@ namespace App\Repository;
 use App\Entity\File;
 use App\Handler\DbBatchHandler;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
+use Traversable;
 
 class FileRepository extends AbstractBatchableEntityRepository
 {
@@ -22,7 +22,7 @@ class FileRepository extends AbstractBatchableEntityRepository
      *
      * @param string|array $mimeMatch
      */
-    public function getFiles($mimeMatch = null, $pathMatch = ''): IterableResult
+    public function getFiles($mimeMatch = null, $pathMatch = ''): Traversable
     {
         $qb = $this->createQueryBuilder('f');
         // Build Expr
@@ -43,7 +43,9 @@ class FileRepository extends AbstractBatchableEntityRepository
             $qb->where($expr);
         }
 
-        return $qb->getQuery()->iterate();
+        foreach ($qb->getQuery()->iterate() as $row) {
+            yield $row[0];
+        }
     }
 
     /**

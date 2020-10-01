@@ -31,8 +31,8 @@ class ImageImporter
         foreach ($itemList as $item) {
             $itemCheckList[$item->getPath()] = $item;
         }
-        foreach ($files as $row) {
-            $timelineItem = $this->imageReader->getImageAsTimelineItem($row[0]);
+        foreach ($files as $file) {
+            $timelineItem = $this->imageReader->getImageAsTimelineItem($file);
             if (
                 isset($itemCheckList[$timelineItem->getPath()]) &&
                 $timelineItem->getUpdated() > $itemCheckList[$timelineItem->getPath()]->getUpdated()

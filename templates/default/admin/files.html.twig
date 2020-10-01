@@ -12,8 +12,7 @@
       <a href="{{path('admin_files_sync')}}">Synchronize Files</a>
     </p>
     <dl>
-      {% for row in filelist %}
-        {% set file = row[0] %}
+      {% for file in filelist %}
         <dt>{{file.fileName}}</dt>
         <dd>source: {{file.source}}</dd>
         <dd>type: {{file.mimeType}}</dd>
