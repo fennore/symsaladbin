@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Driver\Gapi;
+namespace App\Driver\GoogleApi\Directions;
 
 use App\Driver\DirectionsDriverInterface;
 use App\Entity\Directions;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Internal\Hydration\IterableResult;
 /**
  * Directions Driver using Google API.
  */
-class GapiDirectionsDriver implements DirectionsDriverInterface
+class Driver implements DirectionsDriverInterface
 {
     /**
      * Maximum amount of locations sent per 1 direction request.
@@ -55,7 +55,7 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
         $destination = current($locationList->next());
 
         while (($locationList->valid() || !empty($list)) && (0 === $maxRequests || $requestCount < $maxRequests)) {
-            $modes = GapiHelper::DIRECTIONMODES;
+            $modes = Helper::DIRECTIONMODES;
 
             do {
                 $locationList->current() ? array_push($list, current($locationList->current())) : null; // remember row[0] :(
@@ -68,7 +68,7 @@ class GapiDirectionsDriver implements DirectionsDriverInterface
                 $size = (current($modeSet) ?? self::REQUESTSIZE) - $setBack;
                 $listChunk = array_slice($list, 0, $size);
                 $destination = array_pop($listChunk);
-                $directionsRequest = new GapiDirectionsRequest($this->apiKey, $origin, $destination, $mode, 'ferries|tolls|highways');
+                $directionsRequest = new DirectionsRequest($this->apiKey, $origin, $destination, $mode, 'ferries|tolls|highways');
                 array_map([$directionsRequest, 'addWaypoint'], $listChunk);
                 $response = $directionsRequest->getDirections();
                 ++$requestCount;

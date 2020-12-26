@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Driver\Gapi;
+namespace App\Driver\GoogleApi\Directions;
 
 use App\Entity\Location;
 use ErrorException;
@@ -10,7 +10,7 @@ use ErrorException;
  *
  * @see https://developers.google.com/maps/documentation/directions/intro#Waypoints
  */
-class GapiDirectionsRequest
+class Request
 {
     /**
      * @var string Google API authentication key
@@ -37,7 +37,7 @@ class GapiDirectionsRequest
     /**
      * Array of Location entities.
      *
-     * @var array
+     * @var Location[]
      */
     private $waypoints = [];
 
@@ -54,7 +54,7 @@ class GapiDirectionsRequest
      */
     public function __construct(string $apiKey, Location $origin, Location $destination, string $mode = null, string $avoid = null)
     {
-        if (!in_array($mode, GapiHelper::VALIDDIRECTIONMODES)) {
+        if (!in_array($mode, Helper::VALIDDIRECTIONMODES)) {
             throw new ErrorException(sprintf('Trying to set invalid mode % for GAPI Direction Request.', $mode));
         }
         $this->apiKey = $apiKey;
@@ -71,20 +71,18 @@ class GapiDirectionsRequest
 
     public function getDirections()
     {
-        $url = GapiHelper::DIRECTIONSREQUESTURL.'?'.$this;
-        // Get cURL resource
         $curl = curl_init();
-        // Set some options - we are passing in a useragent too here
+
         curl_setopt_array($curl, [
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $url,
+            CURLOPT_URL => Helper::DIRECTIONSREQUESTURL.'?'.$this,
             CURLOPT_SSL_VERIFYPEER => false, // ssl verification seems to fail
         ]);
-        // Send the request & save response to $resp
+
         $response = json_decode(curl_exec($curl));
-        // Close request to clear up some resources
+
         curl_close($curl);
-        // Take a break;
+
         usleep(100);
 
         return $response;

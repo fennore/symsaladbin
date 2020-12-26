@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Driver\Gapi;
+namespace App\Driver\GoogleApi;
 
-class GapiHelper
+class Helper
 {
     const VALIDDIRECTIONMODES = [
         'bicycling',
