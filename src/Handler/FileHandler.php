@@ -5,6 +5,7 @@ namespace App\Handler;
 use App\Entity\File;
 use App\Reader\DirectoryReader;
 use App\Repository\FileRepository;
+use SplFileInfo;
 use Symfony\Component\HttpFoundation\File\File as BaseFile;
 
 /**
@@ -28,35 +29,53 @@ class FileHandler
         $this->fileRepository = $fileRepository;
     }
 
-    public function syncSourceWithFileEntity(): iterable
+    public function syncSourceWithFileEntity(): void
     {
-        // Create a file source hash list using iterator
-        $dbFileSources = [];
-        foreach ($this->fileRepository->getFiles() as $file) {
-            $dbFileSources[$file->getSource()] = $file->getId();
-        }
-        // Fetch all files from files directory
-        $dirFiles = $this->directoryReader->getAllFiles();
-        // Write new files to database
-        foreach ($dirFiles as $splFileInfo) {
+        $recordedFiles = $this->getRecordedFilesMap();
+
+        $this->recordFiles($this->directoryReader->getAllFiles(), $recordedFiles);
+
+        $this->removeOrphanRecords();
+    }
+
+    /**
+     * @param SplFileInfo[] $directoryFiles
+     * @param int[]         $recordedFiles  Mapping file source => ID
+     */
+    private function recordFiles($directoryFiles, $recordedFiles): void
+    {
+        foreach ($directoryFiles as $splFileInfo) {
             $pathName = str_replace('\\', '/', $splFileInfo->getPathname());
-            $id = $dbFileSources[$pathName] ?? false;
+            $id = $recordedFiles[$pathName] ?? false;
             if (false !== $id) {
                 // Skip already recorded files
-                unset($dbFileSources[$pathName]);
+                unset($recordedFiles[$pathName]);
 
                 continue;
             }
             $file = new File(new BaseFile($pathName));
             $this->fileRepository->createFile($file);
         }
+    }
 
-        // Remove orphan records
-        foreach ($dbFileSources as $source => $id) {
+    /**
+     * Remove all files recorded that are no longer present in the directory.
+     */
+    private function removeOrphanRecords(): void
+    {
+        foreach ($recordedFiles as $source => $id) {
             $file = $this->fileRepository->find($id);
             $this->fileRepository->deleteFile($file);
         }
+    }
 
-        return $this->fileRepository->getFiles();
+    /**
+     * @return iterable [file source => ID]
+     */
+    private function getRecordedFilesMap(): iterable
+    {
+        foreach ($this->fileRepository->getFiles() as $file) {
+            yield [$file->getSource() => $file->getId()];
+        }
     }
 }
