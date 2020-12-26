@@ -61,7 +61,7 @@ class AdminController extends AbstractSmartController
      */
     public function syncFiles(FileHandler $fileHandler)
     {
-        $files = $fileHandler->syncSourceWithFileEntity();
+        $fileHandler->syncSourceWithFileEntity();
 
         return $this->redirectToRoute('admin_files');
     }
