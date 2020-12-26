@@ -45,7 +45,8 @@ class DirectoryReader
      */
     public function getAllFiles(): Finder
     {
-        return Finder::create()->files()
+        return Finder::create()
+            ->files()
             ->followLinks() // Follow symbolic links!
             ->in($this->getFilesDirectory());
     }
@@ -55,9 +56,11 @@ class DirectoryReader
      */
     public function getFilesDirectory(bool $getRelative = false): string
     {
-        return
-            ($getRelative ? '' : $this->params->get('kernel.project_dir').'/').
-            (getenv(self::DIRECTORYNAME_FILES) ?? 'var/files');
+        $projectDirectory = $this->params->get('kernel.project_dir').'/';
+        $filesDirectoryName = getenv(self::DIRECTORYNAME_FILES) ?? 'var/files';
+        $baseDirectory = $getRelative ? '' : $projectDirectory;
+
+        return $baseDirectory.$filesDirectoryName;
     }
 
     /**
@@ -65,7 +68,11 @@ class DirectoryReader
      */
     public function getGpxDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').(getenv(self::SUBDIRECTORYNAME_GPX) ?? 'gpx');
+        $filesDirectory = $this->getFilesDirectory().'/';
+        $gpxDirectoryName = getenv(self::SUBDIRECTORYNAME_GPX) ?? 'gpx';
+        $baseDirectory = $getRelative ? '' : $filesDirectory;
+
+        return $baseDirectory.$gpxDirectoryName;
     }
 
     /**
@@ -73,7 +80,11 @@ class DirectoryReader
      */
     public function getStoriesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').(getenv(self::SUBDIRECTORYNAME_STORIES) ?? 'stories');
+        $filesDirectory = $this->getFilesDirectory().'/';
+        $storiesDirectoryName = getenv(self::SUBDIRECTORYNAME_STORIES) ?? 'stories';
+        $baseDirectory = $getRelative ? '' : $filesDirectory;
+
+        return $baseDirectory.$storiesDirectoryName;
     }
 
     /**
@@ -81,6 +92,10 @@ class DirectoryReader
      */
     public function getImagesDirectory(bool $getRelative = false): string
     {
-        return ($getRelative ? '' : $this->getFilesDirectory().'/').(getenv(self::SUBDIRECTORYNAME_IMAGES) ?? 'images');
+        $filesDirectory = $this->getFilesDirectory().'/';
+        $imagesDirectoryName = getenv(self::SUBDIRECTORYNAME_IMAGES) ?? 'images';
+        $baseDirectory = $getRelative ? '' : $filesDirectory;
+
+        return $baseDirectory.$imagesDirectoryName;
     }
 }
