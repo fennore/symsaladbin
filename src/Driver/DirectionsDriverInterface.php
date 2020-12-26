@@ -26,8 +26,10 @@ interface DirectionsDriverInterface
 
     /**
      * If the directions calculation hit the request limit there will be locations left to calculate directions for.
+     *
+     * @return bool|null Returns null when no directions calculation has been done yet (= unknown)
      */
-    public function hasUncalculatedDirectionsLeft(): bool;
+    public function hasUncalculatedDirectionsLeft(): ?bool;
 
     /**
      * Get the last Location used for Direction requests.

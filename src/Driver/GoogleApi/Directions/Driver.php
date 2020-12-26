@@ -94,7 +94,7 @@ class Driver implements DirectionsDriverInterface
     /**
      * {@inheritdoc}
      */
-    public function hasUncalculatedDirectionsLeft(): bool
+    public function hasUncalculatedDirectionsLeft(): ?bool
     {
         return $this->leftovers;
     }
