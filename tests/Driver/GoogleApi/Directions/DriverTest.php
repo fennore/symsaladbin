@@ -6,4 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class DriverTest extends TestCase
 {
+    public function testGetDirections()
+    {
+        $this->assertTrue(false);
+    }
 }
