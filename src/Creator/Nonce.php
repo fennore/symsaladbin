@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Generator;
+namespace App\Creator;
 
-class Nonce implements GeneratorInterface
+class Nonce implements CreatorInterface
 {
     public function create()
     {
