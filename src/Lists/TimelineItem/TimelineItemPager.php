@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lists;
+namespace App\Lists\TimelineItem;
 
 use App\Repository\TimelineItemRepository;
 use Hateoas\Configuration\Annotation as Hateoas;

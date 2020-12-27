@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lists;
+namespace App\Lists\Story;
 
 use App\Repository\StoryRepository;
 use Hateoas\Configuration\Annotation as Hateoas;
