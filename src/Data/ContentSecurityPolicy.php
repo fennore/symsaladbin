@@ -2,7 +2,7 @@
 
 namespace App\Data;
 
-use App\Utils\Generator;
+use App\Creator\Nonce;
 
 /**
  * @see https://www.w3.org/TR/CSP3/
@@ -24,9 +24,9 @@ class ContentSecurityPolicy
      */
     private $useNonce = false;
 
-    public function __construct(Generator $generator)
+    public function __construct(Nonce $nonce)
     {
-        $this->nonce = $generator->createNonce();
+        $this->nonce = $nonce->create();
     }
 
     /**
