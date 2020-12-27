@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Driver\GoogleApi;
+namespace App\Driver\GoogleApi\Directions;
 
 class Helper
 {
