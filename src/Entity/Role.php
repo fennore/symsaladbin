@@ -2,35 +2,27 @@
 
 namespace App\Entity;
 
+use Stringable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Role Entity for database.
- *
- * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
- * @ORM\Table(name="role")
- */
-class Role
+#[ORM\Entity(repositoryClass="App\Repository\RoleRepository")]
+#[ORM\Table(name="role")]
+final class Role implements Stringable
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type="integer")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type="string", unique=true)]
+    #[Assert\NotBlank]
     private $name;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="roles")
-     */
+    #[ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="roles")]
     private $users;
 
     /**
@@ -43,24 +35,18 @@ class Role
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection A collection of User entities
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    /**
-     * Get the name for the role.
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Overrides the parent getRole.
-     */
     public function getRole(): string
     {
         return $this->getName();

@@ -12,55 +12,42 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * User Entity.
- *
- * @ORM\Table(name="user")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields="username", message="Username already taken")
- */
-class User implements UserInterface, Serializable, EquatableInterface
+#[ORM\Table(name="user")]
+#[ORM\Entity(repositoryClass="App\Repository\UserRepository")]
+#[UniqueEntity(fields="username", message="Username already taken")]
+final class User implements UserInterface, Serializable, EquatableInterface
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    
+    #[ORM\Column(type="integer")]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy="AUTO")]
     private $id;
 
-    /**
-     * @ORM\Column(type="string", unique=true, length=32)
-     * @Assert\NotBlank()
-     */
+    
+    #[ORM\Column(type="string", unique=true, length=32)]
+    #[Assert\NotBlank()]
     private $username;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
+    
+    #[Assert\NotBlank()]
+    #[Assert\Length(max=4096)]
     private $plainPassword;
 
-    /**
-     * @ORM\Column(type="string", length=256)
-     */
+    
+    #[ORM\Column(type="string", length=256)]
     private $password;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
-     * @ORM\JoinTable(name="user_role")
-     *
-     * @var Collection
-     */
-    private $roles;
+    
+    #[ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")]
+    #[ORM\JoinTable(name="user_role")]
+    private Collection $roles;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned":true})
-     */
+    
+    #[ORM\Column(type="smallint", options={"unsigned":true})]
     private $status;
 
-    /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
-     */
+    
+    #[ORM\Column(type="integer", options={"unsigned":true})]
     private $created;
 
     public function __construct(string $username, ?string $password, array $roles = [], int $status = 1)
@@ -113,7 +100,7 @@ class User implements UserInterface, Serializable, EquatableInterface
     }
 
     /**
-     * @return ArrayCollection|Role[]
+     * @return string[] An array of Role names related to the user
      */
     public function getRoles(): array
     {
