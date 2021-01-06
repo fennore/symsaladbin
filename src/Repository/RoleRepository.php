@@ -14,19 +14,6 @@ class RoleRepository extends ServiceEntityRepository
         parent::__construct($registry, Role::class);
     }
 
-    /*
-      public function findBySomething($value)
-      {
-      return $this->createQueryBuilder('r')
-      ->where('r.something = :value')->setParameter('value', $value)
-      ->orderBy('r.id', 'ASC')
-      ->setMaxResults(10)
-      ->getQuery()
-      ->getResult()
-      ;
-      }
-     */
-
     /**
      * @param string $name Name for the role to search for. Each role has a unique name.
      */
@@ -35,9 +22,6 @@ class RoleRepository extends ServiceEntityRepository
         return $this->findOneBy(['name' => $name]);
     }
 
-    /**
-     * Writes a new Role Entity to database.
-     */
     public function createRole(Role $role)
     {
         if (!is_null($role->getId())) {
@@ -46,9 +30,6 @@ class RoleRepository extends ServiceEntityRepository
         $this->persistRole($role);
     }
 
-    /**
-     * Updates Role Entity in database.
-     */
     public function updateRole(Role $role)
     {
         if (is_null($role->getId())) {
@@ -57,9 +38,6 @@ class RoleRepository extends ServiceEntityRepository
         $this->persistRole($role);
     }
 
-    /**
-     * Removes Role Entity from database.
-     */
     public function deleteRole(Role $role)
     {
         $this->getEntityManager()->remove($role);

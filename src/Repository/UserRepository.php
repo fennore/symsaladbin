@@ -22,38 +22,19 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
      */
     public function loadUserByUsername($username)
     {
-        /* $qb = $this
-          ->createQueryBuilder('u');
-          $expr = $qb
-          ->expr()
-          ->eq('u.username', ':username');
-          $qb
-          ->where($expr)
-          ->setParameter(':username', $username);
-
-          return $qb->getQuery()->getResult(); */
         return $this->findOneBy(['username' => $username]);
     }
 
-    /**
-     * Writes User Entity to database.
-     */
     public function createUser(UserInterface $user)
     {
         $this->persistUser($user);
     }
 
-    /**
-     * Updates User Entity in database.
-     */
     public function updateUser(UserInterface $user)
     {
         $this->persistUser($user);
     }
 
-    /**
-     * Removes User Entity from database.
-     */
     public function deleteUser(UserInterface $user)
     {
         $this->getEntityManager()->remove($user);
