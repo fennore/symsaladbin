@@ -17,7 +17,7 @@
 
 namespace App\Entity\Traits;
 
-use App\Entity\File;
+use App\Entity\{File,Item};
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -26,40 +26,24 @@ use JMS\Serializer\Annotation as Serializer;
  */
 trait SourceItem
 {
-    /**
-     * @Serializer\Exclude
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\File")
-     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
-     *
-     * @var File Source File
-     */
-    protected $file;
 
-    /**
-     * Overwrite default Doctrine setFile,
-     * So we can set the Item title according to file name when empty.
-     */
+    #[Serializer\Exclude]
+    #[ORM\OneToOne(targetEntity:'App\Entity\File')]
+    #[ORM\JoinColumn(name:'file_id', referencedColumnName:'id')]
+    protected File $file;
+
     public function setFile(File $file)
     {
         $this->file = $file;
 
-        // Update object title
         $this->setTitle($file->getFileName());
-
-        $this->updated = $file->getLastModified();
 
         return $this;
     }
 
-    abstract public function setTitle(string $title);
+    abstract public function setTitle(string $title): static;
 
-    /**
-     * Remove File from Item.
-     *
-     * @return self
-     */
-    public function detachFile()
+    public function detachFile(): static
     {
         unset($this->file);
 

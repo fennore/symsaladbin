@@ -13,12 +13,12 @@ trait ImageSourceItem
     }
 
     /**
-     * @ORM\Column(type="json", nullable=true);
+    #[ORM\Column(type="json", nullable=true);]
      */
     protected $property;
 
     /**
-     * @ORM\Column(type="json", nullable=true);
+    #[ORM\Column(type="json", nullable=true);]
      */
     protected $setting;
 
@@ -61,7 +61,7 @@ trait ImageSourceItem
     }
 
     /**
-     * @ORM\PostLoad
+    #[ORM\PostLoad]
      */
     public function postLoad()
     {

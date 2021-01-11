@@ -12,43 +12,43 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Table(name="user")]
-#[ORM\Entity(repositoryClass="App\Repository\UserRepository")]
-#[UniqueEntity(fields="username", message="Username already taken")]
+#[ORM\Table(name:'user')]
+#[ORM\Entity(repositoryClass:'App\Repository\UserRepository')]
+#[UniqueEntity(fields:'username', message:'Username already taken')]
 final class User implements UserInterface, Serializable, EquatableInterface
 {
     
-    #[ORM\Column(type="integer")]
+    #[ORM\Column(type:'integer')]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy="AUTO")]
-    private $id;
+    #[ORM\GeneratedValue(strategy:'AUTO')]
+    private int $id;
 
     
-    #[ORM\Column(type="string", unique=true, length=32)]
-    #[Assert\NotBlank()]
-    private $username;
+    #[ORM\Column(type:'string', unique:true, length:32)]
+    #[Assert\NotBlank]
+    private string $username;
 
     
-    #[Assert\NotBlank()]
-    #[Assert\Length(max=4096)]
-    private $plainPassword;
+    #[Assert\NotBlank]
+    #[Assert\Length(max:4096)]
+    private string $plainPassword;
 
     
-    #[ORM\Column(type="string", length=256)]
-    private $password;
+    #[ORM\Column(type:'string', length:256)]
+    private string $password;
 
     
-    #[ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")]
-    #[ORM\JoinTable(name="user_role")]
+    #[ORM\ManyToMany(targetEntity:'App\Entity\Role', inversedBy:'users')]
+    #[ORM\JoinTable(name:'user_role')]
     private Collection $roles;
 
     
-    #[ORM\Column(type="smallint", options={"unsigned":true})]
-    private $status;
+    #[ORM\Column(type:'smallint', options:['unsigned' => true])]
+    private int $status;
 
     
-    #[ORM\Column(type="integer", options={"unsigned":true})]
-    private $created;
+    #[ORM\Column(type:'integer', options:['unsigned' => true])]
+    private int $created;
 
     public function __construct(string $username, ?string $password, array $roles = [], int $status = 1)
     {
@@ -128,18 +128,16 @@ final class User implements UserInterface, Serializable, EquatableInterface
             $this->username,
             $this->password,
             $this->status,
-            // $this->salt,
         ]);
     }
 
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list(
             $this->id,
             $this->username,
             $this->password,
             $this->status
-            // $this->salt
         ) = \unserialize($serialized);
     }
 }

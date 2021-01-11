@@ -6,60 +6,39 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Table(name="log")
- * @ORM\Entity(repositoryClass="App\Repository\LogRepository")
- */
+#[ORM\Table(name:'log')]
+#[ORM\Entity(repositoryClass:'App\Repository\LogRepository')]
 class Log
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
-    /**
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank()
-     */
-    private $message;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:'integer')]
+    private int $id;
 
-    /**
-     * Json is safer because of no serialisation, and cleaner.
-     *
-     * @ORM\Column(type="json")
-     */
-    private $context;
+    #[ORM\Column(type:'text')]
+    #[Assert\NotBlank]
+    private string $message;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank()
-     */
-    private $channel;
+    #[ORM\Column(type:'json')]
+    private stdClass $context;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned":true})
-     * @Assert\NotBlank()
-     */
-    private $level;
+    #[ORM\Column(type:'string')]
+    #[Assert\NotBlank]
+    private string $channel;
 
-    /**
-     * Json is safer because of no serialisation, and cleaner.
-     *
-     * @ORM\Column(type="json")
-     */
-    private $extra;
+    #[ORM\Column(type:'smallint', options:['unsigned' => true])]
+    #[Assert\NotBlank]
+    private int $level;
 
-    /**
-     * @ORM\Column(type="integer", options={"unsigned":true})
-     */
-    private $created;
+    #[ORM\Column(type:'json')]
+    private stdClass $extra;
 
-    /**
-     * @param array $record Monolog logging record
-     */
-    public function __construct($record)
+    #[ORM\Column(type:'integer', options:['unsigned' => true])]
+    private int $created;
+
+    /** @param array $record Monolog logging record */
+    public function __construct(array $record)
     {
         $datetime = new DateTime();
         $this->message = $record['message'];

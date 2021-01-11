@@ -3,40 +3,35 @@
 namespace App\Entity;
 
 use Stringable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\{Collection, ArrayCollection};
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass="App\Repository\RoleRepository")]
-#[ORM\Table(name="role")]
+#[ORM\Entity(repositoryClass:'App\Repository\RoleRepository')]
+#[ORM\Table(name:'role')]
 final class Role implements Stringable
 {
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type="integer")]
-    private $id;
+    #[ORM\Column(type:'integer')]
+    private int $id;
 
-    #[ORM\Column(type="string", unique=true)]
+    #[ORM\Column(type:'string', unique:true)]
     #[Assert\NotBlank]
-    private $name;
+    private string $name;
 
-    #[ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="roles")]
-    private $users;
+    #[ORM\ManyToMany(targetEntity:'App\Entity\User', mappedBy:'roles')]
+    private Collection $users;
 
-    /**
-     * @param string $role Unique name for the role
-     */
+    /** @param string $role Unique name for the role */
     public function __construct(string $name)
     {
         $this->users = new ArrayCollection();
         $this->name = $name;
     }
 
-    /**
-     * @return Collection A collection of User entities
-     */
+    /** @return Collection A collection of User entities */
     public function getUsers(): Collection
     {
         return $this->users;

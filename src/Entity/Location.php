@@ -3,49 +3,33 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Stringable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
- * @ORM\Table(name="location", indexes={@ORM\Index(name="location_list_select", columns={"stage", "weight"}), @ORM\Index(name="location_filter", columns={"status"})})
- */
-class Location
+#[ORM\Entity(repositoryClass:'App\Repository\LocationRepository')]
+#[ORM\Table(name:'location', indexes:[#[ORM\Index(name:'location_list_select', columns:['stage', 'weight'])], #[ORM\Index(name:'location_filter', columns:['status'])]])]
+class Location implements Stringable
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
-    /**
-     * @ORM\Embedded(class="App\Entity\Coordinate", columnPrefix=false)
-     */
-    private $coordinate;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:'integer')]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $name;
+    #[ORM\Embedded(class:'App\Entity\Coordinate', columnPrefix:false)]
+    private Coordinate $coordinate;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $weight;
+    #[ORM\Column(type:'string')]
+    private string $name;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned":true})
-     */
-    private $status;
+    #[ORM\Column(type:'integer')]
+    private int $weight;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned":true})
-     */
-    private $stage;
+    #[ORM\Column(type:'smallint', options:["unsigned" => true])]
+    private int $status;
 
-    /**
-     * @param int $weight defaults to 0
-     * @param int $status defaults to 1
-     */
+    #[ORM\Column(type:'smallint', options:["unsigned" => true])]
+    private int $stage;
+
     public function __construct(Coordinate $coordinate, string $name, int $stage, int $weight = 0, int $status = 1)
     {
         $this->coordinate = $coordinate;
@@ -67,22 +51,22 @@ class Location
 
     public function getStage(): int
     {
-        return (int) $this->stage;
+        return $this->stage;
     }
 
     public function getWeight(): int
     {
-        return (int) $this->weight;
+        return $this->weight;
     }
 
     public function getStatus(): int
     {
-        return (int) $this->status;
+        return $this->status;
     }
 
     public function __toString(): string
     {
-        return (string) $this->coordinate;
+        return $this->coordinate;
     }
 
     public function getId(): ?int

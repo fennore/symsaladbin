@@ -4,92 +4,77 @@ namespace App\Entity\Item;
 
 use App\Entity\Tools\CleanPathString;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\{Collection,ArrayCollection};
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as Serializer;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *      name="item",
- *      indexes={@ORM\Index(name="item_list_select", columns={"status", "created", "weight"})},
- *      uniqueConstraints={@ORM\UniqueConstraint(name="unique_path", columns={"path", "type"})}
- * )
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="type", type="string")
- * @Serializer\Discriminator(field = "type", disabled = true, map = {"item" = "Item"})
- */
+#[ORM\Entity]
+#[ORM\Table(
+     name:'item',
+     indexes:[#[ORM\Index(name='item_list_select', columns:['status', 'created', 'weight'])]],
+     uniqueConstraints:[#[ORM\UniqueConstraint(name:'unique_path', columns:['path', 'type'])]]
+)]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name:'type', type:'string')]
+#[Serializer\Discriminator(field:'type', disabled:true, map:['item' => 'Item'])]
 class Item
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    protected ?int $id;
 
-    /**
-     * @Serializer\Exclude
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:'integer')]
+    protected int $id;
+
+    #[Serializer\Exclude]
     protected string $type = '';
 
     /**
      * Linked Item.
-     *
-     * @Serializer\Type("ArrayCollection")
-     * @ORM\ManyToMany(targetEntity="Item", fetch="EXTRA_LAZY")
-     * @ORM\JoinTable(
-     *      name="itemlink",
-     *      joinColumns={@ORM\JoinColumn(name="item_id_1", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="item_id_2", referencedColumnName="id")})
      */
+    #[Serializer\Type('ArrayCollection')]
+    #[ORM\ManyToMany(targetEntity:'Item', fetch:'EXTRA_LAZY')]
+    #[ORM\JoinTable(
+          name:'itemlink',
+          joinColumns:[#[ORM\JoinColumn(name:'item_id_1', referencedColumnName:'id')]],
+          inverseJoinColumns:[#[ORM\JoinColumn(name:'item_id_2', referencedColumnName:'id')]]
+    )]
     protected ?Collection $link;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected string $title = '';
 
     /**
      * Text that can contain HTML.
-     *
-     * @ORM\Column(type="text", nullable=true)
      */
+    #[ORM\Column(type:'text', nullable:true)]
     protected ?string $content = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     protected string $path = '';
 
     /**
      * Date created.
-     *
-     * @ORM\Column(type="integer", options={"unsigned":true})
      */
+    #[ORM\Column(type:'integer', options:['unsigned' => true])]
     protected int $created = 0;
 
     /**
      * Date last modified.
-     *
-     * @ORM\Column(type="integer", options={"unsigned":true})
      */
+    #[ORM\Column(type:'integer', options:['unsigned' => true])]
     protected int $updated = 0;
 
     /**
      * Weight for sorting.
-     *
-     * @ORM\Column(type="integer", options={"unsigned":true})
      */
+    #[ORM\Column(type:'integer', options:['unsigned' => true])]
     protected int $weight = 0;
 
     /**
      * Item status. Like open (1) / closed (0).
-     *
-     * @ORM\Column(type="smallint", options={"unsigned":true})
      */
+    #[ORM\Column(type:'smallint', options:['unsigned' => true])]
     protected int $status = 0;
 
     public function __construct(string $title, ?string $content)
@@ -103,37 +88,25 @@ class Item
         $this->created = $this->updated;
     }
 
-    /**
-     * @return static
-     */
-    public function setTitle(string $title): self
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
-        // Update path from title
         $this->setPath(new CleanPathString($title));
-        // Flag updated
         $this->setUpdated();
 
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function setContent(?string $content): self
+    public function setContent(?string $content): static
     {
         $this->content = $content;
-        // Flag updated
         $this->setUpdated();
 
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function setPath(CleanPathString $path): self
+    public function setPath(CleanPathString $path): static
     {
         $this->path = (string) $path;
 
@@ -144,48 +117,34 @@ class Item
      * Link other Items to this Item.
      *
      * @param Collection $items a collection of Item entities
-     *
-     * @return static
      */
-    public function setLink(Collection $items): self
+    public function setLink(Collection $items): static
     {
         $this->link = $items;
 
         return $this;
     }
 
-    /**
-     * @param self $item
-     */
     public function addLink(Item $item)
     {
         $this->link->add($item);
     }
 
-    /**
-     * @return static
-     */
-    public function setWeight(int $weight): self
+    public function setWeight(int $weight): static
     {
         $this->weight = $weight;
 
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function setActive(): self
+    public function setActive(): static
     {
         $this->status = 1;
 
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function setInactive(): self
+    public function setInactive(): static
     {
         $this->status = 0;
 
@@ -195,10 +154,8 @@ class Item
     /**
      * Flag this Item as updated.
      * This means setting the updated property to the current timestamp value.
-     *
-     * @return static
      */
-    public function setUpdated(): self
+    public function setUpdated(): static
     {
         $currentDT = new DateTime();
         $this->updated = $currentDT->getTimestamp();

@@ -6,66 +6,42 @@ use App\Exception\StagesDoNotMatchException;
 use Doctrine\ORM\Mapping as ORM;
 use stdClass;
 
-/**
- * @ORM\Table(name="directions")
- * @ORM\Entity(repositoryClass="App\Repository\DirectionsRepository")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name:'directions')]
+#[ORM\Entity(repositoryClass:'App\Repository\DirectionsRepository')]
+#[ORM\HasLifecycleCallbacks]
 class Directions
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Location")
-     *
-     * @var Location
-     */
-    private $origin;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:'integer')]
+    private int $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Location")
-     *
-     * @var Location
-     */
-    private $destination;
+    #[ORM\OneToOne(targetEntity:'App\Entity\Location')]
+    private Location $origin;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned":true})
-     *
-     * @var int
-     */
-    private $stage;
+    #[ORM\OneToOne(targetEntity:'App\Entity\Location')]
+    private Location $destination;
 
-    /**
-     * @ORM\Column(type="json")
-     *
-     * @var stdClass|null
-     */
-    private $data;
+    #[ORM\Column(type:'smallint', options:['unsigned' => true])]
+    private int $stage;
+
+    #[ORM\Column(type:'json')]
+    private stdClass $data;
 
     /**
      * Called on postLoad Entity life cycle.
      * Because doctrine converts json objects to associative arrays instead of objects and we want objects, which is default php behaviour!
      *
      * @see http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#lifecycle-callbacks
-     *
-     * @ORM\PostLoad
      */
+    #[ORM\PostLoad]
     public function postLoad()
     {
         $this->data = json_decode(json_encode($this->data));
     }
 
-    /**
-     * @param \App\Entity\Location $origin
-     * @param \App\Entity\Location $destination
-     * @param string               $data        Json directions information
-     */
+    /** @param stdClass $data Json directions information */
     public function __construct(Location $origin, Location $destination, stdClass $data)
     {
         $this->origin = $origin;
@@ -87,7 +63,7 @@ class Directions
         return $this->destination;
     }
 
-    public function getData(): ?stdClass
+    public function getData(): stdClass
     {
         return $this->data;
     }

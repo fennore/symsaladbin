@@ -2,22 +2,18 @@
 
 namespace App\Entity\Tools;
 
+use Stringable;
+
 /**
  * Creates a clean path string from a regular string.
  */
-class CleanPathString
+class CleanPathString implements Stringable
 {
     private $originalString;
 
-    /**
-     * @var array
-     */
-    private $replace = [];
+    private array $replace = [];
 
-    /**
-     * @var string
-     */
-    private $delimiter = '-';
+    private string $delimiter = '-';
 
     public function __construct(string $stringToConvert, array $replace = [], string $delimiter = '-')
     {
@@ -32,7 +28,7 @@ class CleanPathString
      *
      * @param string $stringToConvert The original string
      */
-    public function setString(string $stringToConvert): CleanPathString
+    public function setString(string $stringToConvert): static
     {
         $this->originalString = $stringToConvert;
 
@@ -44,7 +40,7 @@ class CleanPathString
      *
      * @param array $replace Array of values to replace with the delimiter
      */
-    public function setReplace(array $replace): CleanPathString
+    public function setReplace(array $replace): static
     {
         $this->replace = $replace;
 
@@ -57,7 +53,7 @@ class CleanPathString
      *
      * @param string $delimiter String delimiter. Defaults to '-'.
      */
-    public function setDelimiter(string $delimiter = '-'): CleanPathString
+    public function setDelimiter(string $delimiter = '-'): static
     {
         $this->delimiter = $delimiter;
 
@@ -68,8 +64,6 @@ class CleanPathString
      * Get a clean path version of a string.
      *
      * @todo find something better (Symfony has path / url function?)
-     *
-     * @return string $str
      */
     private function getCleanPathString(): string
     {

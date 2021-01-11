@@ -2,22 +2,18 @@
 
 namespace App\Entity;
 
+use Stringable;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Embeddable
- */
-class Coordinate
+#[ORM\Embeddable]
+class Coordinate implements Stringable
 {
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $lat;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $lng;
+    #[ORM\Column(type:'float')]
+    private float $lat;
+
+    #[ORM\Column(type:'float')]
+    private float $lng;
 
     public function __construct(float $lat, float $lng)
     {
@@ -25,42 +21,32 @@ class Coordinate
         $this->lng = $lng;
     }
 
-    /**
-     * @param float $lat Latitude
-     *
-     * @return $this
-     */
-    public function setLat(float $lat): self
+    public function setLat(float $lat): static
     {
         $this->lat = $lat;
 
         return $this;
     }
 
-    /**
-     * @param float $lng Longitude
-     *
-     * @return $this
-     */
-    public function setLng(float $lng): self
+    public function setLng(float $lng): static
     {
         $this->lng = $lng;
 
         return $this;
     }
 
-    public function getLat()
+    public function getLat(): float
     {
-        return (float) $this->lat;
+        return $this->lat;
     }
 
-    public function getLng()
+    public function getLng(): float
     {
-        return (float) $this->lng;
+        return $this->lng;
     }
 
     public function __toString()
     {
-        return $this->getLat().','.$this->getLng();
+        return "{$this->getLat()},{$this->getLng()}";
     }
 }

@@ -3,81 +3,51 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File as BaseFile;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\{File as BaseFile,UploadedFile};
 use Vich\UploaderBundle\Mapping\Annotation as Vich; // Uploaded file will be of this type instead
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
- * @ORM\Table(name="file", indexes={@ORM\Index(name="file_select", columns={"mime_type", "path"})})
- * @Vich\Uploadable
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass:'App\Repository\FileRepository')]
+#[ORM\Table(name:'file', indexes:[#[ORM\Index(name:'file_select', columns:['mime_type', 'path'])]])]
+#[Vich\Uploadable]
+#[ORM\HasLifecycleCallbacks]
 class File
 {
-    /**
-     * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     *
-     * @Vich\UploadableField(mapping="files", fileNameProperty="fileName", mimeType="mimeType")
-     *
-     * @var BaseFile
-     */
-    private $file;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[Vich\UploadableField(mapping:'files', fileNameProperty:'fileName', mimeType:'mimeType')]
+    private BaseFile $file;
 
-    /**
-     * @ORM\Column(name="filename", type="string")
-     *
-     * @var string
-     */
-    private $fileName;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type:'integer')]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string")
-     *
-     * @var string
-     */
-    private $path;
+    #[ORM\Column(name:'filename', type:'string')]
+    private string $fileName;
 
-    /**
-     * Holds the source of the file.
-     *
-     * @var string
-     */
-    private $source;
+    #[ORM\Column(type:'string')]
+    private string $path;
 
-    /**
-     * @ORM\Column(name="mime_type",type="string")
-     */
-    private $mimeType;
+    private string $source;
 
-    /**
-     * @ORM\Column(name="last_modified", type="integer", options={"unsigned":true})
-     */
-    private $lastModified;
+    #[ORM\Column(name:'mime_type',type:'string')]
+    private string $mimeType;
+
+    #[ORM\Column(name:'last_modified', type:'integer', options:['unsigned' => true])]
+    private int $lastModified;
 
     /**
      * In some cases we want item info with the file.
      *
      * @todo check if we should use unilateral Doctrine for this instead.
-     *
-     * @var Item
      */
-    private $item;
+    private Item $item;
 
     /**
      * Holds the file data.
      * For now not using it.
       nullable: true
-     * @var object
      */
-    private $data;
+    private stdClass $data;
 
     public function __construct(BaseFile $file)
     {
@@ -85,10 +55,10 @@ class File
         //$this->data = $fileInfo->getContents();
     }
 
-    /** @ORM\PostLoad */
+    #[ORM\PostLoad]
     public function doPostLoad()
     {
-        $this->source = $this->path.'/'.$this->fileName;
+        $this->source = "{$this->path}/{$this->fileName}";
     }
 
     /**
@@ -100,13 +70,13 @@ class File
      *
      * @param BaseFile|UploadedFile $image
      */
-    public function setFile(BaseFile $file): void
+    public function setFile(BaseFile|UploadedFile $file): void
     {
         $this->fileName = $file->getFilename();
         $this->mimeType = $file->getMimeType();
         $this->file = $file;
         $this->path = str_replace('\\', '/', $file->getPath()); // Always use / for directory separator
-        $this->source = $this->path.'/'.$this->fileName;
+        $this->source = "{$this->path}/{$this->fileName}";
         $this->lastModified = $file->getMTime();
     }
 
