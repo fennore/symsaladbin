@@ -13,7 +13,7 @@ use Doctrine\ORM\ORMInvalidArgumentException;
  * @method TimelineItem[]    findAll()
  * @method TimelineItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TimelineItemRepository extends AbstractItemRepository
+final class TimelineItemRepository extends AbstractItemRepository
 {
     public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
@@ -47,41 +47,26 @@ class TimelineItemRepository extends AbstractItemRepository
         $this->persistTimelineItem($item, $useBatch);
     }
 
-    /**
-     * @param TimelineItem[] $items
-     */
-    public function updateTimelineItems(array $items): void
+    public function updateTimelineItems(TimelineItem ...$items): void
     {
-        $matches = [];
+        $mapper = [];
         $ids = [];
         foreach ($items as $item) {
             $id = $item->getId();
-            $matches[$id] = $item;
+            $mapper[$id] = $item;
             $ids[] = $id;
         }
 
         foreach (
             $this
                 ->createQueryBuilder('t')
-                ->addCriteria($this->getIdListCriteria($ids))
+                ->addCriteria($this->getIdListCriteria(...$ids))
                 ->getQuery()
                 ->iterate() as $row
         ) {
             $item = $row[0];
             $id = $item->getId();
-            if (!isset($matches[$id])) {
-                continue;
-            }
-            $item
-                ->setWeight($matches[$id]->getWeight())
-                ->setTitle($matches[$id]->getTitle())
-                ->setContent($matches[$id]->getContent());
-            if ($item->isActive() && !$matches[$id]->isActive()) {
-                $item->setInactive();
-            }
-            if (!$item->isActive() && $matches[$id]->isActive()) {
-                $item->setActive();
-            }
+            $this->prepareItemForUpdate($item, $mapper[$id] ?? null);
 //            $item->setLink($items);
             $this->updateTimelineItem($item);
         }

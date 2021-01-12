@@ -14,7 +14,7 @@ use Doctrine\ORM\UnitOfWork;
  * @method Story[]    findAll()
  * @method Story[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class StoryRepository extends AbstractItemRepository
+final class StoryRepository extends AbstractItemRepository
 {
     public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {
@@ -48,16 +48,13 @@ class StoryRepository extends AbstractItemRepository
         $this->persistStory($story, $useBatch);
     }
 
-    /**
-     * @param Story[] $stories
-     */
-    public function updateStories(array $stories): void
+    public function updateStories(Story ...$stories): void
     {
-        $matches = [];
+        $mapper = [];
         $ids = [];
         foreach ($stories as $story) {
             $id = $story->getId();
-            $matches[$id] = $story;
+            $mapper[$id] = $story;
             $ids[] = $id;
         }
 
@@ -70,19 +67,7 @@ class StoryRepository extends AbstractItemRepository
         ) {
             $story = $row[0];
             $id = $story->getId();
-            if (!isset($matches[$id])) {
-                continue;
-            }
-            $story
-                ->setWeight($matches[$id]->getWeight())
-                ->setTitle($matches[$id]->getTitle())
-                ->setContent($matches[$id]->getContent());
-            if ($story->isActive() && !$matches[$id]->isActive()) {
-                $story->setInactive();
-            }
-            if (!$story->isActive() && $matches[$id]->isActive()) {
-                $story->setActive();
-            }
+            $this->prepareItemForUpdate($story, $mapper[$id] ?? null);
 //            $story->setLink($items);
             $this->updateStory($story);
         }

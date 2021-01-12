@@ -19,13 +19,11 @@ class FileRepository extends AbstractBatchableEntityRepository
      * Get all Files from database,
      * optionally filtered by parameter.
      * About IterableResult annoyance @see https://github.com/doctrine/doctrine2/issues/5287.
-     *
-     * @param string|array $mimeMatch
      */
-    public function getFiles($mimeMatch = null, $pathMatch = ''): Traversable
+    public function getFiles(array|string $mimeMatch = null, string $pathMatch = ''): Traversable
     {
         $qb = $this->createQueryBuilder('f');
-        // Build Expr
+
         if (is_string($mimeMatch)) {
             $expr = $qb->expr()->like('f.mimeType', ':type');
         } elseif (is_array($mimeMatch)) {
@@ -38,7 +36,7 @@ class FileRepository extends AbstractBatchableEntityRepository
             $expr = $qb->expr()->andX($expr, $qb->expr()->eq('f.path', ':path'));
             $qb->setParameter(':path', $pathMatch);
         }
-        // Set WHERE
+
         if (!empty($expr)) {
             $qb->where($expr);
         }
@@ -51,7 +49,7 @@ class FileRepository extends AbstractBatchableEntityRepository
     /**
      * Writes a new File Entity to database.
      */
-    public function createFile(File $file, $useBatch = true)
+    public function createFile(File $file, $useBatch = true): void
     {
         if (!is_null($file->getId())) {
             throw ORMInvalidArgumentException::scheduleInsertForManagedEntity($file);
@@ -62,7 +60,7 @@ class FileRepository extends AbstractBatchableEntityRepository
     /**
      * Updates File Entity in database.
      */
-    public function updateFile(File $file, $useBatch = true)
+    public function updateFile(File $file, $useBatch = true): void
     {
         if (is_null($file->getId())) {
             throw ORMInvalidArgumentException::entityHasNoIdentity($file, 'update');
@@ -73,7 +71,7 @@ class FileRepository extends AbstractBatchableEntityRepository
     /**
      * Removes File Entity from database.
      */
-    public function deleteFile(File $file, $useBatch = true)
+    public function deleteFile(File $file, $useBatch = true): void
     {
         $em = $this->getEntityManager();
         $em->remove($file);
@@ -83,7 +81,7 @@ class FileRepository extends AbstractBatchableEntityRepository
     /**
      * Creates or updates the File Entity data in the database.
      */
-    protected function persistFile(File $file, $useBatch)
+    protected function persistFile(File $file, $useBatch): void
     {
         $em = $this->getEntityManager();
         $em->persist($file);

@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Creator;
+
+use App\Entity\File;
+use App\Reader\SimpleDocumentReader;
+
+final class StoryFromFile implements CreatorInterface
+{
+    public function __construct(
+        private SimpleDocumentReader $documentReader
+    )
+    {}
+
+    public function create(File $file): Story
+    {
+        $document = $this->documentReader->getDocument($file);
+        // @todo remove strip tags if allowed with contenteditable / wysiwyg implementation
+        return strip_tags(simplexml_import_dom($doc)->asXML() ?? '', '<br>');
+    }
+}

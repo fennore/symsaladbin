@@ -12,23 +12,26 @@ abstract class AbstractItemRepository extends AbstractBatchableEntityRepository
 {
     protected string $alias;
 
-    /**
-     * @param string $alias Alias for the repository entity table
-     */
+    /** @param string $alias Alias for the repository entity table */
     public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler, string $entityClass, string $alias)
     {
         parent::__construct($registry, $batchHandler, $entityClass);
         $this->alias = $alias;
     }
 
-    public function getAll(): IterableResult
+    public function getAll(): Traversable
     {
-        return $this->createQueryBuilder($this->alias)
-            ->getQuery()
-            ->iterate();
+        foreach (
+            $this->createQueryBuilder($this->alias)
+                ->getQuery()
+                ->iterate() 
+            as $row
+        ) {
+            yield $row[0];
+        }
     }
 
-    public function getRange(int $offset, int $limit, bool $showDisabled = false): IterableResult
+    public function getRange(int $offset, int $limit, bool $showDisabled = false): Traversable
     {
         $qb = $this->createQueryBuilder($this->alias);
         if (!$showDisabled) {
@@ -37,12 +40,17 @@ abstract class AbstractItemRepository extends AbstractBatchableEntityRepository
                 ->setParameter('status', 0);
         }
 
-        return $qb
-            ->addOrderBy("{$this->alias}.weight")
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->iterate();
+        foreach (
+            $qb
+                ->addOrderBy("{$this->alias}.weight")
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->iterate() 
+            as $row
+        ) {
+            yield $row[0];
+        }
     }
 
     public function getFromPath(string $pathString): ?Item
@@ -66,12 +74,7 @@ abstract class AbstractItemRepository extends AbstractBatchableEntityRepository
         return $this->getTotal();
     }
 
-    /**
-     * @param int[] $ids
-     *
-     * @return void
-     */
-    public function deleteById(array $ids): void
+    public function deleteById(int ...$ids): void
     {
         $this
             ->getEntityManager()
@@ -89,16 +92,28 @@ abstract class AbstractItemRepository extends AbstractBatchableEntityRepository
                 $criteria->expr()->gt('status', 0));
     }
 
-    /**
-     * @param int[] $ids
-     *
-     * @return Criteria
-     */
-    protected function getIdListCriteria(array $ids): Criteria
+    protected function getIdListCriteria(int ...$ids): Criteria
     {
         $criteria = (new Criteria());
 
         return $criteria->andWhere(
                 $criteria->expr()->in('id', $ids));
+    }
+
+    protected function prepareItemForUpdate(Item $persistedItem, ?Item $newItem): void
+    {
+        if (null === $newItem) {
+            return;
+        }
+        $persistedItem
+            ->setWeight($newItem->getWeight())
+            ->setTitle($newItem->getTitle())
+            ->setContent($newItem->getContent());
+        if ($persistedItem->isActive() && !$newItem->isActive()) {
+            $persistedItem->setInactive();
+        }
+        if (!$persistedItem->isActive() && $newItem->isActive()) {
+            $persistedItem->setActive();
+        }
     }
 }

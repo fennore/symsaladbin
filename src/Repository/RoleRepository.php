@@ -7,7 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\ORMInvalidArgumentException;
 
-class RoleRepository extends ServiceEntityRepository
+final class RoleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
