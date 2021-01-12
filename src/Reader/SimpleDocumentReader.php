@@ -2,8 +2,7 @@
 
 namespace App\Reader;
 
-use App\Entity\File;
-use App\Entity\Item\Story;
+use App\Entity\{File,Item\Story};
 use DOMDocument;
 use XMLReader;
 use ZipArchive;
@@ -11,59 +10,41 @@ use ZipArchive;
 /**
  * @todo use a separate document reader like:
  * https://github.com/PHPOffice/PHPWord
- *
- * Reader code is currently mixed with App specific code (story entity) this should not be the case.
- * This class is supposed to be the glue using the reader and filling App entities with data received from the reader.
  */
 class SimpleDocumentReader
 {
-    /**
-     * Creates a new Story from given File.
-     *
-     * @param File $file The file to create a story from. This should be a document.
-     */
-    public function getDocumentAsStory(File $file): Story
+
+    public function getDocument(File $file): DOMDocument
     {
-        $xml = $this->readZippedXml($file);
+        $document = $this->readFile($file);
 
-        $html = $this->xmlToHtml($file, $xml);
-
-        $story = new Story($file->getFileName(), $html);
-        $story->setFile($file);
-
-        return $story;
+        return $this->extractHTMLContent($document, $this->getNamespaceIdentifier($file));
     }
 
-    /**
-     * Reads XML from archived text document.
-     */
-    private function readZippedXml(File $file): string
+    private function readFile(File $file): DOMDocument
     {
-        // Create new ZIP archive
+
         $zip = new ZipArchive();
-        // Open zipped archive file
         $isOpen = $zip->open($file->getSource());
 
+        $doc = new DOMDocument();
+        
         if (true === $isOpen) {
             $index = $zip->locateName($this->getContentIdentifier($file));
         }
 
-        // Open received archive file
-        if (true === $isOpen && false !== $index) {
-            // If found, read it to the string
-            $content = $zip->getFromIndex($index);
-            // Close archive file
-            $zip->close();
-            // Load XML from a string
-            // Skip errors and warnings
-            $doc = new DOMDocument();
-            $doc->loadXML($content, LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
-            // Read XML data
-            return $doc->saveXML();
+        if (true !== $isOpen || false === $index) {
+            return $doc;
         }
 
-        // In case of failure return empty string
-        return '';
+        $content = $zip->getFromIndex($index);
+
+        $zip->close();
+
+        // Skip errors and warnings when loading the string content into DOMDocument
+        $doc->loadXML($content, LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+
+        return $doc;
     }
 
     /**
@@ -104,27 +85,18 @@ class SimpleDocumentReader
         }
     }
 
-    /**
-     * Converts an xml string to a html string.
-     *
-     * @param string $xmlString Xml string to convert to supported and cleaned up HTML
-     */
-    private function xmlToHtml(File $file, string $xmlString): string
+    private function extractHTMLContent(DOMDocument $document, $namespace): DOMDocument
     {
-        // Read XML string
         $reader = new XMLReader();
-        $reader->xml($xmlString);
+        $reader->xml($document->saveXML());
 
-        // Initialize variables
         $text = '';
         $formatting['header'] = 0;
 
-        // Loop through XML DOM
         while ($reader->read()) {
             // Look for new paragraphs
             $nodeTypeCheck = XMLReader::ELEMENT === $reader->nodeType;
-            $ns = $this->getNamespaceIdentifier($file);
-            $nsCheck = $ns.':p' === $reader->name;
+            $nsCheck = "{$namespace}:p" === $reader->name;
 
             if (!$nodeTypeCheck || !$nsCheck) {
                 continue;
@@ -133,7 +105,7 @@ class SimpleDocumentReader
             $p = $reader->readOuterXML();
 
             // Search for heading
-            preg_match('/<'.$ns.':pStyle '.$ns.':val="Heading.*?([1-6])"/', $p, $matches);
+            preg_match('/<'.$namespace.':pStyle '.$namespace.':val="Heading.*?([1-6])"/', $p, $matches);
 
             if (!empty($matches)) {
                 $formatting['header'] = $matches[1];
@@ -152,11 +124,10 @@ class SimpleDocumentReader
 
         // Suppress warnings. loadHTML does not require valid HTML but still warns against it...
         // Fix invalid html
-        $doc = new DOMDocument();
-        $doc->encoding = 'UTF-8';
+        $newDocument = new DOMDocument();
+        $newDocument->encoding = 'UTF-8';
         // Load as HTML without html/body and doctype
-        @$doc->loadHTML($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        // @todo remove strip tags if allowed with contenteditable / wysiwyg implementation
-        return strip_tags(simplexml_import_dom($doc)->asXML() ?? '', '<br>');
+        @$newDocument->loadHTML($text, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        return $doc;
     }
 }
