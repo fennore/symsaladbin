@@ -7,7 +7,7 @@ use Stringable;
 /**
  * Creates a clean path string from a regular string.
  */
-class CleanPathString implements Stringable
+final class CleanPathString implements Stringable
 {
     private $originalString;
 

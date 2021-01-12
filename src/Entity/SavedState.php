@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name:'savedstate')]
 #[ORM\Entity(repositoryClass:'App\Repository\SavedStateRepository')]
-class SavedState
+final class SavedState
 {
 
     #[ORM\Id]

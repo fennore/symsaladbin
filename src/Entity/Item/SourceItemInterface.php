@@ -6,9 +6,7 @@ use App\Entity\File;
 
 interface SourceItemInterface
 {
-    public function setFile(File $file);
+    public function setFile(File $file): void;
 
-    public function detachFile();
-
-    public static function matchMimeType();
+    public function detachFile(): void;
 }

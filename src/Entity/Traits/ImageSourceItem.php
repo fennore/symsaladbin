@@ -2,9 +2,10 @@
 
 namespace App\Entity\Traits;
 
+use App\Creator\ArrayToObject;
 use App\Entity\File;
 use Doctrine\ORM\Mapping as ORM;
-use Throwable;
+use Throwable,ArrayObject;
 
 trait ImageSourceItem
 {
@@ -12,15 +13,11 @@ trait ImageSourceItem
         setFile as sourceItemSetFile;
     }
 
-    /**
-    #[ORM\Column(type="json", nullable=true);]
-     */
-    protected $property;
+    #[ORM\Column(type:'json', nullable:true)]
+    protected array|ArrayObject $property;
 
-    /**
-    #[ORM\Column(type="json", nullable=true);]
-     */
-    protected $setting;
+    #[ORM\Column(type:'json', nullable:true)]
+    protected array|ArrayObject $setting;
 
     /**
      * Overwrite SourceItem setFile.
@@ -30,10 +27,10 @@ trait ImageSourceItem
     public function setFile(File $file)
     {
         $this->sourceItemSetFile($file);
-        // Add exif data
+
         try {
             if (null === $this->property) {
-                $this->property = (object) [];
+                $this->property = new ArrayObject(flags: ArrayObject::STD_PROP_LIST)
             }
             $exif = exif_read_data($file->getSource(), 'FILE,COMPUTED', true, false);
             $check = ['FILE' => null, 'COMPUTED' => null];
@@ -50,22 +47,21 @@ trait ImageSourceItem
         }
     }
 
-    public function getProperty(): object
+    public function getProperty(): ArrayObject
     {
-        return (object) $this->property;
+        return $this->property;
     }
 
-    public function getSetting(): object
+    public function getSetting(): ArrayObject
     {
-        return (object) $this->setting;
+        return $this->setting;
     }
 
-    /**
     #[ORM\PostLoad]
-     */
     public function postLoad()
     {
-        $this->property = (object) $this->property;
-        $this->setting = (object) $this->setting;
+        $arrayToObject = new ArrayToObject;
+        $this->property = $arrayToObject->create($this->property);
+        $this->setting = $arrayToObject->create($this->setting);
     }
 }

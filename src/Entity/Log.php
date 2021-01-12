@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name:'log')]
 #[ORM\Entity(repositoryClass:'App\Repository\LogRepository')]
-class Log
+final class Log
 {
 
     #[ORM\Id]

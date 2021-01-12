@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation as Serializer;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name:'type', type:'string')]
 #[Serializer\Discriminator(field:'type', disabled:true, map:['item' => 'Item'])]
-class Item
+abstract class Item
 {
 
     #[ORM\Id]

@@ -7,7 +7,7 @@ use Stringable;
 
 #[ORM\Entity(repositoryClass:'App\Repository\LocationRepository')]
 #[ORM\Table(name:'location', indexes:[#[ORM\Index(name:'location_list_select', columns:['stage', 'weight'])], #[ORM\Index(name:'location_filter', columns:['status'])]])]
-class Location implements Stringable
+final class Location implements Stringable
 {
 
     #[ORM\Id]

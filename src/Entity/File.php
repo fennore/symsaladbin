@@ -10,7 +10,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich; // Uploaded file will be of 
 #[ORM\Table(name:'file', indexes:[#[ORM\Index(name:'file_select', columns:['mime_type', 'path'])]])]
 #[Vich\Uploadable]
 #[ORM\HasLifecycleCallbacks]
-class File
+final class File
 {
 
     #[Vich\UploadableField(mapping:'files', fileNameProperty:'fileName', mimeType:'mimeType')]

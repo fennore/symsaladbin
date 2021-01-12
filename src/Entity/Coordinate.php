@@ -6,7 +6,7 @@ use Stringable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Embeddable]
-class Coordinate implements Stringable
+final class Coordinate implements Stringable
 {
 
     #[ORM\Column(type:'float')]
