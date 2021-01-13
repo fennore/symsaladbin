@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity\Tools;
+namespace App\Transformer;
 
 use Stringable;
 
 /**
  * Creates a clean path string from a regular string.
  */
-final class CleanPathString implements Stringable
+class CleanPathString implements Stringable
 {
     private $originalString;
 

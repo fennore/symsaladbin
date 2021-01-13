@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Creator;
+namespace App\Transformer;
 
 use ArrayObject;
 
 /**
- * Recursively convert an array to an ArrayObject
+ * Recursively convert an array to an ArrayObject that can be used like stdClass
  */
-class ArrayToObject implements CreatorInterface
+class ArrayToObject
 {
 
     public function create(array $array): ArrayObject

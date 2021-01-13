@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Creator;
+namespace App\Transformer;
 
 use App\Entity\File;
 use App\Reader\SimpleDocumentReader;
 
-final class StoryFromFile implements CreatorInterface
+final class FileToStory
 {
     public function __construct(
         private SimpleDocumentReader $documentReader
