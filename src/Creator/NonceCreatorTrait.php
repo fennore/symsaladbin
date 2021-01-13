@@ -2,9 +2,9 @@
 
 namespace App\Creator;
 
-class Nonce implements CreatorInterface
+trait NonceCreatorTrait
 {
-    public function create()
+    private function createNonce(): string
     {
         return base64_encode(random_bytes(20));
     }
