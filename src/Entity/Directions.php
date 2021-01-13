@@ -9,7 +9,7 @@ use stdClass;
 #[ORM\Table(name:'directions')]
 #[ORM\Entity(repositoryClass:'App\Repository\DirectionsRepository')]
 #[ORM\HasLifecycleCallbacks]
-final class Directions
+class Directions implements EntityInterface
 {
 
     #[ORM\Id]

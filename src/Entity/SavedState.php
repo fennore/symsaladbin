@@ -5,9 +5,9 @@ namespace App\Entity;
 use App\States\StateInterface;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Entity]
 #[ORM\Table(name:'savedstate')]
-#[ORM\Entity(repositoryClass:'App\Repository\SavedStateRepository')]
-final class SavedState
+class SavedState implements EntityInterface
 {
 
     #[ORM\Id]

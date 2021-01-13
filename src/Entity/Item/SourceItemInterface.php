@@ -2,7 +2,7 @@
 
 namespace App\Entity\Item;
 
-use App\Entity\File;
+use App\Entity\{File, EntityInterface};
 
 interface SourceItemInterface
 {

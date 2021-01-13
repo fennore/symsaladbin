@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Item;
+namespace App\Entity;
 
 use App\Entity\Tools\CleanPathString;
 use DateTime;
@@ -10,15 +10,10 @@ use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 #[ORM\Entity]
-#[ORM\Table(
-     name:'item',
-     indexes:[#[ORM\Index(name='item_list_select', columns:['status', 'created', 'weight'])]],
-     uniqueConstraints:[#[ORM\UniqueConstraint(name:'unique_path', columns:['path', 'type'])]]
-)]
+#[ORM\Table(name:'item',indexes:[#[ORM\Index(name='item_list_select', columns:['status', 'created', 'weight'])]],uniqueConstraints:[#[ORM\UniqueConstraint(name:'unique_path', columns:['path', 'type'])]])]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name:'type', type:'string')]
-#[Serializer\Discriminator(field:'type', disabled:true, map:['item' => 'Item'])]
-abstract class Item
+abstract class AbstractItem implements EntityInterface
 {
 
     #[ORM\Id]
@@ -33,12 +28,8 @@ abstract class Item
      * Linked Item.
      */
     #[Serializer\Type('ArrayCollection')]
-    #[ORM\ManyToMany(targetEntity:'Item', fetch:'EXTRA_LAZY')]
-    #[ORM\JoinTable(
-          name:'itemlink',
-          joinColumns:[#[ORM\JoinColumn(name:'item_id_1', referencedColumnName:'id')]],
-          inverseJoinColumns:[#[ORM\JoinColumn(name:'item_id_2', referencedColumnName:'id')]]
-    )]
+    #[ORM\ManyToMany(targetEntity:'AbstractItem', fetch:'EXTRA_LAZY')]
+    #[ORM\JoinTable(name:'itemlink',joinColumns:[#[ORM\JoinColumn(name:'item_id_1', referencedColumnName:'id')]],inverseJoinColumns:[#[ORM\JoinColumn(name:'item_id_2', referencedColumnName:'id')]])]
     protected ?Collection $link;
 
     #[ORM\Column]

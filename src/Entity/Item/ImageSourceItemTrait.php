@@ -30,7 +30,7 @@ trait ImageSourceItem
 
         try {
             if (null === $this->property) {
-                $this->property = new ArrayObject(flags: ArrayObject::STD_PROP_LIST)
+                $this->property = new ArrayObject(flags: ArrayObject::STD_PROP_LIST);
             }
             $exif = exif_read_data($file->getSource(), 'FILE,COMPUTED', true, false);
             $check = ['FILE' => null, 'COMPUTED' => null];

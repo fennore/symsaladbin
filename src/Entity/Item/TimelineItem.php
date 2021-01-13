@@ -6,7 +6,7 @@ use App\Entity\File;
 use App\Entity\Traits\ImageSourceItem;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass:'App\Repository\TimelineItemRepository')]
+#[ORM\Entity]
 #[ORM\Table(name:'timelineitem')]
 #[ORM\HasLifecycleCallbacks]
 class TimelineItem extends Item implements SourceItemInterface

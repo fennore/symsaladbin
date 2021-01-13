@@ -13,9 +13,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name:'user')]
-#[ORM\Entity(repositoryClass:'App\Repository\UserRepository')]
+#[ORM\Entity]
 #[UniqueEntity(fields:'username', message:'Username already taken')]
-final class User implements UserInterface, Serializable, EquatableInterface
+class User implements UserInterface,EntityInterface,Serializable,EquatableInterface
 {
     
     #[ORM\Column(type:'integer')]

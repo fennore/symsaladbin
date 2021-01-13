@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass:'App\Repository\RoleRepository')]
 #[ORM\Table(name:'role')]
-final class Role implements Stringable
+class Role implements EntityInterface,Stringable
 {
 
     #[ORM\Id]

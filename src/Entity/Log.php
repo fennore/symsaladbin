@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name:'log')]
 #[ORM\Entity(repositoryClass:'App\Repository\LogRepository')]
-final class Log
+class Log implements EntityInterface
 {
 
     #[ORM\Id]
