@@ -2,7 +2,7 @@
 
 namespace App\EventSubscriber;
 
-use App\Data\ContentSecurityPolicy;
+use App\Data\ContentSecurityPolicyInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
@@ -10,7 +10,7 @@ class GlobalHeaderSubscriber implements EventSubscriberInterface
 {
     private $csp;
 
-    public function __construct(ContentSecurityPolicy $csp)
+    public function __construct(ContentSecurityPolicyInterface $csp)
     {
         $this->csp = $csp;
     }
