@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Driver\GoogleApi\Directions;
+namespace App\Driver;
 
-use App\Driver\DirectionsDriverInterface;
 use App\Entity\Directions;
 use App\Entity\Location;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
@@ -10,7 +9,7 @@ use Doctrine\ORM\Internal\Hydration\IterableResult;
 /**
  * Directions Driver using Google API.
  */
-class Driver implements DirectionsDriverInterface
+class GoogleApiDirectionsDriver implements DirectionsDriverInterface
 {
     /**
      * Maximum amount of locations sent per 1 direction request.
