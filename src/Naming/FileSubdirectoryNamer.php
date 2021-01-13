@@ -10,6 +10,8 @@ use Vich\UploaderBundle\Naming\DirectoryNamerInterface;
  * File directory namer for Vich Uploader bundle.
  *
  * @see https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/directory_namer/howto/create_a_custom_directory_namer.md
+ * 
+ * @todo use symfony mime package for mime types
  */
 class FileSubdirectoryNamer implements DirectoryNamerInterface
 {
