@@ -2,47 +2,46 @@
 
 namespace App\Data;
 
-use App\Creator\Nonce;
+use ArrayObject;
+use App\Creator\NonceCreatorTrait;
 
 /**
  * @see https://www.w3.org/TR/CSP3/
  */
-class ContentSecurityPolicy
+class ContentSecurityPolicy implements ContentSecurityPolicyInterface
 {
-    /**
-     * @var array
-     */
-    private $csp = [];
 
-    /**
-     * @var string
-     */
-    private $nonce;
+    use NonceCreatorTrait;
+    
+    private ArrayObject $csp;
 
-    /**
-     * @var bool
-     */
-    private $useNonce = false;
+    private string $nonce;
 
-    public function __construct(Nonce $nonce)
+    private bool $useNonce = false;
+
+    public function __construct()
     {
-        $this->nonce = $nonce->create();
+        $this->csp = new ArrayObject();
+        $this->nonce = $this->createNonce();
+    }
+
+    public function get(): ArrayObject
+    {
+        return $this->csp;
     }
 
     /**
-     * Set a security policy directive.
+     * Set the security policy directive (overwrites previous).
      */
-    public function set(string $directive, array $sources)
+    public function set(ArrayObject $csp): void
     {
-        $this->csp[$directive] = $sources;
-
-        return $this;
+        $this->csp = $csp;
     }
 
     /**
-     * Add to a security policy directive.
+     * Add a security policy directive.
      */
-    public function add(string $directive, string $source)
+    public function add(string $directive, string $source): static
     {
         $this->csp[$directive][] = $source;
 
@@ -57,20 +56,17 @@ class ContentSecurityPolicy
     {
         if (!$this->useNonce) {
             $this->add('script-src', $this->nonce);
+            $this->useNonce = true;
         }
 
         return $this->nonce;
     }
 
-    /**
-     * Get the string formatted policy for in the header.
-     */
-    public function getPolicy(): ?string
+    public function __toString(): string
     {
-        $csp = $this->csp;
-
-        return array_reduce(array_keys($this->csp), function ($policy, $directive) use ($csp) {
-            return $policy.$directive.' '.implode(' ', $csp[$directive]).'; ';
-        });
+        return array_reduce(
+            array_keys($this->csp->getArrayCopy()), 
+            fn ($policy, $directive) => "{$policy}{$directive} " . implode(' ', $this->csp[$directive]) . ';'
+        );
     }
 }
