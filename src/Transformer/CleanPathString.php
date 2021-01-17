@@ -5,6 +5,7 @@ namespace App\Transformer;
 use Stringable;
 
 /**
+ * @todo use slugger from symfony/string
  * Creates a clean path string from a regular string.
  */
 class CleanPathString implements Stringable
