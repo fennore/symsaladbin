@@ -4,7 +4,7 @@ namespace App\Tests\Driver\GoogleApi\Directions;
 
 use PHPUnit\Framework\TestCase;
 
-class ResponseTest extends TestCase
+class RequestTest extends TestCase
 {
     public function testGetDirections()
     {
