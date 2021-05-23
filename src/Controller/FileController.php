@@ -11,7 +11,7 @@ class FileController extends AbstractSmartController
     /**
      * Matches /img/xxxx.
      *
-     * @Route("/img/{path}", name="intro", defaults={"_format": "html"})
+     * @Route("/img/{path}", name="view_image", defaults={"_format": "jpg"})
      */
     public function intro(FileRepository $fileRepository, $path)
     {

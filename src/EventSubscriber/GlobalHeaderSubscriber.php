@@ -8,12 +8,11 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class GlobalHeaderSubscriber implements EventSubscriberInterface
 {
-    private $csp;
 
-    public function __construct(ContentSecurityPolicyInterface $csp)
-    {
-        $this->csp = $csp;
-    }
+    public function __construct(
+        private ContentSecurityPolicyInterface $csp
+    )
+    {}
 
     public static function getSubscribedEvents()
     {

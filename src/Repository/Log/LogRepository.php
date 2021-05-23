@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Log;
 
 use App\Entity\Log;
 use App\Handler\DbBatchHandler;

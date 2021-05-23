@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\File;
 
 use App\Entity\File;
 use App\Handler\DbBatchHandler;
@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Traversable;
 
-class FileRepository extends AbstractBatchableEntityRepository
+final class FileRepository extends AbstractBatchableEntityRepository
 {
     public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {

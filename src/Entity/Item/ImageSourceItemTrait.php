@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace App\Entity\Item;
 
 use App\Creator\ArrayToObject;
 use App\Entity\File;
 use Doctrine\ORM\Mapping as ORM;
 use Throwable,ArrayObject;
 
-trait ImageSourceItem
+trait ImageSourceItemTrait
 {
     use SourceItem {
         setFile as sourceItemSetFile;

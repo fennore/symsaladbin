@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Item;
 
 use App\Entity\Item\Story;
 use App\Handler\DbBatchHandler;
@@ -14,7 +14,7 @@ use Doctrine\ORM\UnitOfWork;
  * @method Story[]    findAll()
  * @method Story[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-final class StoryRepository extends AbstractItemRepository
+final class StoryRepository implements StoryRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler)
     {

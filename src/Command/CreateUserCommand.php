@@ -13,33 +13,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class CreateUserCommand extends Command
+final class CreateUserCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
     protected static $defaultName = 'app:user:create';
 
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
-    /**
-     * @var RoleRepository
-     */
-    protected $roleRepository;
-
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    protected $userPasswordEncoder;
-
-    public function __construct(UserRepository $userRepository, RoleRepository $roleRepository, UserPasswordEncoderInterface $userPasswordEncoder)
+    public function __construct(
+        private UserRepository $userRepository, 
+        private RoleRepository $roleRepository, 
+        private UserPasswordEncoderInterface $userPasswordEncoder
+    )
     {
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->userPasswordEncoder = $userPasswordEncoder;
         parent::__construct();
     }
 
@@ -70,14 +56,19 @@ class CreateUserCommand extends Command
         $user->setPassword($password);
 
         $output->writeln([
-            'Username: '.$user->getUsername(),
-            'Encoded password: '.$user->getPassword(),
+            "Username: {$user->getUsername()}",
+            "Encrypted password: {$user->getPassword()}",
         ]);
 
         if ($input->getOption('is-admin')) {
             $role = $this->roleRepository->loadRoleByName('ROLE_ADMIN');
             $user->setRoles([$role]);
         }
+
+        $roles = implode($user->getRoles());
+        $output->writeln([
+            "Roles: [{$roles}]" 
+        ]);
 
         $this->userRepository->createUser($user);
 

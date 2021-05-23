@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lists\Location;
+namespace App\List\Location;
 
 use App\Repository\LocationRepository;
 use Hateoas\Configuration\Annotation as Hateoas;

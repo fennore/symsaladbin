@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Location;
 
 use App\Entity\Location;
 use App\Handler\DbBatchHandler;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Internal\Hydration\IterableResult;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Doctrine\ORM\Query;
 
-class LocationRepository extends AbstractBatchableEntityRepository
+final class LocationRepository
 {
     use Traits\RepositoryStageTrait;
 

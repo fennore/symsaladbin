@@ -10,21 +10,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class CreateRoleCommand extends Command
+final class CreateRoleCommand extends Command
 {
     /**
      * {@inheritdoc}
      */
     protected static $defaultName = 'app:role:create';
 
-    /**
-     * @var RoleRepository
-     */
-    protected $roleRepository;
-
-    public function __construct(RoleRepository $roleRepository)
+    public function __construct(
+        private RoleRepository $roleRepository
+    )
     {
-        $this->roleRepository = $roleRepository;
         parent::__construct();
     }
 
@@ -50,7 +46,7 @@ class CreateRoleCommand extends Command
         $role = new Role($roleName);
         $this->roleRepository->createRole($role);
 
-        $io->success('New role created.');
+        $io->success("[{$role}] created.");
 
         return 0;
     }

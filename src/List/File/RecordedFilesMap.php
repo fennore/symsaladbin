@@ -1,5 +1,5 @@
 <?php
-namespace App\Lists\File;
+namespace App\List\File;
 
 class RecordedFilesMap
 {

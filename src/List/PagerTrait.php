@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Lists;
+namespace App\List;
 
 use JMS\Serializer\Annotation as Serializer;
 

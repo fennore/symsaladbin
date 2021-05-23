@@ -2,6 +2,7 @@
 
 namespace App\Tests\Command;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use App\Command\CreateUserCommand;
 use App\Entity\Role;
 use App\Repository\RoleRepository;
@@ -12,24 +13,31 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
-class CreateUserCommandTest extends KernelTestCase
+final class CreateUserCommandTest extends KernelTestCase
 {
-    private RoleRepository $roleRepository;
+    private MockObject $roleRepository;
+    private MockObject $userRepository;
 
     public function setUp(): void
     {
         $this->roleRepository = $this->createMock(RoleRepository::class);
+        $this->userRepository = $this->createMock(UserRepository::class);
         parent::setUp();
     }
 
     public function tearDown(): void
     {
         unset($this->roleRepository);
+        unset($this->userRepository);
         parent::tearDown();
     }
 
     public function testExecute()
     {
+        $this->userRepository
+            ->expects($this->once())
+            ->method('persistUser');
+        
         $commandTester = new CommandTester($this->initiateCommand());
         $commandTester->execute([
             'username' => 'testuser',
@@ -46,10 +54,15 @@ class CreateUserCommandTest extends KernelTestCase
     public function testExecuteAsAdmin()
     {
         $role = new Role('ROLE_ADMIN');
+        
+        $this->userRepository
+            ->expects($this->once())
+            ->method('persistUser');
         $this->roleRepository->expects($this->once())
             ->method('loadRoleByName')
             ->with('ROLE_ADMIN')
             ->willReturn($role);
+
         $commandTester = new CommandTester($this->initiateCommand());
         $commandTester->execute([
             'username' => 'testadmin',
@@ -69,9 +82,8 @@ class CreateUserCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         $application = new Application($kernel);
 
-        $userRepository = $this->createMock(UserRepository::class);
         $userPasswordEncoder = $this->createMock(UserPasswordEncoder::class);
-        $application->add(new CreateUserCommand($userRepository, $this->roleRepository, $userPasswordEncoder));
+        $application->add(new CreateUserCommand($this->userRepository, $this->roleRepository, $userPasswordEncoder));
 
         return $application->find('app:user:create');
     }

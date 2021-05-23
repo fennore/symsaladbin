@@ -2,16 +2,15 @@
 
 namespace App\Entity\Item;
 
-use App\Entity\File;
-use App\Entity\Traits\ImageSourceItem;
+use App\Entity\{File,AbstractItem};
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name:'timelineitem')]
 #[ORM\HasLifecycleCallbacks]
-class TimelineItem extends Item implements SourceItemInterface
+class TimelineItem extends AbstractItem implements SourceItemInterface
 {
-    use ImageSourceItem;
+    use ImageSourceItemTrait;
 
     public function getFile(): File
     {

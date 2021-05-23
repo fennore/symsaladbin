@@ -2,12 +2,12 @@
 
 namespace App\Entity\Item;
 
-use App\Entity\Traits\SourceItem;
+use App\Entity\AbstractItem;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name:'story')]
-class Story extends Item implements SourceItemInterface
+class Story extends AbstractItem implements SourceItemInterface
 {
-    use SourceItem;
+    use SourceItemTrait;
 }

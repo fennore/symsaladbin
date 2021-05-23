@@ -4,5 +4,5 @@ namespace App\Entity;
 
 interface EntityInterface
 {
-   public function getUniqueReference();
+   public function getUniqueReference(): string;
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Lists\Story;
+namespace App\List\Story;
 
+use App\List\{PagerInterface,PagerTrait}
 use App\Repository\StoryRepository;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation as Serializer;
@@ -64,8 +65,10 @@ use JMS\Serializer\Annotation as Serializer;
  *     embedded = "expr(object.showPage())"
  * )
  */
-class StoryPager extends AbstractPager
+class Pager implements PagerInterface
 {
+    use PagerTrait;
+    
     /**
      * @Serializer\Exclude
      */

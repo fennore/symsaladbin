@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\SavedState;
 
 use App\Entity\SavedState;
 use App\Handler\DbBatchHandler;

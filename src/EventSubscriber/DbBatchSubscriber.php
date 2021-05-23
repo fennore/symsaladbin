@@ -23,7 +23,7 @@ class DbBatchSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-           'kernel.terminate' => 'onKernelTerminate',
+//           'kernel.terminate' => 'onKernelTerminate',
         ];
     }
 }

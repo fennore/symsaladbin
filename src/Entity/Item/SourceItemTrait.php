@@ -15,7 +15,7 @@
           name: fileId
    */
 
-namespace App\Entity\Traits;
+namespace App\Entity\Item;
 
 use App\Entity\{File,Item};
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * Trait for Items that have a one-to-one relation with the File entity.
  */
-trait SourceItem
+trait SourceItemTrait
 {
 
     #[Serializer\Exclude]

@@ -1,35 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Item\Item;
-use App\Handler\DbBatchHandler;
+use Traversable;
+use App\Entity\AbstractItem;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\EntityManagerInterface;
 
-abstract class AbstractItemRepository extends AbstractBatchableEntityRepository
+class ItemRepository implements ItemRepositoryInterface
 {
-    protected string $alias;
 
-    /** @param string $alias Alias for the repository entity table */
-    public function __construct(ManagerRegistry $registry, DbBatchHandler $batchHandler, string $entityClass, string $alias)
-    {
-        parent::__construct($registry, $batchHandler, $entityClass);
-        $this->alias = $alias;
-    }
-
-    public function getAll(): Traversable
-    {
-        foreach (
-            $this->createQueryBuilder($this->alias)
-                ->getQuery()
-                ->iterate() 
-            as $row
-        ) {
-            yield $row[0];
-        }
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {}
 
     public function getRange(int $offset, int $limit, bool $showDisabled = false): Traversable
     {
@@ -100,7 +83,7 @@ abstract class AbstractItemRepository extends AbstractBatchableEntityRepository
                 $criteria->expr()->in('id', $ids));
     }
 
-    protected function prepareItemForUpdate(Item $persistedItem, ?Item $newItem): void
+    protected function prepareItemForUpdate(AbstractItem $persistedItem, ?AbstractItem $newItem): void
     {
         if (null === $newItem) {
             return;

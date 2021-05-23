@@ -1,6 +1,6 @@
 <?php
 
-namespace App\States;
+namespace App\State;
 
 class EncodedRoute implements StateInterface
 {

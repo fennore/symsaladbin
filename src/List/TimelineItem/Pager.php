@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Lists\TimelineItem;
+namespace App\List\TimelineItem;
 
+use App\List\{PagerInterface,PagerTrait}
 use App\Repository\TimelineItemRepository;
 use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation as Serializer;
@@ -54,8 +55,10 @@ use JMS\Serializer\Annotation as Serializer;
  *     embedded = "expr(object.showPage())"
  * )
  */
-class TimelineItemPager extends AbstractPager
+class Pager implements PagerInterface
 {
+    use PagerTrait;
+    
     /**
      * @Serializer\Exclude
      */

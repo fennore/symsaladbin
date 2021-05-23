@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Item;
 
 use App\Entity\Item\TimelineItem;
 use App\Handler\DbBatchHandler;
